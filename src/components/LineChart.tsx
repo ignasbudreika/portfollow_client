@@ -39,20 +39,22 @@ export const LineChart: React.FC = () => {
       ],
     };
 
-    return <Line data={data} options={
-      { 
-        maintainAspectRatio: false, plugins: 
-          { legend:  
-              { display: false } 
-          },
-          scales:{
-            x: {
-                display: false
+    return <>
+      <Line data={data} options={
+        { 
+          maintainAspectRatio: false, plugins: 
+            { legend:  
+                { display: false } 
             },
-            y: {
-              display: false
+            scales:{
+              x: {
+                  display: false
+              },
+              y: {
+                display: false
+            }
           }
         }
-      }
-  } />;
+      }/>
+    </>
 }

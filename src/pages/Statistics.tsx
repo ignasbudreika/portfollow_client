@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { DoughnutChart } from '../components/DoughnutChart';
 import { LineChart } from '../components/LineChart';
-import { Card, Col, Row, Space, Statistic } from 'antd';
+import { Card, Carousel, Col, Row, Space, Statistic } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 
@@ -56,15 +56,13 @@ const Statistics: React.FC = () => {
             </Card>
           </Col>
         </Row>
-        <Row style={{height: "720px"}} justify="center">
-          <Col span={10}>
-            <DoughnutChart />
-          </Col>
-        </Row>
-        <Row style={{height: "300px"}} justify="center">
-          <Col span={10}>
-            <LineChart />
-          </Col>
+        <Row justify="center">
+          <div style={{height: "580px", width: "700px"}}>
+            <Carousel dots={true} dotPosition={'bottom'} effect={'fade'}>
+              <DoughnutChart />
+              <LineChart />
+            </Carousel>
+          </div>
         </Row>
       </Space>
     );

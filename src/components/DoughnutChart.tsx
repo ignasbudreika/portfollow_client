@@ -66,7 +66,7 @@ export const DoughnutChart: React.FC = () => {
 
     return <>
       <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-        { maintainAspectRatio: false, radius: 350, plugins: 
+        { maintainAspectRatio: false, radius: 290, plugins: 
           { legend:  
             { 
               display: false,
