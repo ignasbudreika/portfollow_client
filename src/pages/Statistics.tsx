@@ -38,7 +38,7 @@ const Statistics: React.FC = () => {
                 title="Total value"
                 value={totalValue}
                 precision={2}
-                suffix="€"
+                suffix="$"
               />
             </Card>
           </Col>

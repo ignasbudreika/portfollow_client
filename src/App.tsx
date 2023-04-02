@@ -6,6 +6,8 @@ import { Layout } from 'antd';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Statistics from './pages/Statistics';
 import DashNavbar from './components/DashNavbar';
+import Stocks from './pages/Stocks';
+import Cryptocurrencies from './pages/Cryptocurrencies';
 
 function App() {
   const auth = useAppSelector(selectAuth);
@@ -23,6 +25,8 @@ function App() {
                 {auth.accessToken ?
                   <>
                     <Route path="/dash" element={<Statistics />} /> 
+                    <Route path="/stocks" element={<Stocks />} /> 
+                    <Route path="/crypto" element={<Cryptocurrencies />} /> 
                     <Route path="*" element={<Navigate to="/dash" />} />
                   </> :
                   <>

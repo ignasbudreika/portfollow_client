@@ -12,15 +12,30 @@ const navigate = useNavigate();
                 >
                     Statistics
                 </Button>
-                <Button shape="round" type="primary"
+                <Button shape="round" type="primary" onClick={() => navigate("/stocks")}
                     style={{  backgroundColor: window.location.pathname === "/stocks" ? "#AEBED5" : "#121F2B" }}
                 >
                     Stocks
                 </Button>
-                <Button shape="round" type="primary"
+                <Button shape="round" type="primary" onClick={() => navigate("/crypto")}
                     style={{  backgroundColor: window.location.pathname === "/crypto" ? "#AEBED5" : "#121F2B" }}
                 >
                     Crypto
+                </Button>
+                <Button shape="round" type="primary"
+                    style={{  backgroundColor: window.location.pathname === "/forex" ? "#AEBED5" : "#121F2B" }}
+                >
+                    Forex
+                </Button>
+                <Button shape="round" type="primary"
+                    style={{  backgroundColor: window.location.pathname === "/connections" ? "#AEBED5" : "#121F2B" }}
+                >
+                    Connections
+                </Button>
+                <Button shape="round" type="primary"
+                    style={{  backgroundColor: window.location.pathname === "/explore" ? "#AEBED5" : "#121F2B" }}
+                >
+                    Explore
                 </Button>
                 <Button shape="round" type="primary"
                     style={{  backgroundColor: window.location.pathname === "/profile" ? "#AEBED5" : "#121F2B" }}
