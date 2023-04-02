@@ -13,8 +13,8 @@ class PortfolioService {
       return api.get('/portfolio/distribution?type=' + investmentType);
     }
 
-    getPortfolioHistory() {
-      return api.get('/portfolio/history');
+    getPortfolioHistory(historyType: string) {
+      return api.get('/portfolio/history?type=' + historyType);
     }
   }
   

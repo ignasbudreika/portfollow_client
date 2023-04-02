@@ -5,6 +5,8 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
+import { Segmented } from 'antd';
+import { SegmentedValue } from 'antd/es/segmented';
 
 export const LineChart: React.FC = () => {
     ChartJS.register(ArcElement, Tooltip, Legend);
@@ -13,8 +15,8 @@ export const LineChart: React.FC = () => {
 
     const [values, setValues] = useState<any[]>([]);
 
-    const getData = () => {
-      PortfolioService.getPortfolioHistory().then((res) => {
+    const getData = (historyType: string) => {
+      PortfolioService.getPortfolioHistory(historyType).then((res) => {
           setValues(res.data.map((history: any) => { return {x: history.time, y: history.value} }));
       });
     }
@@ -25,7 +27,7 @@ export const LineChart: React.FC = () => {
         return;
       }
 
-      getData();
+      getData('WEEKLY');
   }, []);
 
     const data = {
@@ -33,28 +35,37 @@ export const LineChart: React.FC = () => {
         {
           label: "portfolio value",
           data: values,
-          tension: 0.1,
+          tension: 0.5,
           borderColor: "black",
+          pointRadius: 5,
+          fill: true,
+          steppedLine: true
         },
       ],
     };
 
-    return <>
-      <Line data={data} options={
-        { 
-          maintainAspectRatio: false, plugins: 
-            { legend:  
-                { display: false } 
-            },
-            scales:{
-              x: {
-                  display: false
+    return <div>
+      <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => {getData(selectedType.toString().toUpperCase())}} />
+      <div>
+        <Line data={data} options={
+          { 
+            maintainAspectRatio: false, 
+              plugins: 
+              { 
+                legend: { 
+                  display: false 
+                },
               },
-              y: {
-                display: false
-            }
+              scales:{
+                x: {
+                    display: false
+                },
+                y: {
+                  min: 0,
+              }
+            }, 
           }
-        }
-      }/>
-    </>
+        }/>
+      </div>
+    </div>
 }

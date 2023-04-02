@@ -6,6 +6,7 @@ import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
 import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
+import { Breadcrumb } from 'antd';
 
 export const DoughnutChart: React.FC = () => {
     ChartJS.register(ArcElement, Tooltip);
@@ -64,15 +65,21 @@ export const DoughnutChart: React.FC = () => {
       ],
     };
 
-    return <>
-      <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-        { maintainAspectRatio: false, radius: 290, plugins: 
-          { legend:  
-            { 
-              display: false,
-            }
-          },
-        }
-      } />
-    </>
+    return <div>
+      <Breadcrumb>
+        <Breadcrumb.Item>ALL INVESTMENTS</Breadcrumb.Item>
+        {selectedInvestmentType && <Breadcrumb.Item>{selectedInvestmentType}</Breadcrumb.Item>}
+      </Breadcrumb>
+      <div>
+        <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
+          { maintainAspectRatio: false, radius: 290, plugins: 
+            { legend:  
+              { 
+                display: false,
+              }
+            },
+          }
+        } />
+      </div>
+    </div>
 }

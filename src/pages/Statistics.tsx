@@ -46,7 +46,7 @@ const Statistics: React.FC = () => {
           <Col span={4}>
             <Card bordered={false}>
               <Statistic
-                title="Day change"
+                title="Trend"
                 value={change}
                 precision={2}
                 valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
