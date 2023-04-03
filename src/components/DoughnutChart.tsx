@@ -61,6 +61,9 @@ export const DoughnutChart: React.FC = () => {
         {
           label: 'invested amount',
           data: distribution,
+          backgroundColor: '#F5F5F5',
+          borderColor: '#121F2B',
+          borderWidth: 2
         },
       ],
     };
@@ -72,7 +75,7 @@ export const DoughnutChart: React.FC = () => {
       </Breadcrumb>
       <div>
         <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-          { maintainAspectRatio: false, radius: 290, plugins: 
+          { maintainAspectRatio: false, radius: 289, plugins: 
             { legend:  
               { 
                 display: false,

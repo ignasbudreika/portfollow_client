@@ -2,12 +2,18 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Col, Row, Space, Table } from 'antd';
+import { Button, Col, Row, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
+import AddStock from '../components/AddStock';
+import { PlusOutlined } from '@ant-design/icons';
+import {useAtom} from 'jotai'
+import { showAddStockModalAtom } from '../atoms';
 
 const Stocks: React.FC = () => {
     const navigate = useNavigate();
+
+    const [, setShowModal] = useAtom(showAddStockModalAtom)
 
     const [stocks, setStocks] = useState<DataType[]>([]);
 
@@ -68,11 +74,17 @@ const Stocks: React.FC = () => {
 
     return (
       <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
-        <Row justify="center">
-          <Col span={10}>
-            <Table columns={columns} dataSource={stocks}></Table>
+        <Row justify="end">
+          <Col span={8}>
+            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
           </Col>
         </Row>
+        <Row justify="center">
+          <Col span={10}>
+            <Table columns={columns} dataSource={stocks} size="small"></Table>
+          </Col>
+        </Row>
+        <AddStock></AddStock>
       </Space>
     );
 }
