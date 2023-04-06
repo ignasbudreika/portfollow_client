@@ -36,6 +36,7 @@ const AddStock: React.FC = () => {
             title="Create stock investment"
             open={showModal}
             onOk={handleOk}
+            centered 
             confirmLoading={confirmLoading}
             cancelButtonProps={{hidden: true}}
             okText={'Create'}

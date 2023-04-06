@@ -8,6 +8,7 @@ import Statistics from './pages/Statistics';
 import DashNavbar from './components/DashNavbar';
 import Stocks from './pages/Stocks';
 import Cryptocurrencies from './pages/Cryptocurrencies';
+import Connections from './pages/Connections';
 
 function App() {
   const auth = useAppSelector(selectAuth);
@@ -27,6 +28,7 @@ function App() {
                     <Route path="/dash" element={<Statistics />} /> 
                     <Route path="/stocks" element={<Stocks />} /> 
                     <Route path="/crypto" element={<Cryptocurrencies />} /> 
+                    <Route path="/connections" element={<Connections />} /> 
                     <Route path="*" element={<Navigate to="/dash" />} />
                   </> :
                   <>

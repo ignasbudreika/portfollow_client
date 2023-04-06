@@ -29,7 +29,6 @@ instance.interceptors.response.use(
     if (err.response) {
       if (err.response.status === 401) {
         localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
-        // todo navigate to /
       }
     }
 

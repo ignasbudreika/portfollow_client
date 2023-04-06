@@ -5,7 +5,6 @@ import {useAtom} from 'jotai'
 import { showAddCryptoModalAtom } from '../atoms';
 import CryptocurrenciesService from "../services/CryptocurrenciesService";
 
-
 const AddCrypto: React.FC = () => {
     const [symbol, setSymbol] = useState<string>('')
     const [quantity, setQuantity] = useState<number>(0)
@@ -36,6 +35,7 @@ const AddCrypto: React.FC = () => {
           title="Create cryptocurrency investment"
           open={showModal}
           onOk={handleOk}
+          centered 
           confirmLoading={confirmLoading}
           cancelButtonProps={{hidden: true}}
           okText={'Create'}

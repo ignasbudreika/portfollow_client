@@ -15,8 +15,12 @@ const Statistics: React.FC = () => {
     
     const getData = () => {
       PortfolioService.getPortfolio().then((res) => {
-          setTotalValue(res.data.total_value);
-          setChange(res.data.change);
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+        setTotalValue(res.data.total_value);
+        setChange(res.data.change);
       });
     };
 
@@ -57,7 +61,7 @@ const Statistics: React.FC = () => {
           </Col>
         </Row>
         <Row justify="center">
-          <div style={{height: "580px", width: "700px"}}>
+          <div style={{height: "500px", width: "1800px"}}>
             <Carousel dots={true} dotPosition={'bottom'} effect={'fade'}>
               <DoughnutChart />
               <LineChart />

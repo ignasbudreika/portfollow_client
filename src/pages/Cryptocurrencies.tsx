@@ -55,9 +55,13 @@ const Cryptocurrencies: React.FC = () => {
     
     const getData = () => {
         CryptocurrenciesService.getCrypto().then((res) => {
-            setCryptocurrencies(res.data.map((crypto: any) => { 
-                return {id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, date: crypto.date} 
-            }));
+          if (res.status === 401) {
+            navigate("/")
+            return;
+          }
+          setCryptocurrencies(res.data.map((crypto: any) => { 
+              return {id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, date: crypto.date} 
+          }));
         });
     };
 

@@ -57,9 +57,13 @@ const Stocks: React.FC = () => {
     
     const getData = () => {
         StocksService.getStocks().then((res) => {
-            setStocks(res.data.map((stock: any) => { 
-                return {id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, date: stock.date} 
-            }));
+          if (res.status === 401) {
+            navigate("/")
+            return;
+          }
+          setStocks(res.data.map((stock: any) => { 
+              return {id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, date: stock.date} 
+          }));
         });
     };
 

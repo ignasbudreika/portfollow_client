@@ -27,7 +27,7 @@ const navigate = useNavigate();
                 >
                     Forex
                 </Button>
-                <Button shape="round" type="primary"
+                <Button shape="round" type="primary" onClick={() => navigate("/connections")}
                     style={{  backgroundColor: window.location.pathname === "/connections" ? "#AEBED5" : "#121F2B" }}
                 >
                     Connections

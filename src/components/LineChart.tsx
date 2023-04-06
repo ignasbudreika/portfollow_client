@@ -17,7 +17,11 @@ export const LineChart: React.FC = () => {
 
     const getData = (historyType: string) => {
       PortfolioService.getPortfolioHistory(historyType).then((res) => {
-          setValues(res.data.map((history: any) => { return {x: history.time, y: history.value} }));
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+        setValues(res.data.map((history: any) => { return {x: history.time, y: history.value} }));
       });
     }
 
@@ -37,7 +41,7 @@ export const LineChart: React.FC = () => {
           data: values,
           tension: 0.5,
           borderColor: "black",
-          pointRadius: 5,
+          pointRadius: 3,
           fill: true,
           steppedLine: true
         },
@@ -58,7 +62,7 @@ export const LineChart: React.FC = () => {
               },
               scales:{
                 x: {
-                    display: false
+                  display: false
                 },
                 y: {
                   min: 0,

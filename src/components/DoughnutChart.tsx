@@ -32,14 +32,22 @@ export const DoughnutChart: React.FC = () => {
     const getData = (investmentType: string) => {
       if (investmentType.length == 0) {
         PortfolioService.getPortfolioDistribution().then((res) => {
-            setDistribution(res.data.map((distribution: any) => distribution.value));
-            setCategories(res.data.map((distribution: any) => distribution.label));
+          if (res.status === 401) {
+            navigate("/")
+            return;
+          }
+          setDistribution(res.data.map((distribution: any) => distribution.value));
+          setCategories(res.data.map((distribution: any) => distribution.label));
         });
       } else if (selectedInvestmentType.length == 0) {
         PortfolioService.getPortfolioDistributionByType(investmentType).then((res) => {
-            setSelectedInvestmentType(investmentType);
-            setDistribution(res.data.map((distribution: any) => distribution.value));
-            setCategories(res.data.map((distribution: any) => distribution.label));
+          if (res.status === 401) {
+            navigate("/")
+            return;
+          }
+          setSelectedInvestmentType(investmentType);
+          setDistribution(res.data.map((distribution: any) => distribution.value));
+          setCategories(res.data.map((distribution: any) => distribution.label));
         });
       } else {
         onReturn();
@@ -75,12 +83,12 @@ export const DoughnutChart: React.FC = () => {
       </Breadcrumb>
       <div>
         <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-          { maintainAspectRatio: false, radius: 289, plugins: 
+          { maintainAspectRatio: false, radius: 249, plugins: 
             { legend:  
               { 
                 display: false,
               }
-            },
+            }
           }
         } />
       </div>
