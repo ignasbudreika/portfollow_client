@@ -46,10 +46,10 @@ const AddSpectrocoinConnection: React.FC = () => {
                 </Row>
                 {/* todo remove <br> from project */}
                 <Form.Item required={true}>
-                    <Input value={clientId} onInput={e => setClientId(e.target.value)} placeholder="client ID"/>
+                    <Input value={clientId} onInput={e => setClientId((e.target as HTMLTextAreaElement).value)} placeholder="client ID"/>
                 </Form.Item>
                 <Form.Item required={true}>
-                    <Input.Password value={clientSecret} onInput={e => setClientSecret(e.target.value)} placeholder="client secret" type="secret"/>
+                    <Input.Password value={clientSecret} onInput={e => setClientSecret((e.target as HTMLTextAreaElement).value)} placeholder="client secret" type="secret"/>
                 </Form.Item>
             </Form>
         </Modal>

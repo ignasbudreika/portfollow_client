@@ -12,7 +12,7 @@ export const DoughnutChart: React.FC = () => {
     ChartJS.register(ArcElement, Tooltip);
 
     const navigate = useNavigate();
-    const chartRef = useRef<ChartJSOrUndefined>();
+    const chartRef = useRef(null);
 
     const [categories, setCategories] = useState<any[]>([]);
     const [distribution, setDistribution] = useState<any[]>([]);
@@ -76,6 +76,7 @@ export const DoughnutChart: React.FC = () => {
       ],
     };
 
+    // @ts-ignore
     return <div>
       <Breadcrumb>
         <Breadcrumb.Item>ALL INVESTMENTS</Breadcrumb.Item>

@@ -36,7 +36,7 @@ const AddEthereumWalletConnection: React.FC = () => {
             <br></br>
             <Form>
                 <Form.Item required={true}>
-                    <Input value={address} onInput={e => setAddress(e.target.value)} placeholder="address"/>
+                    <Input value={address} onInput={e => setAddress((e.target as HTMLTextAreaElement).value)} placeholder="address"/>
                 </Form.Item>
             </Form>
         </Modal>

@@ -45,10 +45,10 @@ const AddStock: React.FC = () => {
             <p>Add your new stock investment that will instantly alter your portfolio history</p>
             <Form>
                 <Form.Item required={true}>
-                    <Input value={ticker} onInput={e => setTicker(e.target.value.toUpperCase())} placeholder="ticker"/>
+                    <Input value={ticker} onInput={e => setTicker((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="ticker"/>
                 </Form.Item>
                 <Form.Item required={true}>
-                    <Input value={quantity} onInput={e => setQuantity(e.target.value)} placeholder="quantity" type="number" />
+                    <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
                 </Form.Item>
                 <Form.Item required={true}>
                     <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />

@@ -44,10 +44,10 @@ const AddCrypto: React.FC = () => {
           <p>Add your new cryptocurrency investment that will instantly alter your portfolio history</p>
           <Form>
               <Form.Item required={true}>
-                  <Input value={symbol} onInput={e => setSymbol(e.target.value.toUpperCase())} placeholder="symbol"/>
+                  <Input value={symbol} onInput={e => setSymbol((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="symbol"/>
               </Form.Item>
               <Form.Item required={true}>
-                  <Input value={quantity} onInput={e => setQuantity(e.target.value)} placeholder="quantity" type="number" />
+                  <Input value={quantity} onChange={e => setQuantity(Number((e.target as HTMLInputElement).value))} placeholder="quantity" type="number" />
               </Form.Item>
               <Form.Item required={true}>
                   <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />
