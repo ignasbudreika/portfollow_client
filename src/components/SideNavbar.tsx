@@ -2,7 +2,6 @@ import Icon, { BulbOutlined, DownloadOutlined, EuroCircleOutlined, MehOutlined, 
 import { Button, Row, Space } from 'antd';
 import React from 'react'
 import { useNavigate } from 'react-router';
-import { riAddFill, riEdit2Fill, riDeleteBin6Fill } from '@iconify/icons-ri';
 
 export const SideNavbar: React.FC = () => {
     const navigate = useNavigate();
