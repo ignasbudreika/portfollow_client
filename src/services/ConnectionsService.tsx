@@ -8,9 +8,17 @@ class ConnectionsService {
     createSpectrocoinConnection(body: any) {
       return api.post('/connection/spectrocoin', body);
     }
+    
+    fetchSpectrocoinConnection() {
+      return api.post('/connection/spectrocoin/fetch');
+    }
 
     createEthereumWalletConnection(body: any) {
         return api.post('/connection/ethereum', body);
+    }
+
+    fetchEthereumWalletConnection() {
+      return api.post('/connection/ethereum/fetch');
     }
   }
   

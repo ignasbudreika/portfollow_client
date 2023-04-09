@@ -85,7 +85,7 @@ const Stocks: React.FC = () => {
         </Row>
         <Row justify="center">
           <Col span={10}>
-            <Table columns={columns} dataSource={stocks} size="small"></Table>
+            <Table columns={columns} dataSource={stocks} size="small" pagination={false}></Table>
           </Col>
         </Row>
         <AddStock></AddStock>

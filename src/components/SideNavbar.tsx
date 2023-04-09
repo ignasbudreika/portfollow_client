@@ -1,54 +1,44 @@
-import React from 'react';
-import {
-  FileProtectOutlined,
-  LogoutOutlined,
-  RiseOutlined,
-  TeamOutlined,
-} from '@ant-design/icons';
-import { MenuProps } from 'antd';
-import { Menu } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import { logout, useAppDispatch } from '../app/store';
+import Icon, { BulbOutlined, DownloadOutlined, EuroCircleOutlined, MehOutlined, PieChartOutlined, SettingOutlined, StockOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Button, Row, Space } from 'antd';
+import React from 'react'
+import { useNavigate } from 'react-router';
+import { riAddFill, riEdit2Fill, riDeleteBin6Fill } from '@iconify/icons-ri';
 
-type MenuItem = Required<MenuProps>['items'][number];
+export const SideNavbar: React.FC = () => {
+    const navigate = useNavigate();
 
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[],
-  type?: 'group',
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  } as MenuItem;
+    return <Space direction="vertical" size="middle" 
+        style={{ 
+            display: "flex", 
+            padding: "0 0 20px 0", 
+            backgroundColor: "#F5F5F5"
+        }}>
+        <Row justify="center">
+            <Button type="primary" icon={<PieChartOutlined />} size={'large'} onClick={() => navigate("/dash")}
+                    style={{  backgroundColor: window.location.pathname === "/dash" ? "#c7c4c5" : "#121F2B"}}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<StockOutlined />} size={'large'} onClick={() => navigate("/stocks")}
+                    style={{  backgroundColor: window.location.pathname === "/stocks" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<MehOutlined />} size={'large'} onClick={() => navigate("/crypto")}
+                    style={{  backgroundColor: window.location.pathname === "/crypto" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<EuroCircleOutlined />} size={'large'} style={{  backgroundColor: window.location.pathname === "/forex" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<UserAddOutlined />} size={'large'} onClick={() => navigate("/connections")}
+                    style={{  backgroundColor: window.location.pathname === "/connections" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<BulbOutlined />} size={'large'} style={{  backgroundColor: window.location.pathname === "/explore" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+        <Row justify="center">
+            <Button type="primary" icon={<SettingOutlined />} size={'large'} style={{  backgroundColor: window.location.pathname === "/profile" ? "#c7c4c5" : "#121F2B" }}/>
+        </Row>
+    </Space>;
 }
 
-const items: MenuItem[] = [
-  getItem('Statistics', '1', <RiseOutlined />),
-  getItem('Stocks', '2', <FileProtectOutlined />),
-  getItem('Explore', '3', <TeamOutlined />),
-];
-
-const SideNavbar: React.FC = () => {
-  const dispatch = useAppDispatch()
-  const navigate = useNavigate()
-
-  const logoutUser = () => {
-    dispatch(logout());
-    navigate('/');
-  }
-
-  return (
-      <>
-        <div style={{ height: 32, margin: 16, backgroundColor: "#121F2B" }} />
-        <Menu theme="dark" defaultSelectedKeys={['1']} style={{backgroundColor: "#121F2B"}} items={items} />
-      </>
-  );
-};
-
-export default SideNavbar;
+export default SideNavbar

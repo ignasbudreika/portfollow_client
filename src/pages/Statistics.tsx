@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { DoughnutChart } from '../components/DoughnutChart';
 import { LineChart } from '../components/LineChart';
-import { Card, Carousel, Col, Row, Space, Statistic } from 'antd';
+import { Card, Col, Row, Space, Statistic } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 
@@ -11,6 +11,7 @@ const Statistics: React.FC = () => {
     const navigate = useNavigate();
 
     const [totalValue, setTotalValue] = useState<number>(0);
+    const [totalValueChange, setTotalValueChange] = useState<number>(0);
     const [change, setChange] = useState<number>(0);
     
     const getData = () => {
@@ -37,7 +38,7 @@ const Statistics: React.FC = () => {
       <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
         <Row justify="center">
           <Col span={4}>
-            <Card bordered={false}>
+            <Card>
               <Statistic
                 title="Total value"
                 value={totalValue}
@@ -45,10 +46,17 @@ const Statistics: React.FC = () => {
                 suffix="$"
               />
             </Card>
-          </Col>
-          <div style={{width: 15}}></div>
-          <Col span={4}>
-            <Card bordered={false}>
+            <Card>
+              <Statistic
+                title="Total value change"
+                value={change}
+                precision={2}
+                valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
+                prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                suffix="$"
+              />
+            </Card>
+            <Card>
               <Statistic
                 title="Trend"
                 value={change}
@@ -59,14 +67,18 @@ const Statistics: React.FC = () => {
               />
             </Card>
           </Col>
+          <Col span={7}>
+          <Card>
+            <DoughnutChart />
+          </Card>
+          </Col>
         </Row>
         <Row justify="center">
-          <div style={{height: "500px", width: "1800px"}}>
-            <Carousel dots={true} dotPosition={'bottom'} effect={'fade'}>
-              <DoughnutChart />
+          <Col span={11}>
+            <Card>
               <LineChart />
-            </Carousel>
-          </div>
+            </Card>
+          </Col>
         </Row>
       </Space>
     );

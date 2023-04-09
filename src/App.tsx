@@ -5,10 +5,11 @@ import { selectAuth, useAppSelector } from './app/store';
 import { Layout } from 'antd';
 import { Content, Footer, Header } from 'antd/es/layout/layout';
 import Statistics from './pages/Statistics';
-import DashNavbar from './components/DashNavbar';
 import Stocks from './pages/Stocks';
 import Cryptocurrencies from './pages/Cryptocurrencies';
 import Connections from './pages/Connections';
+import SideNavbar from './components/SideNavbar';
+import Sider from 'antd/es/layout/Sider';
 
 function App() {
   const auth = useAppSelector(selectAuth);
@@ -17,11 +18,27 @@ function App() {
     style={{minHeight:"100vh"}}
   >
     <BrowserRouter >
-          <Header style={{backgroundColor: "#121F2B"}}>
-            <TopNavbar />
-          </Header>
-        <Content>
-              {auth.accessToken ? <DashNavbar/> : <></>}
+        <Header style={{backgroundColor: "#F5F5F5"}}>
+          <TopNavbar />
+        </Header>
+        <Layout>
+          {auth.accessToken ? 
+            <Sider 
+              style={{backgroundColor: "#F5F5F5",
+              overflow: 'auto',
+              height: '100vh',
+              position: 'fixed',
+              left: 0,
+              top: 0,
+              bottom: 0
+              }}
+              className="flex-column justify-center"
+            >
+              <SideNavbar></SideNavbar>
+            </Sider> 
+            : 
+            <div></div>}
+          <Content>
               <Routes>
                 {auth.accessToken ?
                   <>
@@ -37,10 +54,8 @@ function App() {
                   </>
                 }
               </Routes>
-        </Content>
-        <Footer style={{backgroundColor: "#121F2B", color: "white"}}>
-            made by ign
-        </Footer>
+          </Content>
+        </Layout>
     </BrowserRouter>
   </Layout>;
 }

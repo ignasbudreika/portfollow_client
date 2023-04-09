@@ -49,3 +49,10 @@
 .ant-btn-primary-hover:hover {
   background-color: #AEBED5;
 }
+
+.ant-layout-sider {
+  z-index: 1000;
+  display: grid;
+  align-content: center;
+  justify-content: center;
+}

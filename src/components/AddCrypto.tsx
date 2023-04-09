@@ -47,8 +47,8 @@ const AddCrypto: React.FC = () => {
                   <Input value={symbol} onInput={e => setSymbol((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="symbol"/>
               </Form.Item>
               <Form.Item required={true}>
-                  <Input value={quantity} onChange={e => setQuantity(Number((e.target as HTMLInputElement).value))} placeholder="quantity" type="number" />
-              </Form.Item>
+                    <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
+                </Form.Item>
               <Form.Item required={true}>
                   <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />
               </Form.Item>

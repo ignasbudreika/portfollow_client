@@ -42,7 +42,6 @@ export const LineChart: React.FC = () => {
           tension: 0.5,
           borderColor: "black",
           pointRadius: 3,
-          fill: true,
           steppedLine: true
         },
       ],
@@ -65,7 +64,7 @@ export const LineChart: React.FC = () => {
                   display: false
                 },
                 y: {
-                  min: 0,
+                  beginAtZero: false
               }
             }, 
           }

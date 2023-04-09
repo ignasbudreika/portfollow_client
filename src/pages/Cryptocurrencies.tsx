@@ -83,7 +83,7 @@ const Cryptocurrencies: React.FC = () => {
         </Row>
         <Row justify="center">
           <Col span={10}>
-            <Table columns={columns} dataSource={cryptocurrencies} size="small"></Table>
+            <Table columns={columns} dataSource={cryptocurrencies} size="small" pagination={false}></Table>
           </Col>
         </Row>
         <AddCrypto></AddCrypto>

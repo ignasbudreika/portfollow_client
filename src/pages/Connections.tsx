@@ -31,6 +31,24 @@ const Connections : React.FC = () => {
           setEthereumWalletConnection({address: res.data.ethereum.address, updatedAt: res.data.ethereum.updated_at});
         });
       };
+
+      const fetchSpectrocoinConnection = () => {
+        ConnectionsService.fetchSpectrocoinConnection().then((res) => {
+            if (res.status === 401) {
+              navigate("/")
+              return;
+            }
+        });
+      }
+
+      const fetchEthereumWalletConnection = () => {
+        ConnectionsService.fetchEthereumWalletConnection().then((res) => {
+            if (res.status === 401) {
+              navigate("/")
+              return;
+            }
+        });
+      }
   
       useEffect(() => {
         if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
@@ -61,7 +79,7 @@ const Connections : React.FC = () => {
                             <Descriptions.Item label="Updated at" span={3}>{spectrocoinConnection.updatedAt}</Descriptions.Item>
                         </Descriptions>
                         <br></br>
-                        <Button block type="primary" icon={<SyncOutlined />} ></Button>
+                        <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchSpectrocoinConnection()}></Button>
                         </>
                         :
                         <>
@@ -91,7 +109,7 @@ const Connections : React.FC = () => {
                                 <Descriptions.Item label="Updated at" span={3}>{ethereumWalletConnection.updatedAt}</Descriptions.Item>
                             </Descriptions>
                             <br></br>
-                            <Button block type="primary" icon={<SyncOutlined />} ></Button>
+                            <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchEthereumWalletConnection()}></Button>
                         </>
                         :
                         <>

@@ -69,29 +69,21 @@ export const DoughnutChart: React.FC = () => {
         {
           label: 'invested amount',
           data: distribution,
-          backgroundColor: '#F5F5F5',
-          borderColor: '#121F2B',
-          borderWidth: 2
+          backgroundColor: ["#888a88","#989898","#a8a6a7","#bdbabb","#c7c4c5","#ccc9ca","#d1cdce","#dedddd","#eaecec","#dfe0e0"],
         },
       ],
     };
 
     // @ts-ignore
     return <div>
-      <Breadcrumb>
-        <Breadcrumb.Item>ALL INVESTMENTS</Breadcrumb.Item>
-        {selectedInvestmentType && <Breadcrumb.Item>{selectedInvestmentType}</Breadcrumb.Item>}
-      </Breadcrumb>
-      <div>
-        <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-          { maintainAspectRatio: false, radius: 249, plugins: 
-            { legend:  
-              { 
-                display: false,
-              }
+      <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
+        { maintainAspectRatio: false, radius: 90, aspectRatio: 1, plugins: 
+          { legend:  
+            { 
+              display: false,
             }
           }
-        } />
-      </div>
+        }
+      } />
     </div>
 }
