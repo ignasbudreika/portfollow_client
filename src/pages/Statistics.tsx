@@ -6,10 +6,12 @@ import { LineChart } from '../components/LineChart';
 import { Card, Col, Row, Space, Statistic } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
+import EmptyPortfolio from '../components/EmptyPortfolio';
 
 const Statistics: React.FC = () => {
     const navigate = useNavigate();
 
+    const [empty, setEmpty] = useState<boolean>(true);
     const [totalValue, setTotalValue] = useState<number>(0);
     const [totalValueChange, setTotalValueChange] = useState<number>(0);
     const [change, setChange] = useState<number>(0);
@@ -20,6 +22,7 @@ const Statistics: React.FC = () => {
           navigate("/")
           return;
         }
+        setEmpty(res.data.is_empty);
         setTotalValue(res.data.total_value);
         setChange(res.data.change);
       });
@@ -35,52 +38,59 @@ const Statistics: React.FC = () => {
     }, []);
 
     return (
-      <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
-        <Row justify="center">
-          <Col span={4}>
+      <>
+      {
+        empty ?
+        <EmptyPortfolio/>
+        :
+        <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+          <Row justify="center">
+            <Col span={4}>
+              <Card>
+                <Statistic
+                  title="Total value"
+                  value={totalValue}
+                  precision={2}
+                  suffix="$"
+                />
+              </Card>
+              <Card>
+                <Statistic
+                  title="Total value change"
+                  value={change}
+                  precision={2}
+                  valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
+                  prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                  suffix="$"
+                />
+              </Card>
+              <Card>
+                <Statistic
+                  title="Trend"
+                  value={change}
+                  precision={2}
+                  valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
+                  prefix={change >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                  suffix="%"
+                />
+              </Card>
+            </Col>
+            <Col span={7}>
             <Card>
-              <Statistic
-                title="Total value"
-                value={totalValue}
-                precision={2}
-                suffix="$"
-              />
+              <DoughnutChart />
             </Card>
-            <Card>
-              <Statistic
-                title="Total value change"
-                value={change}
-                precision={2}
-                valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
-                prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                suffix="$"
-              />
-            </Card>
-            <Card>
-              <Statistic
-                title="Trend"
-                value={change}
-                precision={2}
-                valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
-                prefix={change >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                suffix="%"
-              />
-            </Card>
-          </Col>
-          <Col span={7}>
-          <Card>
-            <DoughnutChart />
-          </Card>
-          </Col>
-        </Row>
-        <Row justify="center">
-          <Col span={11}>
-            <Card>
-              <LineChart />
-            </Card>
-          </Col>
-        </Row>
-      </Space>
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={11}>
+              <Card>
+                <LineChart />
+              </Card>
+            </Col>
+          </Row>
+        </Space>
+      }
+    </>
     );
 }
 

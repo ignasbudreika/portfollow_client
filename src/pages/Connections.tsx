@@ -68,7 +68,7 @@ const Connections : React.FC = () => {
                     <p>
                         SpectroCoin is an all-in-one solution for cryptocurrencies. 
                         It has been serving the needs of blockchain enthusiasts ever since the dawn of cryptocurrencies. 
-                        Our services include a wide selection of cryptocurrency solutions, ranging from exchange to e-wallets.
+                        Their services include a wide selection of cryptocurrency solutions, ranging from exchange to e-wallets.
                     </p>
                     {
                         spectrocoinConnected ? 

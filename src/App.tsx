@@ -3,7 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LandingPage } from './pages/LandingPage';
 import { selectAuth, useAppSelector } from './app/store';
 import { Layout } from 'antd';
-import { Content, Footer, Header } from 'antd/es/layout/layout';
+import { Content, Header } from 'antd/es/layout/layout';
 import Statistics from './pages/Statistics';
 import Stocks from './pages/Stocks';
 import Cryptocurrencies from './pages/Cryptocurrencies';
