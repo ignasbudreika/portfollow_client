@@ -24,7 +24,7 @@ const Statistics: React.FC = () => {
         }
         setEmpty(res.data.is_empty);
         setTotalValue(res.data.total_value);
-        setChange(res.data.change);
+        setChange(res.data.trend);
       });
     };
 

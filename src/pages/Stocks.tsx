@@ -8,25 +8,40 @@ import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
 import { PlusOutlined } from '@ant-design/icons';
 import {useAtom} from 'jotai'
-import { showAddStockModalAtom } from '../atoms';
+import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
+import AddTx from '../components/AddTx';
 
 const Stocks: React.FC = () => {
     const navigate = useNavigate();
 
     const [, setShowModal] = useAtom(showAddStockModalAtom)
+    const [, setShowTxModal] = useAtom(showAddTxModalAtom)
+    const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
 
-    const [stocks, setStocks] = useState<DataType[]>([]);
+    const [stocks, setStocks] = useState<StockInvestment[]>([]);
 
-    interface DataType {
+    const addTx = (id: string) => {
+      setSelectedInvestmentId(id);
+      setShowTxModal(true);
+    }
+
+    interface StockInvestment {
         id: string
         ticker: string;
         quantity: number;
         price: number;
         value: number;
+        transactions: Transaction[];
+      }
+
+    interface Transaction {
+        id: string
+        quantity: number;
+        type: string;
         date: Date;
       }
       
-      const columns: ColumnsType<DataType> = [
+      const columns: ColumnsType<StockInvestment> = [
         {
           title: 'Ticker',
           dataIndex: 'ticker',
@@ -49,10 +64,12 @@ const Stocks: React.FC = () => {
             key: 'value',
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-          },
+          title: 'Action',
+          key: 'tx',
+          render: (_, record) => (
+            <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(record.id)}></Button>
+          ),
+        },
       ];
     
     const getData = () => {
@@ -62,7 +79,7 @@ const Stocks: React.FC = () => {
             return;
           }
           setStocks(res.data.map((stock: any) => { 
-              return {id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, date: stock.date} 
+              return {id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions} 
           }));
         });
     };
@@ -85,10 +102,39 @@ const Stocks: React.FC = () => {
         </Row>
         <Row justify="center">
           <Col span={10}>
-            <Table columns={columns} dataSource={stocks} size="small" pagination={false}></Table>
+            <Table columns={columns} dataSource={stocks} size="small" pagination={false} 
+            expandable={{
+              expandedRowRender: (record) => {
+                const transactions: ColumnsType<Transaction> = [
+                  {
+                    title: 'Quantity',
+                    dataIndex: 'quantity',
+                    key: 'quantity',
+                  },
+                  {
+                    title: 'Type',
+                    dataIndex: 'type',
+                    key: 'type',
+                  },
+                  {
+                    title: 'Date',
+                    dataIndex: 'date',
+                    key: 'date',
+                  },
+                ];
+                return (
+                  <Table<Transaction>
+                    columns={transactions}
+                    dataSource={record.transactions}
+                    pagination={false}
+                  />
+                );
+              },
+            }}></Table>
           </Col>
         </Row>
         <AddStock></AddStock>
+        <AddTx/>
       </Space>
     );
 }

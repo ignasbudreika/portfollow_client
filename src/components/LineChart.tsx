@@ -39,9 +39,9 @@ export const LineChart: React.FC = () => {
         {
           label: "portfolio value",
           data: values,
-          tension: 0.5,
+          tension: 0.3,
           borderColor: "black",
-          pointRadius: 3,
+          pointRadius: 5,
           steppedLine: true
         },
       ],
@@ -53,20 +53,20 @@ export const LineChart: React.FC = () => {
         <Line data={data} options={
           { 
             maintainAspectRatio: false, 
-              plugins: 
-              { 
-                legend: { 
-                  display: false 
-                },
+            plugins: 
+            { 
+              legend: { 
+                display: false 
               },
-              scales:{
-                x: {
-                  display: false
-                },
-                y: {
-                  beginAtZero: false
+            },
+            scales:{
+              x: {
+                display: false
+              },
+              y: {
+                beginAtZero: false
               }
-            }, 
+            },
           }
         }/>
       </div>

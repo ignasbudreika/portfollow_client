@@ -5,26 +5,42 @@ import { Button, Col, Row, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import CryptocurrenciesService from '../services/CryptocurrenciesService';
 import { useAtom } from 'jotai';
-import { showAddCryptoModalAtom } from '../atoms';
+import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
 import { PlusOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCrypto';
+import AddTx from '../components/AddTx';
 
 const Cryptocurrencies: React.FC = () => {
     const navigate = useNavigate();
 
     const [, setShowModal] = useAtom(showAddCryptoModalAtom)
-    const [cryptocurrencies, setCryptocurrencies] = useState<DataType[]>([]);
+    const [, setShowTxModal] = useAtom(showAddTxModalAtom)
+    const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
 
-    interface DataType {
+    const [cryptocurrencies, setCryptocurrencies] = useState<CryptoInvestment[]>([]);
+
+    const addTx = (id: string) => {
+      setSelectedInvestmentId(id);
+      setShowTxModal(true);
+    }
+
+    interface CryptoInvestment {
         id: string
         symbol: string;
         quantity: number;
         price: number;
         value: number;
-        date: Date;
-      }
+        transactions: Transaction[];
+    }
+
+    interface Transaction {
+      id: string
+      quantity: number;
+      type: string;
+      date: Date;
+    }
       
-      const columns: ColumnsType<DataType> = [
+      const columns: ColumnsType<CryptoInvestment> = [
         {
           title: 'Symbol',
           dataIndex: 'symbol',
@@ -47,10 +63,12 @@ const Cryptocurrencies: React.FC = () => {
             key: 'value',
         },
         {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-          },
+          title: 'Action',
+          key: 'tx',
+          render: (_, record) => (
+            <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(record.id)}></Button>
+          ),
+        },
       ];
     
     const getData = () => {
@@ -60,7 +78,7 @@ const Cryptocurrencies: React.FC = () => {
             return;
           }
           setCryptocurrencies(res.data.map((crypto: any) => { 
-              return {id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, date: crypto.date} 
+              return {id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, transactions: crypto.transactions} 
           }));
         });
     };
@@ -83,10 +101,39 @@ const Cryptocurrencies: React.FC = () => {
         </Row>
         <Row justify="center">
           <Col span={10}>
-            <Table columns={columns} dataSource={cryptocurrencies} size="small" pagination={false}></Table>
+            <Table columns={columns} dataSource={cryptocurrencies} size="small" pagination={false}
+              expandable={{
+                expandedRowRender: (record) => {
+                  const transactions: ColumnsType<Transaction> = [
+                    {
+                      title: 'Quantity',
+                      dataIndex: 'quantity',
+                      key: 'quantity',
+                    },
+                    {
+                      title: 'Type',
+                      dataIndex: 'type',
+                      key: 'type',
+                    },
+                    {
+                      title: 'Date',
+                      dataIndex: 'date',
+                      key: 'date',
+                    },
+                  ];
+                  return (
+                    <Table<Transaction>
+                      columns={transactions}
+                      dataSource={record.transactions}
+                      pagination={false}
+                    />
+                  );
+                },
+              }}></Table>
           </Col>
         </Row>
-        <AddCrypto></AddCrypto>
+        <AddCrypto/>
+        <AddTx/>
       </Space>
     );
 }
