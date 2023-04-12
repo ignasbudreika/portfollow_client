@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Row, Space, Table } from 'antd';
+import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import CryptocurrenciesService from '../services/CryptocurrenciesService';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCrypto';
 import AddTx from '../components/AddTx';
+import TransactionService from '../services/TransactionService';
+import InvestmentService from '../services/InvestmentService';
 
 const Cryptocurrencies: React.FC = () => {
     const navigate = useNavigate();
@@ -22,6 +24,28 @@ const Cryptocurrencies: React.FC = () => {
     const addTx = (id: string) => {
       setSelectedInvestmentId(id);
       setShowTxModal(true);
+    }
+
+    const removeInvestment = (id: string) => {
+      InvestmentService.deleteInvestment(id).then((res) => {
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+
+        getData();
+      })
+    }
+
+    const removeTx = (id: string) => {
+      TransactionService.deleteTransaction(id).then((res) => {
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+
+        getData();
+      })
     }
 
     interface CryptoInvestment {
@@ -65,8 +89,19 @@ const Cryptocurrencies: React.FC = () => {
         {
           title: 'Action',
           key: 'tx',
-          render: (_, record) => (
-            <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(record.id)}></Button>
+          render: (_, investment) => (
+            <Space>
+              <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+              <Popconfirm
+                title="Delete the investment"
+                description="Are you sure to delete this investment? This affects all of the portfolio statistics"
+                onConfirm={() => removeInvestment(investment.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+              </Popconfirm>
+            </Space>
           ),
         },
       ];
@@ -120,6 +155,23 @@ const Cryptocurrencies: React.FC = () => {
                       dataIndex: 'date',
                       key: 'date',
                     },
+                    {
+                      title: '',
+                      key: 'action',
+                      render: (_, tx) => (
+                        <Space>
+                          <Popconfirm
+                            title="Delete the transaction"
+                            description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
+                            onConfirm={() => removeTx(tx.id)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                          </Popconfirm>
+                        </Space>
+                      ),
+                    },
                   ];
                   return (
                     <Table<Transaction>
@@ -132,8 +184,8 @@ const Cryptocurrencies: React.FC = () => {
               }}></Table>
           </Col>
         </Row>
-        <AddCrypto/>
-        <AddTx/>
+        <AddCrypto onDone={getData}/>
+        <AddTx onDone={getData}/>
       </Space>
     );
 }

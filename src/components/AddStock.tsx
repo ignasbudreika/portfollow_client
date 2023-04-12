@@ -6,16 +6,21 @@ import { showAddStockModalAtom } from '../atoms';
 import StocksService from "../services/StocksService";
 
 
-const AddStock: React.FC = () => {
+interface Props {
+    onDone: () => void
+}
+
+const AddStock = (props: Props) => {
     const [ticker, setTicker] = useState<string>('')
     const [quantity, setQuantity] = useState<number>(0)
     const [date, setDate] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddStockModalAtom)
     const [confirmLoading, setConfirmLoading] = useState(false);
   
-    const handleOk = () => {
-        StocksService.createStock({ticker: ticker, quantity: quantity, date: date})
+    const handleOk = async () => {
         setConfirmLoading(true);
+        await StocksService.createStock({ticker: ticker, quantity: quantity, date: date})
+        props.onDone();
         setShowModal(false);
         setConfirmLoading(false);
     };

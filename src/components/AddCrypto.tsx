@@ -5,16 +5,21 @@ import {useAtom} from 'jotai'
 import { showAddCryptoModalAtom } from '../atoms';
 import CryptocurrenciesService from "../services/CryptocurrenciesService";
 
-const AddCrypto: React.FC = () => {
+interface Props {
+    onDone: () => void
+}
+
+const AddCrypto = (props: Props) => {
     const [symbol, setSymbol] = useState<string>('')
     const [quantity, setQuantity] = useState<number>(0)
     const [date, setDate] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddCryptoModalAtom)
     const [confirmLoading, setConfirmLoading] = useState(false);
 
-    const handleOk = () => {
-        CryptocurrenciesService.createCrypto({symbol: symbol, quantity: quantity, date: date})
+    const handleOk = async () => {
+        await CryptocurrenciesService.createCrypto({symbol: symbol, quantity: quantity, date: date})
         setConfirmLoading(true);
+        props.onDone();
         setShowModal(false);
         setConfirmLoading(false);
     };

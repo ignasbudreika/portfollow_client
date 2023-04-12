@@ -5,7 +5,11 @@ import {useAtom} from 'jotai'
 import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
 import InvestmentService from "../services/InvestmentService";
 
-const AddTx: React.FC = () => {
+interface Props {
+  onDone: () => void
+}
+
+const AddTx = (props: Props) => {
     const [id, setId] = useAtom(selectedInvestmentIdAtom)
     const [quantity, setQuantity] = useState<number>(0)
     const [type, setType] = useState<string>('BUY')
@@ -13,9 +17,10 @@ const AddTx: React.FC = () => {
     const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
     const [confirmLoading, setConfirmLoading] = useState(false);
 
-    const handleOk = () => {
-        InvestmentService.createTx(id, {quantity: quantity, type: type, date: date})
+    const handleOk = async () => {
+        await InvestmentService.createTx(id, {quantity: quantity, type: type, date: date})
         setConfirmLoading(true);
+        props.onDone();
         setShowModal(false);
         setConfirmLoading(false);
     };

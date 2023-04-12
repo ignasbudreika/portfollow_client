@@ -2,14 +2,16 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Row, Space, Table } from 'antd';
+import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
-import { PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import {useAtom} from 'jotai'
 import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
 import AddTx from '../components/AddTx';
+import InvestmentService from '../services/InvestmentService';
+import TransactionService from '../services/TransactionService';
 
 const Stocks: React.FC = () => {
     const navigate = useNavigate();
@@ -23,6 +25,28 @@ const Stocks: React.FC = () => {
     const addTx = (id: string) => {
       setSelectedInvestmentId(id);
       setShowTxModal(true);
+    }
+
+    const removeInvestment = (id: string) => {
+      InvestmentService.deleteInvestment(id).then((res) => {
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+
+        getData();
+      })
+    }
+
+    const removeTx = (id: string) => {
+      TransactionService.deleteTransaction(id).then((res) => {
+        if (res.status === 401) {
+          navigate("/")
+          return;
+        }
+
+        getData();
+      })
     }
 
     interface StockInvestment {
@@ -64,10 +88,21 @@ const Stocks: React.FC = () => {
             key: 'value',
         },
         {
-          title: 'Action',
-          key: 'tx',
-          render: (_, record) => (
-            <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(record.id)}></Button>
+          title: '',
+          key: 'action',
+          render: (_, investment) => (
+            <Space>
+              <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+              <Popconfirm
+                title="Delete the investment"
+                description="Are you sure to delete this investment? This affects all of the portfolio statistics"
+                onConfirm={() => removeInvestment(investment.id)}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+              </Popconfirm>
+            </Space>
           ),
         },
       ];
@@ -104,7 +139,7 @@ const Stocks: React.FC = () => {
           <Col span={10}>
             <Table columns={columns} dataSource={stocks} size="small" pagination={false} 
             expandable={{
-              expandedRowRender: (record) => {
+              expandedRowRender: (investment) => {
                 const transactions: ColumnsType<Transaction> = [
                   {
                     title: 'Quantity',
@@ -121,11 +156,28 @@ const Stocks: React.FC = () => {
                     dataIndex: 'date',
                     key: 'date',
                   },
+                  {
+                    title: '',
+                    key: 'action',
+                    render: (_, tx) => (
+                      <Space>
+                        <Popconfirm
+                          title="Delete the transaction"
+                          description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
+                          onConfirm={() => removeTx(tx.id)}
+                          okText="Yes"
+                          cancelText="No"
+                        >
+                          <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                        </Popconfirm>
+                      </Space>
+                    ),
+                  },
                 ];
                 return (
                   <Table<Transaction>
                     columns={transactions}
-                    dataSource={record.transactions}
+                    dataSource={investment.transactions}
                     pagination={false}
                   />
                 );
@@ -133,8 +185,8 @@ const Stocks: React.FC = () => {
             }}></Table>
           </Col>
         </Row>
-        <AddStock></AddStock>
-        <AddTx/>
+        <AddStock onDone={getData}></AddStock>
+        <AddTx onDone={getData}/>
       </Space>
     );
 }
