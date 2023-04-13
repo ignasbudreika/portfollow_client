@@ -55,7 +55,7 @@ const AddCrypto = (props: Props) => {
                     <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
                 </Form.Item>
                 <Form.Item required={true}>
-                    <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />
+                    <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
                 </Form.Item>
             </Form>
         </Modal>
