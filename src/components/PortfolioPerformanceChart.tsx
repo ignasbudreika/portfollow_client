@@ -8,20 +8,29 @@ import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 
-export const PortfolioValueChart: React.FC = () => {
+export const PortfolioPerformanceChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const navigate = useNavigate();
 
   const [values, setValues] = useState<any[]>([]);
+  const [comparison, setComparison] = useState<any[]>([]);
 
   const getData = (historyType: string) => {
-    PortfolioService.getPortfolioValueHistory(historyType).then((res) => {
+    PortfolioService.getPortfolioPerformanceHistory(historyType).then((res) => {
       if (res.status === 401) {
         navigate("/")
         return;
       }
       setValues(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
+    });
+
+    PortfolioService.getPortfolioPerformanceComparisonHistory(historyType).then((res) => {
+      if (res.status === 401) {
+        navigate("/")
+        return;
+      }
+      setComparison(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
     });
   }
 
@@ -37,12 +46,20 @@ export const PortfolioValueChart: React.FC = () => {
   const data = {
     datasets: [
       {
-        label: "portfolio value",
+        label: "Portfolio performance",
         data: values,
         tension: 0.3,
         borderColor: "black",
         pointRadius: 2,
-        steppedLine: true
+        steppedLine: true,
+      },
+      {
+        label: "SPY performance",
+        data: comparison,
+        tension: 0.3,
+        borderColor: "#70a37f",
+        pointRadius: 2,
+        steppedLine: true,
       },
     ],
   };
