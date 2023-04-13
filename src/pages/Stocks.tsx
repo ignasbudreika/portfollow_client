@@ -142,7 +142,7 @@ const Stocks: React.FC = () => {
         </Col>
       </Row>
       <Row justify="center">
-        <Col xl={12} xs={22} sm={22}>
+        <Col xl={16} xs={22} sm={22}>
           <Table columns={columns} dataSource={stocks} size="small" pagination={false}
             expandable={{
               expandedRowRender: (investment) => {

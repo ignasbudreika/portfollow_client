@@ -36,6 +36,8 @@ a:active {
 
 .leftPartFromMainLogo {
     flex: 1;
+    display: flex;
+    justify-content: left;
 }
 
 /* todo fix color when unhovering */

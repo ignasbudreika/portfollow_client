@@ -80,7 +80,9 @@ export const TopNavbar: React.FC = () => {
           shape='round'
           onClick={() => logoutUser()}
         >
-          Logout
+          {
+            useDrawer ? '' : 'Logout'
+          }
         </Button>
         :
         <Button
@@ -90,7 +92,9 @@ export const TopNavbar: React.FC = () => {
           shape='round'
           onClick={() => getAuthorizationCode()}
         >
-          Sign in with Google
+          {
+            useDrawer ? '' : 'Sign in with Google'
+          }
         </Button>
       }
     </span>
