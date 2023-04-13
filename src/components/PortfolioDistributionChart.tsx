@@ -6,6 +6,7 @@ import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
 import { logout, useAppDispatch } from '../app/store';
+import { Empty } from 'antd';
 
 export const PortfolioDistributionChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip);
@@ -78,16 +79,20 @@ export const PortfolioDistributionChart: React.FC = () => {
 
   // @ts-ignore
   return <div>
-    <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
-      {
-        maintainAspectRatio: false, radius: 90, aspectRatio: 1, plugins:
-        {
-          legend:
+    {
+      distribution.length === 0 ?
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
+        <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
           {
-            display: false,
+            maintainAspectRatio: false, radius: 90, aspectRatio: 1, plugins:
+            {
+              legend:
+              {
+                display: false,
+              }
+            }
           }
-        }
-      }
-    } />
+        } />
+    }
   </div>
 }

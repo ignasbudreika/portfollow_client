@@ -51,7 +51,7 @@ const Statistics: React.FC = () => {
           :
           <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
             <Row justify="center">
-              <Col xl={4} xs={16} sm={10}>
+              <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
                   <Statistic
                     title="Total value"
@@ -60,16 +60,8 @@ const Statistics: React.FC = () => {
                     suffix="$"
                   />
                 </Card>
-                <Card>
-                  <Statistic
-                    title="Total value change"
-                    value={totalValueChange}
-                    precision={2}
-                    valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
-                    prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                    suffix="$"
-                  />
-                </Card>
+              </Col>
+              <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
                   <Statistic
                     title="Trend"
@@ -81,8 +73,22 @@ const Statistics: React.FC = () => {
                   />
                 </Card>
               </Col>
-              <Col xl={7} xs={16} sm={12}>
+              <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
+                  <Statistic
+                    title="Total value change"
+                    value={totalValueChange}
+                    precision={2}
+                    valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
+                    prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                    suffix="$"
+                  />
+                </Card>
+              </Col>
+            </Row>
+            <Row justify="center">
+              <Col xl={8} xs={16} sm={12}>
+                <Card title={'Portfolio distribution'}>
                   <PortfolioDistributionChart />
                 </Card>
               </Col>
@@ -108,7 +114,7 @@ const Statistics: React.FC = () => {
                 </Card>
               </Col>
             </Row>
-          </Space>
+          </Space >
       }
     </>
   );
