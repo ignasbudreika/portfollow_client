@@ -11,9 +11,11 @@ import AddCrypto from '../components/AddCrypto';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
 import InvestmentService from '../services/InvestmentService';
+import { logout, useAppDispatch } from '../app/store';
 
 const Cryptocurrencies: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [, setShowModal] = useAtom(showAddCryptoModalAtom)
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
@@ -28,23 +30,23 @@ const Cryptocurrencies: React.FC = () => {
 
   const removeInvestment = (id: string) => {
     InvestmentService.deleteInvestment(id).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
-
       getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     })
   }
 
   const removeTx = (id: string) => {
     TransactionService.deleteTransaction(id).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
-
       getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     })
   }
 
@@ -108,13 +110,14 @@ const Cryptocurrencies: React.FC = () => {
 
   const getData = () => {
     CryptocurrenciesService.getCrypto().then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
       setCryptocurrencies(res.data.map((crypto: any) => {
         return { id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, transactions: crypto.transactions }
       }));
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     });
   };
 

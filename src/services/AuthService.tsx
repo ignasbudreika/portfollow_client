@@ -1,5 +1,4 @@
 import axios from 'axios';
-import api from '../api/AuthApi'
 
 class AuthService {
   retrieveAccessTokenFromAuthenticationCode(code: string) {

@@ -7,30 +7,34 @@ import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
+import { logout, useAppDispatch } from '../app/store';
 
 export const PortfolioPerformanceChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [values, setValues] = useState<any[]>([]);
   const [comparison, setComparison] = useState<any[]>([]);
 
   const getData = (historyType: string) => {
     PortfolioService.getPortfolioPerformanceHistory(historyType).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
       setValues(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     });
 
     PortfolioService.getPortfolioPerformanceComparisonHistory(historyType).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
       setComparison(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     });
   }
 

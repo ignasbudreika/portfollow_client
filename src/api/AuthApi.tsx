@@ -25,13 +25,6 @@ instance.interceptors.response.use(
     return res;
   },
   async (err: any) => {
-
-    if (err.response) {
-      if (err.response.status === 401) {
-        localStorage.removeItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
-      }
-    }
-
     return Promise.reject(err);
   }
 );

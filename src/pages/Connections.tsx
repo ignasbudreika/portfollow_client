@@ -7,9 +7,11 @@ import { showAddEthereumWalletConnectionModalAtom, showAddSpectrocoinConnectionM
 import AddSpectrocoinConnection from "../components/AddSpectrocoinConnection";
 import AddEthereumWalletConnection from '../components/AddEthereumWalletConnection';
 import ConnectionsService from "../services/ConnectionsService";
+import { logout, useAppDispatch } from "../app/store";
 
 const Connections: React.FC = () => {
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
 
     const [spectrocoinConnected, setSpectrocoinConnected] = useState<boolean>(false);
     const [spectrocoinConnection, setSpectrocoinConnection] = useState<any>();
@@ -21,22 +23,23 @@ const Connections: React.FC = () => {
 
     const getData = () => {
         ConnectionsService.getConnections().then((res) => {
-            if (res.status === 401) {
-                navigate("/")
-                return;
-            }
             setSpectrocoinConnected(res.data.spectrocoin.status === 'ACTIVE');
             setSpectrocoinConnection({ clientId: res.data.spectrocoin.client_id, updatedAt: res.data.spectrocoin.updated_at });
             setEthereumWalletConnected(res.data.ethereum.status === 'ACTIVE');
             setEthereumWalletConnection({ address: res.data.ethereum.address, updatedAt: res.data.ethereum.updated_at });
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
         });
     };
 
     const fetchSpectrocoinConnection = () => {
-        ConnectionsService.fetchSpectrocoinConnection().then((res) => {
-            if (res.status === 401) {
-                navigate("/")
-                return;
+        ConnectionsService.fetchSpectrocoinConnection().catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
             }
         });
     }

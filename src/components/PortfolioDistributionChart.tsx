@@ -5,11 +5,13 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
+import { logout, useAppDispatch } from '../app/store';
 
 export const PortfolioDistributionChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip);
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const chartRef = useRef(null);
 
   const [categories, setCategories] = useState<any[]>([]);
@@ -30,22 +32,24 @@ export const PortfolioDistributionChart: React.FC = () => {
   const getData = (investmentType: string) => {
     if (investmentType.length == 0) {
       PortfolioService.getPortfolioDistribution().then((res) => {
-        if (res.status === 401) {
-          navigate("/")
-          return;
-        }
         setDistribution(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
+      }).catch((err) => {
+        if (err.response.status === 401) {
+          dispatch(logout());
+          navigate("/");
+        }
       });
     } else if (selectedInvestmentType.length == 0) {
       PortfolioService.getPortfolioDistributionByType(investmentType).then((res) => {
-        if (res.status === 401) {
-          navigate("/")
-          return;
-        }
         setSelectedInvestmentType(investmentType);
         setDistribution(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
+      }).catch((err) => {
+        if (err.response.status === 401) {
+          dispatch(logout());
+          navigate("/");
+        }
       });
     } else {
       onReturn();

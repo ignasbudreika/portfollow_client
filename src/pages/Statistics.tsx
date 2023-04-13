@@ -9,9 +9,11 @@ import EmptyPortfolio from '../components/EmptyPortfolio';
 import { PortfolioDistributionChart } from '../components/PortfolioDistributionChart';
 import { PortfolioProfitLossChart } from '../components/PortfolioProfitLossChart';
 import { PortfolioPerformanceChart } from '../components/PortfolioPerformanceChart';
+import { logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
 
 const Statistics: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch()
 
   const [empty, setEmpty] = useState<boolean>(true);
   const [totalValue, setTotalValue] = useState<number>(0);
@@ -20,14 +22,15 @@ const Statistics: React.FC = () => {
 
   const getData = () => {
     PortfolioService.getPortfolio().then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
       setEmpty(res.data.is_empty);
       setTotalValue(res.data.total_value);
       setTotalValueChange(res.data.total_change);
       setTrend(res.data.trend);
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     });
   };
 

@@ -61,7 +61,7 @@ export const TopNavbar: React.FC = () => {
   return <div className='topNavigationBar'>
     <div className='leftPartFromMainLogo'>
       {
-        useDrawer ?
+        useDrawer && auth.accessToken ?
           <BarsOutlined onClick={showDrawer} /> :
           <></>
       }

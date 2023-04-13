@@ -12,9 +12,11 @@ import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } f
 import AddTx from '../components/AddTx';
 import InvestmentService from '../services/InvestmentService';
 import TransactionService from '../services/TransactionService';
+import { logout, useAppDispatch } from '../app/store';
 
 const Stocks: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [, setShowModal] = useAtom(showAddStockModalAtom)
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
@@ -29,23 +31,23 @@ const Stocks: React.FC = () => {
 
   const removeInvestment = (id: string) => {
     InvestmentService.deleteInvestment(id).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
-
       getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     })
   }
 
   const removeTx = (id: string) => {
     TransactionService.deleteTransaction(id).then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
-
       getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     })
   }
 
@@ -109,13 +111,14 @@ const Stocks: React.FC = () => {
 
   const getData = () => {
     StocksService.getStocks().then((res) => {
-      if (res.status === 401) {
-        navigate("/")
-        return;
-      }
       setStocks(res.data.map((stock: any) => {
         return { id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions }
       }));
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
     });
   };
 
