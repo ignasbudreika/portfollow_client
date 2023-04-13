@@ -1,7 +1,7 @@
 import { DatePicker, DatePickerProps, Form, Input, Modal } from "antd";
 import { useState } from "react";
 
-import {useAtom} from 'jotai'
+import { useAtom } from 'jotai'
 import { showAddCryptoModalAtom } from '../atoms';
 import CryptocurrenciesService from "../services/CryptocurrenciesService";
 
@@ -17,7 +17,7 @@ const AddCrypto = (props: Props) => {
     const [confirmLoading, setConfirmLoading] = useState(false);
 
     const handleOk = async () => {
-        await CryptocurrenciesService.createCrypto({symbol: symbol, quantity: quantity, date: date})
+        await CryptocurrenciesService.createCrypto({ symbol: symbol, quantity: quantity, date: date })
         setConfirmLoading(true);
         props.onDone();
         setShowModal(false);
@@ -37,27 +37,27 @@ const AddCrypto = (props: Props) => {
 
     return (
         <Modal
-          title="Create cryptocurrency investment"
-          open={showModal}
-          onOk={handleOk}
-          centered 
-          confirmLoading={confirmLoading}
-          cancelButtonProps={{hidden: true}}
-          okText={'Create'}
-          onCancel={handleCancel}
+            title="Create cryptocurrency investment"
+            open={showModal}
+            onOk={handleOk}
+            centered
+            confirmLoading={confirmLoading}
+            cancelButtonProps={{ hidden: true }}
+            okText={'Create'}
+            onCancel={handleCancel}
         >
-          <p>Add your new cryptocurrency investment that will instantly alter your portfolio history</p>
-          <Form>
-              <Form.Item required={true}>
-                  <Input value={symbol} onInput={e => setSymbol((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="symbol"/>
-              </Form.Item>
-              <Form.Item required={true}>
+            <p>Add your new cryptocurrency investment that will instantly alter your portfolio history</p>
+            <Form>
+                <Form.Item required={true}>
+                    <Input value={symbol} onInput={e => setSymbol((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="symbol" />
+                </Form.Item>
+                <Form.Item required={true}>
                     <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
                 </Form.Item>
-              <Form.Item required={true}>
-                  <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />
-              </Form.Item>
-          </Form>
+                <Form.Item required={true}>
+                    <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01')} />
+                </Form.Item>
+            </Form>
         </Modal>
     );
 }

@@ -17,12 +17,12 @@ export const TopNavbar: React.FC = () => {
 
   const getAccessToken = (authorizationCode: string) => {
     AuthService.retrieveAccessTokenFromAuthenticationCode(authorizationCode)
-    .then((res) => {
-      if (res.status == 200) {
-        dispatch(login({accessToken: res.data.access_token}));
-        navigate('/dash');
-      }
-    }).catch(err => {})
+      .then((res) => {
+        if (res.status == 200) {
+          dispatch(login({ accessToken: res.data.access_token }));
+          navigate('/dash');
+        }
+      }).catch(err => { })
   }
 
   const logoutUser = () => {
@@ -37,34 +37,34 @@ export const TopNavbar: React.FC = () => {
   });
 
   return <div className='topNavigationBar'>
-      <div className='leftPartFromMainLogo'></div>
-        <div>
-          <NavLink to="/" style={{color: "#121F2B"}}>
-            PORTFOLLOW
-          </NavLink>
-        </div>
-      <span className='googleLoginButtonSpan'>
-        {auth.accessToken ?
-          <Button
-            className='googleLoginButton ant-btn'
-            icon={<LogoutOutlined className='googleIcon'/>}
-            size='small'
-            shape='round'
-            onClick={() => logoutUser()}
-          >          
-            Logout
-          </Button>
-        :
-          <Button
-            className='googleLoginButton ant-btn'
-            icon={<GoogleOutlined className='googleIcon'/>}
-            size='small'
-            shape='round'
-            onClick={() => getAuthorizationCode()}
-          >
-          Sign in with Google
-          </Button>
-        }
-      </span>
+    <div className='leftPartFromMainLogo'></div>
+    <div>
+      <NavLink to="/" style={{ color: "#121F2B" }}>
+        PORTFOLLOW
+      </NavLink>
     </div>
+    <span className='googleLoginButtonSpan'>
+      {auth.accessToken ?
+        <Button
+          className='googleLoginButton ant-btn'
+          icon={<LogoutOutlined className='googleIcon' />}
+          size='small'
+          shape='round'
+          onClick={() => logoutUser()}
+        >
+          Logout
+        </Button>
+        :
+        <Button
+          className='googleLoginButton ant-btn'
+          icon={<GoogleOutlined className='googleIcon' />}
+          size='small'
+          shape='round'
+          onClick={() => getAuthorizationCode()}
+        >
+          Sign in with Google
+        </Button>
+      }
+    </span>
+  </div>
 }

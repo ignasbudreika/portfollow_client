@@ -1,7 +1,7 @@
 import { DatePicker, DatePickerProps, Form, Input, Modal } from "antd";
 import { useState } from "react";
 
-import {useAtom} from 'jotai'
+import { useAtom } from 'jotai'
 import { showAddStockModalAtom } from '../atoms';
 import StocksService from "../services/StocksService";
 
@@ -16,10 +16,10 @@ const AddStock = (props: Props) => {
     const [date, setDate] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddStockModalAtom)
     const [confirmLoading, setConfirmLoading] = useState(false);
-  
+
     const handleOk = async () => {
         setConfirmLoading(true);
-        await StocksService.createStock({ticker: ticker, quantity: quantity, date: date})
+        await StocksService.createStock({ ticker: ticker, quantity: quantity, date: date })
         props.onDone();
         setShowModal(false);
         setConfirmLoading(false);
@@ -28,7 +28,7 @@ const AddStock = (props: Props) => {
     const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
         setDate(dateString)
     };
-  
+
     const handleCancel = () => {
         setTicker('')
         setQuantity(0)
@@ -41,16 +41,16 @@ const AddStock = (props: Props) => {
             title="Create stock investment"
             open={showModal}
             onOk={handleOk}
-            centered 
+            centered
             confirmLoading={confirmLoading}
-            cancelButtonProps={{hidden: true}}
+            cancelButtonProps={{ hidden: true }}
             okText={'Create'}
             onCancel={handleCancel}
         >
             <p>Add your new stock investment that will instantly alter your portfolio history</p>
             <Form>
                 <Form.Item required={true}>
-                    <Input value={ticker} onInput={e => setTicker((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="ticker"/>
+                    <Input value={ticker} onInput={e => setTicker((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="ticker" />
                 </Form.Item>
                 <Form.Item required={true}>
                     <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />

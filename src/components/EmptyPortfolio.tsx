@@ -2,7 +2,7 @@ import { Row, Timeline } from "antd";
 
 const EmptyPortfolio: React.FC = () => {
     return (
-        <Row justify="center" style={{height: '100%'}}>
+        <Row justify="center" style={{ height: '100%' }}>
             <Timeline
                 items={[
                     {
@@ -34,7 +34,7 @@ const EmptyPortfolio: React.FC = () => {
                         children: 'Set up your periodic investments to keep everything up to date automatically',
                     },
                 ]}
-            >    
+            >
             </Timeline>
         </Row>
     );

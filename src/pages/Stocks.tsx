@@ -7,137 +7,137 @@ import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
-import {useAtom} from 'jotai'
+import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
 import AddTx from '../components/AddTx';
 import InvestmentService from '../services/InvestmentService';
 import TransactionService from '../services/TransactionService';
 
 const Stocks: React.FC = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [, setShowModal] = useAtom(showAddStockModalAtom)
-    const [, setShowTxModal] = useAtom(showAddTxModalAtom)
-    const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
+  const [, setShowModal] = useAtom(showAddStockModalAtom)
+  const [, setShowTxModal] = useAtom(showAddTxModalAtom)
+  const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
 
-    const [stocks, setStocks] = useState<StockInvestment[]>([]);
+  const [stocks, setStocks] = useState<StockInvestment[]>([]);
 
-    const addTx = (id: string) => {
-      setSelectedInvestmentId(id);
-      setShowTxModal(true);
-    }
+  const addTx = (id: string) => {
+    setSelectedInvestmentId(id);
+    setShowTxModal(true);
+  }
 
-    const removeInvestment = (id: string) => {
-      InvestmentService.deleteInvestment(id).then((res) => {
-        if (res.status === 401) {
-          navigate("/")
-          return;
-        }
-
-        getData();
-      })
-    }
-
-    const removeTx = (id: string) => {
-      TransactionService.deleteTransaction(id).then((res) => {
-        if (res.status === 401) {
-          navigate("/")
-          return;
-        }
-
-        getData();
-      })
-    }
-
-    interface StockInvestment {
-        id: string
-        ticker: string;
-        quantity: number;
-        price: number;
-        value: number;
-        transactions: Transaction[];
-      }
-
-    interface Transaction {
-        id: string
-        quantity: number;
-        type: string;
-        date: Date;
-      }
-      
-      const columns: ColumnsType<StockInvestment> = [
-        {
-          title: 'Ticker',
-          dataIndex: 'ticker',
-          key: 'ticker',
-          render: (text) => <b>{text}</b>,
-        },
-        {
-          title: 'Quantity',
-          dataIndex: 'quantity',
-          key: 'quantity',
-        },
-        {
-          title: 'Price, $',
-          dataIndex: 'price',
-          key: 'price',
-        },
-        {
-            title: 'Value, $',
-            dataIndex: 'value',
-            key: 'value',
-        },
-        {
-          title: '',
-          key: 'action',
-          render: (_, investment) => (
-            <Space>
-              <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
-              <Popconfirm
-                title="Delete the investment"
-                description="Are you sure to delete this investment? This affects all of the portfolio statistics"
-                onConfirm={() => removeInvestment(investment.id)}
-                okText="Yes"
-                cancelText="No"
-              >
-                <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
-              </Popconfirm>
-            </Space>
-          ),
-        },
-      ];
-    
-    const getData = () => {
-        StocksService.getStocks().then((res) => {
-          if (res.status === 401) {
-            navigate("/")
-            return;
-          }
-          setStocks(res.data.map((stock: any) => { 
-              return {id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions} 
-          }));
-        });
-    };
-
-    useEffect(() => {
-      if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
-          navigate("/")
-          return;
+  const removeInvestment = (id: string) => {
+    InvestmentService.deleteInvestment(id).then((res) => {
+      if (res.status === 401) {
+        navigate("/")
+        return;
       }
 
       getData();
-    }, []);
+    })
+  }
 
-    return (
-      <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
-        <Row justify="end">
-          <Col span={8}>
-            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
-          </Col>
-        </Row>
-        <Row justify="center">
-          <Col span={10}>
-            <Table columns={columns} dataSource={stocks} size="small" pagination={false} 
+  const removeTx = (id: string) => {
+    TransactionService.deleteTransaction(id).then((res) => {
+      if (res.status === 401) {
+        navigate("/")
+        return;
+      }
+
+      getData();
+    })
+  }
+
+  interface StockInvestment {
+    id: string
+    ticker: string;
+    quantity: number;
+    price: number;
+    value: number;
+    transactions: Transaction[];
+  }
+
+  interface Transaction {
+    id: string
+    quantity: number;
+    type: string;
+    date: Date;
+  }
+
+  const columns: ColumnsType<StockInvestment> = [
+    {
+      title: 'Ticker',
+      dataIndex: 'ticker',
+      key: 'ticker',
+      render: (text) => <b>{text}</b>,
+    },
+    {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      key: 'quantity',
+    },
+    {
+      title: 'Price, $',
+      dataIndex: 'price',
+      key: 'price',
+    },
+    {
+      title: 'Value, $',
+      dataIndex: 'value',
+      key: 'value',
+    },
+    {
+      title: '',
+      key: 'action',
+      render: (_, investment) => (
+        <Space>
+          <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+          <Popconfirm
+            title="Delete the investment"
+            description="Are you sure to delete this investment? This affects all of the portfolio statistics"
+            onConfirm={() => removeInvestment(investment.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+          </Popconfirm>
+        </Space>
+      ),
+    },
+  ];
+
+  const getData = () => {
+    StocksService.getStocks().then((res) => {
+      if (res.status === 401) {
+        navigate("/")
+        return;
+      }
+      setStocks(res.data.map((stock: any) => {
+        return { id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions }
+      }));
+    });
+  };
+
+  useEffect(() => {
+    if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
+      navigate("/")
+      return;
+    }
+
+    getData();
+  }, []);
+
+  return (
+    <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+      <Row justify="end">
+        <Col span={8}>
+          <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col span={10}>
+          <Table columns={columns} dataSource={stocks} size="small" pagination={false}
             expandable={{
               expandedRowRender: (investment) => {
                 const transactions: ColumnsType<Transaction> = [
@@ -183,12 +183,12 @@ const Stocks: React.FC = () => {
                 );
               },
             }}></Table>
-          </Col>
-        </Row>
-        <AddStock onDone={getData}></AddStock>
-        <AddTx onDone={getData}/>
-      </Space>
-    );
+        </Col>
+      </Row>
+      <AddStock onDone={getData}></AddStock>
+      <AddTx onDone={getData} />
+    </Space>
+  );
 }
 
 export default Stocks;

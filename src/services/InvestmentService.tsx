@@ -9,5 +9,5 @@ class InvestmentService {
     return api.delete('/investment/' + id);
   }
 }
-  
+
 export default new InvestmentService();

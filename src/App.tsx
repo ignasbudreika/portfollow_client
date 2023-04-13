@@ -14,48 +14,49 @@ import Sider from 'antd/es/layout/Sider';
 function App() {
   const auth = useAppSelector(selectAuth);
 
-  return <Layout 
-    style={{minHeight:"100vh"}}
+  return <Layout
+    style={{ minHeight: "100vh" }}
   >
     <BrowserRouter >
-        <Header style={{backgroundColor: "#F5F5F5"}}>
-          <TopNavbar />
-        </Header>
-        <Layout>
-          {auth.accessToken ? 
-            <Sider 
-              style={{backgroundColor: "#F5F5F5",
+      <Header style={{ backgroundColor: "#F5F5F5" }}>
+        <TopNavbar />
+      </Header>
+      <Layout>
+        {auth.accessToken ?
+          <Sider
+            style={{
+              backgroundColor: "#F5F5F5",
               overflow: 'auto',
               height: '100vh',
               position: 'fixed',
               left: 0,
               top: 0,
               bottom: 0
-              }}
-              className="flex-column justify-center"
-            >
-              <SideNavbar></SideNavbar>
-            </Sider> 
-            : 
-            <div></div>}
-          <Content>
-              <Routes>
-                {auth.accessToken ?
-                  <>
-                    <Route path="/dash" element={<Statistics />} /> 
-                    <Route path="/stocks" element={<Stocks />} /> 
-                    <Route path="/crypto" element={<Cryptocurrencies />} /> 
-                    <Route path="/connections" element={<Connections />} /> 
-                    <Route path="*" element={<Navigate to="/dash" />} />
-                  </> :
-                  <>
-                    <Route path="/" element={<LandingPage />} /> 
-                    <Route path="*" element={<Navigate to="/" />} />
-                  </>
-                }
-              </Routes>
-          </Content>
-        </Layout>
+            }}
+            className="flex-column justify-center"
+          >
+            <SideNavbar></SideNavbar>
+          </Sider>
+          :
+          <div></div>}
+        <Content>
+          <Routes>
+            {auth.accessToken ?
+              <>
+                <Route path="/dash" element={<Statistics />} />
+                <Route path="/stocks" element={<Stocks />} />
+                <Route path="/crypto" element={<Cryptocurrencies />} />
+                <Route path="/connections" element={<Connections />} />
+                <Route path="*" element={<Navigate to="/dash" />} />
+              </> :
+              <>
+                <Route path="/" element={<LandingPage />} />
+                <Route path="*" element={<Navigate to="/" />} />
+              </>
+            }
+          </Routes>
+        </Content>
+      </Layout>
     </BrowserRouter>
   </Layout>;
 }

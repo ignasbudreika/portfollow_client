@@ -1,26 +1,29 @@
 .topNavigationBar {
     display: flex;
     justify-content: space-between;
-    align-items: center; 
+    align-items: center;
     text-align: center;
     vertical-align: middle;
     height: 64px;
     padding: 0.5rem 0.5rem;
 }
 
-a:link { 
-    text-decoration: none; 
-    color: #F5F5F5;
-}
-a:visited { 
+a:link {
     text-decoration: none;
     color: #F5F5F5;
 }
-a:hover { 
+
+a:visited {
     text-decoration: none;
     color: #F5F5F5;
 }
-a:active { 
+
+a:hover {
+    text-decoration: none;
+    color: #F5F5F5;
+}
+
+a:active {
     text-decoration: none;
     color: #F5F5F5;
 }
@@ -40,12 +43,15 @@ a:active {
     border: none;
     padding-right: 5px;
 }
+
 .googleLoginButton:hover {
     border: none;
 }
-.googleLoginButton:hover span{
+
+.googleLoginButton:hover span {
     color: #AEBED5;
-} 
+}
+
 .googleLoginButton:hover {
     color: #AEBED5;
 }

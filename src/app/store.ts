@@ -1,7 +1,7 @@
 import { configureStore, ThunkAction, Action, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { useDispatch, useSelector,TypedUseSelectorHook } from 'react-redux';
+import { useDispatch, useSelector, TypedUseSelectorHook } from 'react-redux';
 
-const initialState:Tokens = {
+const initialState: Tokens = {
   accessToken: localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY) || ""
 }
 
