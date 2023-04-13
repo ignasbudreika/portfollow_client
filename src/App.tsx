@@ -23,7 +23,7 @@ function App() {
     setShowDrawer(false);
   };
 
-  const [useDrawer, setUseDrawer] = useState(false)
+  const [useDrawer, setUseDrawer] = useState(window.innerWidth < 1250)
 
   const handleResize = () => {
     if (window.innerWidth < 1250) {
@@ -52,6 +52,10 @@ function App() {
               height={'100vh'}
               style={{
                 backgroundColor: "#F5F5F5",
+                overflow: 'auto',
+                alignContent: 'center',
+                justifyContent: 'center',
+                display: 'grid',
               }}
               placement={'left'}
               closable={false}

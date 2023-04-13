@@ -6,7 +6,7 @@ import { ColumnsType } from 'antd/es/table';
 import CryptocurrenciesService from '../services/CryptocurrenciesService';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FieldTimeOutlined, PlusOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCrypto';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
@@ -131,11 +131,14 @@ const Cryptocurrencies: React.FC = () => {
     <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
       <Row justify="end">
         <Col span={8}>
-          <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
+          <Space>
+            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
+            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => setShowModal(true)}></Button>
+          </Space>
         </Col>
       </Row>
       <Row justify="center">
-        <Col span={10}>
+        <Col xl={12} xs={22} sm={22}>
           <Table columns={columns} dataSource={cryptocurrencies} size="small" pagination={false}
             expandable={{
               expandedRowRender: (record) => {

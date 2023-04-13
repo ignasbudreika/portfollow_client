@@ -6,7 +6,7 @@ import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../ap
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/topnavbar.css';
-import { GoogleOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
+import { BarsOutlined, GoogleOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthService from '../services/AuthService';
 import { useAtom } from 'jotai';
 import { showDrawerAtom } from '../atoms';
@@ -23,7 +23,7 @@ export const TopNavbar: React.FC = () => {
     setShowDrawer(true);
   };
 
-  const [useDrawer, setUseDrawer] = useState(false)
+  const [useDrawer, setUseDrawer] = useState(window.innerWidth < 1250)
 
   const handleResize = () => {
     if (window.innerWidth < 1250) {
@@ -62,7 +62,7 @@ export const TopNavbar: React.FC = () => {
     <div className='leftPartFromMainLogo'>
       {
         useDrawer ?
-          <MenuOutlined onClick={showDrawer} /> :
+          <BarsOutlined onClick={showDrawer} /> :
           <></>
       }
     </div>

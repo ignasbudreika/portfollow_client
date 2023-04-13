@@ -48,7 +48,7 @@ const Statistics: React.FC = () => {
           :
           <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
             <Row justify="center">
-              <Col span={4}>
+              <Col xl={4} xs={16} sm={16}>
                 <Card>
                   <Statistic
                     title="Total value"
@@ -78,28 +78,28 @@ const Statistics: React.FC = () => {
                   />
                 </Card>
               </Col>
-              <Col span={7}>
+              <Col xl={7} xs={16} sm={16}>
                 <Card>
                   <PortfolioDistributionChart />
                 </Card>
               </Col>
             </Row>
             <Row justify="center">
-              <Col span={11}>
+              <Col xl={12} xs={22} sm={22}>
                 <Card title={'Total value history'}>
                   <PortfolioValueChart />
                 </Card>
               </Col>
             </Row>
             <Row justify="center">
-              <Col span={11}>
+              <Col xl={12} xs={22} sm={22}>
                 <Card title={'P/L history'}>
                   <PortfolioProfitLossChart />
                 </Card>
               </Col>
             </Row>
             <Row justify="center">
-              <Col span={11}>
+              <Col xl={12} xs={22} sm={22}>
                 <Card title={'Performance history'}>
                   <PortfolioPerformanceChart />
                 </Card>

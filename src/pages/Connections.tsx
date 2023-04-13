@@ -62,7 +62,7 @@ const Connections: React.FC = () => {
     return (
         <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
             <Row justify="center">
-                <Col style={{ width: '800px' }}>
+                <Col xl={12} xs={22} sm={22}>
                     <Card cover={<img alt="example" src="spectrocoin_logo.svg" style={{ height: '100px', padding: '20px 0px 0px 0px' }} />}>
                         <Divider orientation="left">SpectroCoin</Divider>
                         <p>
@@ -92,7 +92,7 @@ const Connections: React.FC = () => {
                 </Col>
             </Row>
             <Row justify="center">
-                <Col style={{ width: '800px' }}>
+                <Col xl={12} xs={22} sm={22}>
                     <Card cover={<img alt="example" src="ethereum_logo.svg" style={{ height: '100px', padding: '20px 0px 0px 0px' }} />}>
                         <Divider orientation="left">Ethereum wallet</Divider>
                         <p>
@@ -122,7 +122,7 @@ const Connections: React.FC = () => {
                 </Col>
             </Row>
             <Row justify="center">
-                <Col style={{ width: '800px' }}>
+                <Col xl={12} xs={22} sm={22}>
                     <Card><Skeleton /></Card>
                 </Col>
             </Row>
