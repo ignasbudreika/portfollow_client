@@ -8,7 +8,7 @@ import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 
-export const LineChart: React.FC = () => {
+export const PortfolioValueChart: React.FC = () => {
     ChartJS.register(ArcElement, Tooltip, Legend);
 
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const LineChart: React.FC = () => {
     const [values, setValues] = useState<any[]>([]);
 
     const getData = (historyType: string) => {
-      PortfolioService.getPortfolioHistory(historyType).then((res) => {
+      PortfolioService.getPortfolioValueHistory(historyType).then((res) => {
         if (res.status === 401) {
           navigate("/")
           return;
@@ -41,7 +41,7 @@ export const LineChart: React.FC = () => {
           data: values,
           tension: 0.3,
           borderColor: "black",
-          pointRadius: 5,
+          pointRadius: 1,
           steppedLine: true
         },
       ],

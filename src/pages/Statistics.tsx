@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { DoughnutChart } from '../components/DoughnutChart';
-import { LineChart } from '../components/LineChart';
+import { PortfolioValueChart } from '../components/PortfolioValueChart';
 import { Card, Col, Row, Space, Statistic } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 import EmptyPortfolio from '../components/EmptyPortfolio';
+import { PortfolioDistributionChart } from '../components/PortfolioDistributionChart';
+import { PortfolioProfitLossChart } from '../components/PortfolioProfitLossChart';
 
 const Statistics: React.FC = () => {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ const Statistics: React.FC = () => {
     const [empty, setEmpty] = useState<boolean>(true);
     const [totalValue, setTotalValue] = useState<number>(0);
     const [totalValueChange, setTotalValueChange] = useState<number>(0);
-    const [change, setChange] = useState<number>(0);
+    const [trend, setTrend] = useState<number>(0);
     
     const getData = () => {
       PortfolioService.getPortfolio().then((res) => {
@@ -24,7 +25,8 @@ const Statistics: React.FC = () => {
         }
         setEmpty(res.data.is_empty);
         setTotalValue(res.data.total_value);
-        setChange(res.data.trend);
+        setTotalValueChange(res.data.total_change);
+        setTrend(res.data.trend);
       });
     };
 
@@ -57,9 +59,9 @@ const Statistics: React.FC = () => {
               <Card>
                 <Statistic
                   title="Total value change"
-                  value={change}
+                  value={totalValueChange}
                   precision={2}
-                  valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
+                  valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
                   prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
                   suffix="$"
                 />
@@ -67,24 +69,31 @@ const Statistics: React.FC = () => {
               <Card>
                 <Statistic
                   title="Trend"
-                  value={change}
+                  value={trend}
                   precision={2}
-                  valueStyle={{ color: change >= 0 ? 'green' : 'red' }}
-                  prefix={change >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                  valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
+                  prefix={trend >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
                   suffix="%"
                 />
               </Card>
             </Col>
             <Col span={7}>
             <Card>
-              <DoughnutChart />
+              <PortfolioDistributionChart />
             </Card>
             </Col>
           </Row>
           <Row justify="center">
             <Col span={11}>
-              <Card>
-                <LineChart />
+              <Card title={'Total value history'}>
+                <PortfolioValueChart />
+              </Card>
+            </Col>
+          </Row>
+          <Row justify="center">
+            <Col span={11}>
+              <Card title={'P/L history'}>
+                <PortfolioProfitLossChart />
               </Card>
             </Col>
           </Row>

@@ -5,10 +5,8 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
-import { ChartJSOrUndefined } from 'react-chartjs-2/dist/types';
-import { Breadcrumb } from 'antd';
 
-export const DoughnutChart: React.FC = () => {
+export const PortfolioDistributionChart: React.FC = () => {
     ChartJS.register(ArcElement, Tooltip);
 
     const navigate = useNavigate();
@@ -69,7 +67,7 @@ export const DoughnutChart: React.FC = () => {
         {
           label: 'invested amount',
           data: distribution,
-          backgroundColor: ["#888a88","#989898","#a8a6a7","#bdbabb","#c7c4c5","#ccc9ca","#d1cdce","#dedddd","#eaecec","#dfe0e0"],
+          backgroundColor: ["#70a37f","#659482","#598485","#4d7588","#476d89","#41658a","#474f71","#4c3957"],
         },
       ],
     };

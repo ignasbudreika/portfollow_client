@@ -13,8 +13,12 @@ class PortfolioService {
       return api.get('/portfolio/distribution?type=' + investmentType);
     }
 
-    getPortfolioHistory(historyType: string) {
+    getPortfolioValueHistory(historyType: string) {
       return api.get('/portfolio/history?type=' + historyType);
+    }
+
+    getPortfolioProfitLossHistory(historyType: string) {
+      return api.get('/portfolio/profit-loss?type=' + historyType);
     }
   }
   
