@@ -26,7 +26,7 @@ function App() {
   const [useDrawer, setUseDrawer] = useState(window.innerWidth < 1250)
 
   const handleResize = () => {
-    if (window.innerWidth < 1250) {
+    if (window.innerWidth < 1200) {
       setUseDrawer(true)
     } else {
       setUseDrawer(false)
