@@ -21,11 +21,8 @@ export const SideNavbar: React.FC = () => {
                 style={{ backgroundColor: window.location.pathname === "/stocks" ? "#c7c4c5" : "#121F2B" }} />
         </Row>
         <Row justify="center">
-            <Button type="primary" icon={<MehOutlined />} size={'large'} onClick={() => navigate("/crypto")}
-                style={{ backgroundColor: window.location.pathname === "/crypto" ? "#c7c4c5" : "#121F2B" }} />
-        </Row>
-        <Row justify="center">
-            <Button type="primary" icon={<EuroCircleOutlined />} size={'large'} style={{ backgroundColor: window.location.pathname === "/forex" ? "#c7c4c5" : "#121F2B" }} />
+            <Button type="primary" icon={<EuroCircleOutlined />} size={'large'} onClick={() => navigate("/currencies")}
+                style={{ backgroundColor: window.location.pathname === "/currencies" ? "#c7c4c5" : "#121F2B" }} />
         </Row>
         <Row justify="center">
             <Button type="primary" icon={<UserAddOutlined />} size={'large'} onClick={() => navigate("/connections")}

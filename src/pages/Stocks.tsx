@@ -6,7 +6,7 @@ import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FieldTimeOutlined, PlusOutlined } from '@ant-design/icons';
 import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
 import AddTx from '../components/AddTx';
@@ -132,7 +132,10 @@ const Stocks: React.FC = () => {
     <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
       <Row justify="end">
         <Col span={8}>
-          <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
+          <Space>
+            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
+            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => setShowModal(true)}></Button>
+          </Space>
         </Col>
       </Row>
       <Row justify="center">

@@ -1,19 +1,41 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button } from 'antd';
 import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/topnavbar.css';
-import { GoogleOutlined, LogoutOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
 import AuthService from '../services/AuthService';
+import { useAtom } from 'jotai';
+import { showDrawerAtom } from '../atoms';
 
 
 export const TopNavbar: React.FC = () => {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const auth = useAppSelector(selectAuth);
+
+  const [, setShowDrawer] = useAtom(showDrawerAtom)
+
+  const showDrawer = () => {
+    setShowDrawer(true);
+  };
+
+  const [useDrawer, setUseDrawer] = useState(false)
+
+  const handleResize = () => {
+    if (window.innerWidth < 1250) {
+      setUseDrawer(true)
+    } else {
+      setUseDrawer(false)
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize)
+  })
 
   const getAccessToken = (authorizationCode: string) => {
     AuthService.retrieveAccessTokenFromAuthenticationCode(authorizationCode)
@@ -37,7 +59,13 @@ export const TopNavbar: React.FC = () => {
   });
 
   return <div className='topNavigationBar'>
-    <div className='leftPartFromMainLogo'></div>
+    <div className='leftPartFromMainLogo'>
+      {
+        useDrawer ?
+          <MenuOutlined onClick={showDrawer} /> :
+          <></>
+      }
+    </div>
     <div>
       <NavLink to="/" style={{ color: "#121F2B" }}>
         PORTFOLLOW
