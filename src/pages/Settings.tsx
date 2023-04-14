@@ -1,6 +1,6 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Row, Space, Switch, Tooltip } from "antd";
-import { useEffect, useState } from "react";
+import { Badge, Button, Col, Descriptions, Row, Space, Switch, Tooltip, Tour, TourProps } from "antd";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
 import { logout, useAppDispatch } from "../app/store";
@@ -8,6 +8,12 @@ import { logout, useAppDispatch } from "../app/store";
 const Settings: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const updateRef = useRef(null);
+    const resetRef = useRef(null);
+    const deleteRef = useRef(null);
+
+    const [tourOpen, setTourOpen] = useState<boolean>(false);
+    const [setupOpen, setSetupOpen] = useState<boolean>(false);
 
     const [needsSetup, setNeedsSetup] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
@@ -18,18 +24,35 @@ const Settings: React.FC = () => {
     const [allowedUsers, setAllowedUsers] = useState<string[]>([]);
     const [currencyEur, setCurrencyEur] = useState<boolean>(false);
 
+    const steps: TourProps['steps'] = [
+        {
+            title: 'Update information',
+            description: 'Keep your portfolio information up to date.',
+            target: () => updateRef.current,
+        },
+        {
+            title: 'Reset portfolio',
+            description: 'Deletes all the investments, connections and portfolio information.',
+            target: () => resetRef.current,
+        },
+        {
+            title: 'Delete your account',
+            description: 'Deletes the account entirely. ',
+            target: () => deleteRef.current,
+        },
+    ];
+
     const getData = () => {
         SettingsService.getUserSettings().then((res) => {
             setNeedsSetup(res.data.needs_setup);
-            if (!needsSetup) {
-                setEmail(res.data.user_info.email);
-                setUsername(res.data.user_info.username);
-                setDescription(res.data.portfolio_info.description);
-                setIsPublic(res.data.portfolio_info.public);
-                setIsValueRevealed(res.data.portfolio_info.reveal_value);
-                setAllowedUsers(res.data.portfolio_info.allowed_users);
-                setCurrencyEur(res.data.portfolio_info.currency_eur);
-            }
+            setTourOpen(res.data.needs_setup)
+            setEmail(res.data.user_info.email);
+            setUsername(res.data.user_info.username);
+            setDescription(res.data.portfolio_info.description);
+            setIsPublic(res.data.portfolio_info.public);
+            setIsValueRevealed(res.data.portfolio_info.reveal_value);
+            setAllowedUsers(res.data.portfolio_info.allowed_users);
+            setCurrencyEur(res.data.portfolio_info.currency_eur);
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
@@ -78,7 +101,7 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label={
                             <Space>
                                 Allowed users
-                                <Tooltip title="leaving allowed users empty will result in anyone being able to comment under your public portfolio">
+                                <Tooltip placement="right" title="leaving allowed users empty will result in anyone being able to comment under your public portfolio">
                                     <InfoCircleOutlined />
                                 </Tooltip>
                             </Space>
@@ -94,16 +117,20 @@ const Settings: React.FC = () => {
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Space>
-                        <Button type="primary" danger>
+                        <Button ref={updateRef} type="default" onClick={() => setSetupOpen(true)}>
+                            Update
+                        </Button>
+                        <Button ref={resetRef} type="primary" danger>
                             Reset portfolio
                         </Button>
-                        <Button type="primary" danger>
+                        <Button ref={deleteRef} disabled type="primary" danger>
                             Delete account
                         </Button>
                     </Space>
                 </Col>
             </Row>
-        </Space >
+            <Tour placement="topRight" open={tourOpen} onClose={() => setTourOpen(false)} steps={steps} />
+        </Space>
     );
 }
 

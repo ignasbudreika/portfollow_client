@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { PortfolioValueChart } from '../components/PortfolioValueChart';
-import { Card, Col, Row, Space, Statistic } from 'antd';
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
+import { Card, Col, Row, Space, Statistic, Tooltip } from 'antd';
+import { ArrowDownOutlined, ArrowUpOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 import EmptyPortfolio from '../components/EmptyPortfolio';
 import { PortfolioDistributionChart } from '../components/PortfolioDistributionChart';
@@ -95,25 +95,57 @@ const Statistics: React.FC = () => {
             </Row>
             <Row justify="center">
               <Col xl={16} xs={22} sm={22}>
-                <Card title={'Total value history'}>
+                <Card title={
+                  <Space>
+                    Total value history
+                    <Tooltip placement="right" title={
+                      "displays total portfolio value at specific date. " +
+                      "Prices for investments are calculated according to previous day's closing price"
+                    }>
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </Space>
+                }>
                   <PortfolioValueChart />
                 </Card>
               </Col>
-            </Row>
+            </Row >
             <Row justify="center">
               <Col xl={16} xs={22} sm={22}>
-                <Card title={'P/L history'}>
+                <Card title={
+                  <Space>
+                    P/L history
+                    <Tooltip placement="right" title={
+                      "displays portfolio profit/loss value at specific date. " +
+                      "Is adjusted according to selected time period starting value. " +
+                      "Is calculated by a sum of each investments (Current value + total sell value - total purchase value)"
+                    }>
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </Space>
+                }>
                   <PortfolioProfitLossChart />
                 </Card>
               </Col>
-            </Row>
+            </Row >
             <Row justify="center">
               <Col xl={16} xs={22} sm={22}>
-                <Card title={'Performance history'}>
+                <Card title={
+                  <Space>
+                    Performance history
+                    <Tooltip placement="right" title={
+                      "displays portfolio performance since the begining of selected period. " +
+                      "Is calculated by a sum of each investments (Current value + total sell value - total purchase value) divided by total purchase value. " +
+                      "Is compared with a SPY index for better performance insights."
+                    }>
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </Space>
+                }>
                   <PortfolioPerformanceChart />
                 </Card>
               </Col>
-            </Row>
+            </Row >
           </Space >
       }
     </>

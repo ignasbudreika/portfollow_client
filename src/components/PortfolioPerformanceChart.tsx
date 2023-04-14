@@ -55,7 +55,6 @@ export const PortfolioPerformanceChart: React.FC = () => {
         tension: 0.3,
         borderColor: "black",
         pointRadius: 2,
-        steppedLine: true,
       },
       {
         label: "SPY performance",
@@ -63,7 +62,6 @@ export const PortfolioPerformanceChart: React.FC = () => {
         tension: 0.3,
         borderColor: "#70a37f",
         pointRadius: 2,
-        steppedLine: true,
       },
     ],
   };
