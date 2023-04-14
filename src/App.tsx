@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { showDrawerAtom } from './atoms';
 import Settings from './pages/Settings';
+import Explore from './pages/Explore';
 
 function App() {
   const auth = useAppSelector(selectAuth);
@@ -89,6 +90,7 @@ function App() {
                 <Route path="/stocks" element={<Stocks />} />
                 <Route path="/currencies" element={<Cryptocurrencies />} />
                 <Route path="/connections" element={<Connections />} />
+                <Route path="/explore" element={<Explore />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="*" element={<Navigate to="/dash" />} />
               </> :

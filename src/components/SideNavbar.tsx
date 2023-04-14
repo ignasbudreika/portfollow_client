@@ -37,7 +37,8 @@ export const SideNavbar: React.FC = () => {
                 style={{ backgroundColor: window.location.pathname === "/connections" ? "#c7c4c5" : "#121F2B" }} />
         </Row>
         <Row justify="center">
-            <Button type="primary" icon={<BulbOutlined />} size={'large'} style={{ backgroundColor: window.location.pathname === "/explore" ? "#c7c4c5" : "#121F2B" }} />
+            <Button type="primary" icon={<BulbOutlined />} size={'large'} onClick={() => navigateTo("/explore")}
+                style={{ backgroundColor: window.location.pathname === "/explore" ? "#c7c4c5" : "#121F2B" }} />
         </Row>
         <Row justify="center">
             <Button type="primary" icon={<SettingOutlined />} size={'large'} onClick={() => navigateTo("/settings")}

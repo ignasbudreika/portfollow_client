@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Row, Space, Switch, Tooltip, Tour, TourProps } from "antd";
+import { Badge, Button, Col, Descriptions, Row, Space, Switch, Tooltip, TourProps } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
@@ -12,12 +12,12 @@ const Settings: React.FC = () => {
     const resetRef = useRef(null);
     const deleteRef = useRef(null);
 
-    const [tourOpen, setTourOpen] = useState<boolean>(false);
     const [setupOpen, setSetupOpen] = useState<boolean>(false);
 
     const [needsSetup, setNeedsSetup] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
+    const [title, setTitle] = useState<string>('');
     const [description, setDescription] = useState<string>('');
     const [isPublic, setIsPublic] = useState<boolean>(false);
     const [isValueRevealed, setIsValueRevealed] = useState<boolean>(false);
@@ -32,7 +32,7 @@ const Settings: React.FC = () => {
         },
         {
             title: 'Reset portfolio',
-            description: 'Deletes all the investments, connections and portfolio information.',
+            description: 'Deletes all the investments, connections.',
             target: () => resetRef.current,
         },
         {
@@ -45,9 +45,9 @@ const Settings: React.FC = () => {
     const getData = () => {
         SettingsService.getUserSettings().then((res) => {
             setNeedsSetup(res.data.needs_setup);
-            setTourOpen(res.data.needs_setup)
             setEmail(res.data.user_info.email);
             setUsername(res.data.user_info.username);
+            setTitle(res.data.portfolio_info.title);
             setDescription(res.data.portfolio_info.description);
             setIsPublic(res.data.portfolio_info.public);
             setIsValueRevealed(res.data.portfolio_info.reveal_value);
@@ -83,6 +83,7 @@ const Settings: React.FC = () => {
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Descriptions title="Portfolio information" bordered>
+                        <Descriptions.Item label="Title" span={3}>{title}</Descriptions.Item>
                         <Descriptions.Item label="Description" span={3}>{description}</Descriptions.Item>
                         <Descriptions.Item label="Public" span={3}>
                             {
@@ -129,7 +130,6 @@ const Settings: React.FC = () => {
                     </Space>
                 </Col>
             </Row>
-            <Tour placement="topRight" open={tourOpen} onClose={() => setTourOpen(false)} steps={steps} />
         </Space>
     );
 }

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Popconfirm, Row, Space, Table } from 'antd';
+import { Button, Col, Divider, Popconfirm, Row, Space, Table, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
@@ -13,6 +13,7 @@ import AddTx from '../components/AddTx';
 import InvestmentService from '../services/InvestmentService';
 import TransactionService from '../services/TransactionService';
 import { logout, useAppDispatch } from '../app/store';
+import Title from 'antd/es/typography/Title';
 
 const Stocks: React.FC = () => {
   const navigate = useNavigate();
@@ -133,6 +134,14 @@ const Stocks: React.FC = () => {
 
   return (
     <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+      <Row justify={'center'}>
+        <Col xl={16} xs={22} sm={22}>
+          <Typography>
+            <Title level={2}>Manage stock investments</Title>
+            <Divider></Divider>
+          </Typography>
+        </Col>
+      </Row>
       <Row justify="end">
         <Col span={8}>
           <Space>

@@ -9,11 +9,11 @@ import EmptyPortfolio from '../components/EmptyPortfolio';
 import { PortfolioDistributionChart } from '../components/PortfolioDistributionChart';
 import { PortfolioProfitLossChart } from '../components/PortfolioProfitLossChart';
 import { PortfolioPerformanceChart } from '../components/PortfolioPerformanceChart';
-import { logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
+import { logout, useAppDispatch } from '../app/store';
 
 const Statistics: React.FC = () => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
 
   const [empty, setEmpty] = useState<boolean>(true);
   const [totalValue, setTotalValue] = useState<number>(0);
