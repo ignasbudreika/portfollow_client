@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Row, Space, Switch, Tooltip, TourProps } from "antd";
+import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, TourProps } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
@@ -12,9 +12,8 @@ const Settings: React.FC = () => {
     const resetRef = useRef(null);
     const deleteRef = useRef(null);
 
-    const [setupOpen, setSetupOpen] = useState<boolean>(false);
+    const [updateOpen, setUpdateOpen] = useState<boolean>(false);
 
-    const [needsSetup, setNeedsSetup] = useState<boolean>(false);
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [title, setTitle] = useState<string>('');
@@ -24,27 +23,8 @@ const Settings: React.FC = () => {
     const [allowedUsers, setAllowedUsers] = useState<string[]>([]);
     const [currencyEur, setCurrencyEur] = useState<boolean>(false);
 
-    const steps: TourProps['steps'] = [
-        {
-            title: 'Update information',
-            description: 'Keep your portfolio information up to date.',
-            target: () => updateRef.current,
-        },
-        {
-            title: 'Reset portfolio',
-            description: 'Deletes all the investments, connections.',
-            target: () => resetRef.current,
-        },
-        {
-            title: 'Delete your account',
-            description: 'Deletes the account entirely. ',
-            target: () => deleteRef.current,
-        },
-    ];
-
     const getData = () => {
         SettingsService.getUserSettings().then((res) => {
-            setNeedsSetup(res.data.needs_setup);
             setEmail(res.data.user_info.email);
             setUsername(res.data.user_info.username);
             setTitle(res.data.portfolio_info.title);
@@ -61,6 +41,36 @@ const Settings: React.FC = () => {
         });
     };
 
+    const save = () => {
+        const body = {
+            username: username,
+            title: title,
+            description: description,
+            public: isPublic,
+            hide_value: !isValueRevealed,
+            allowed_users: allowedUsers.join(','),
+            currency_eur: currencyEur
+        }
+
+        SettingsService.setUserSettings(body).then((res) => {
+            setEmail(res.data.user_info.email);
+            setUsername(res.data.user_info.username);
+            setTitle(res.data.portfolio_info.title);
+            setDescription(res.data.portfolio_info.description);
+            setIsPublic(res.data.portfolio_info.public);
+            setIsValueRevealed(res.data.portfolio_info.reveal_value);
+            setAllowedUsers(res.data.portfolio_info.allowed_users);
+            setCurrencyEur(res.data.portfolio_info.currency_eur);
+
+            setUpdateOpen(false);
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+        });
+    }
+
     useEffect(() => {
         if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
             navigate("/")
@@ -76,27 +86,49 @@ const Settings: React.FC = () => {
                 <Col xl={16} xs={22} sm={22}>
                     <Descriptions title="User information" bordered>
                         <Descriptions.Item label="User email" span={3}>{email}</Descriptions.Item>
-                        <Descriptions.Item label="User name" span={3}>{username}</Descriptions.Item>
+                        <Descriptions.Item label="User name" span={3}>
+                            {
+                                updateOpen ?
+                                    <Input defaultValue={username} onInput={e => setUsername((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    username
+                            }
+                        </Descriptions.Item>
                     </Descriptions>
                 </Col>
             </Row>
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Descriptions title="Portfolio information" bordered>
-                        <Descriptions.Item label="Title" span={3}>{title}</Descriptions.Item>
-                        <Descriptions.Item label="Description" span={3}>{description}</Descriptions.Item>
+                        <Descriptions.Item label="Title" span={3}>
+                            {
+                                updateOpen ?
+                                    <Input defaultValue={title} onInput={e => setTitle((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    title
+                            }
+                        </Descriptions.Item>
+                        <Descriptions.Item label="Description" span={3}>
+                            {
+                                updateOpen ?
+                                    <Input defaultValue={description} onInput={e => setDescription((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    description
+                            }
+                        </Descriptions.Item>
                         <Descriptions.Item label="Public" span={3}>
                             {
-                                isPublic ?
-                                    <Badge status="success" text="Yes" /> :
-                                    <Badge status="error" text="No" />
+                                updateOpen ?
+                                    <Switch checked={isPublic} onChange={e => setIsPublic(e)}></Switch> :
+                                    isPublic ?
+                                        <Badge status="success" text="Yes" /> :
+                                        <Badge status="error" text="No" />
                             }
                         </Descriptions.Item>
                         <Descriptions.Item label="Reveal value" span={3}>
                             {
-                                isValueRevealed ?
-                                    <Badge status="success" text="Yes" /> :
-                                    <Badge status="error" text="No" />
+                                updateOpen ?
+                                    <Switch checked={isValueRevealed} onChange={e => setIsValueRevealed(e)}></Switch> :
+                                    isValueRevealed ?
+                                        <Badge status="success" text="Yes" /> :
+                                        <Badge status="error" text="No" />
                             }
                         </Descriptions.Item>
                         <Descriptions.Item label={
@@ -118,8 +150,11 @@ const Settings: React.FC = () => {
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Space>
-                        <Button ref={updateRef} type="default" onClick={() => setSetupOpen(true)}>
+                        <Button ref={updateRef} type="default" onClick={() => setUpdateOpen(true)} hidden={updateOpen}>
                             Update
+                        </Button>
+                        <Button ref={updateRef} type="default" onClick={save} hidden={!updateOpen}>
+                            Save
                         </Button>
                         <Button ref={resetRef} type="primary" danger>
                             Reset portfolio
