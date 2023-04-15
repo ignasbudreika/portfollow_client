@@ -102,7 +102,7 @@ const Explore: React.FC = () => {
             </Row>
             <Row justify={'center'}>
                 <Col xl={16} xs={22} sm={22}>
-                    <Row justify={'center'}>
+                    <Row justify={'start'}>
                         {
                             portfolios.map(function (portfolio) {
                                 return <Col xxl={8} md={12} xs={24} sm={20}>
