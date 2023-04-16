@@ -1,5 +1,5 @@
-import { SyncOutlined, UserAddOutlined, WalletOutlined } from "@ant-design/icons";
-import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions } from "antd";
+import { DeleteOutlined, SyncOutlined, UserAddOutlined, WalletOutlined } from "@ant-design/icons";
+import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, Popconfirm } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAtom } from "jotai";
@@ -36,7 +36,21 @@ const Connections: React.FC = () => {
     };
 
     const fetchSpectrocoinConnection = () => {
-        ConnectionsService.fetchSpectrocoinConnection().catch((err) => {
+        ConnectionsService.fetchSpectrocoinConnection().then(() => {
+            getData();
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+            getData();
+        });
+    }
+
+    const deleteSpectrocoinConnection = () => {
+        ConnectionsService.deleteSpectrocoinConnection().then(() => {
+            getData();
+        }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
@@ -46,8 +60,22 @@ const Connections: React.FC = () => {
     }
 
     const fetchEthereumWalletConnection = () => {
-        ConnectionsService.fetchEthereumWalletConnection().then((res) => {
-            if (res.status === 401) {
+        ConnectionsService.fetchEthereumWalletConnection().then(() => {
+            getData();
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                navigate("/")
+                return;
+            }
+            getData();
+        });
+    }
+
+    const deleteEthereumWalletConnection = () => {
+        ConnectionsService.deleteEthereumWalletConnection().then(() => {
+            getData();
+        }).catch((err) => {
+            if (err.response.status === 401) {
                 navigate("/")
                 return;
             }
@@ -84,7 +112,22 @@ const Connections: React.FC = () => {
                                         <Descriptions.Item label="Updated at" span={3}>{spectrocoinConnection.updatedAt}</Descriptions.Item>
                                     </Descriptions>
                                     <br></br>
-                                    <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchSpectrocoinConnection()}></Button>
+                                    <Row justify={'center'}>
+                                        <Col span={12}>
+                                            <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchSpectrocoinConnection()}></Button>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Popconfirm
+                                                title="Remove the connection"
+                                                description="Are you sure to remove this connection? Imported transactions will remain in the portfolio"
+                                                onConfirm={() => deleteSpectrocoinConnection()}
+                                                okText="Yes"
+                                                cancelText="No"
+                                            >
+                                                <Button block type="primary" icon={<DeleteOutlined />}></Button>
+                                            </Popconfirm>
+                                        </Col>
+                                    </Row>
                                 </>
                                 :
                                 <>
@@ -92,10 +135,10 @@ const Connections: React.FC = () => {
                                     <Button block type="primary" icon={<UserAddOutlined />} onClick={() => setShowSpectroinConnectionModal(true)}></Button>
                                 </>
                         }
-                        <AddSpectrocoinConnection></AddSpectrocoinConnection>
+                        <AddSpectrocoinConnection refresh={getData} />
                     </Card>
                 </Col>
-            </Row>
+            </Row >
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Card cover={<img alt="example" src="ethereum_logo.svg" style={{ height: '100px', padding: '20px 0px 0px 0px' }} />}>
@@ -114,7 +157,22 @@ const Connections: React.FC = () => {
                                         <Descriptions.Item label="Updated at" span={3}>{ethereumWalletConnection.updatedAt}</Descriptions.Item>
                                     </Descriptions>
                                     <br></br>
-                                    <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchEthereumWalletConnection()}></Button>
+                                    <Row justify={'center'}>
+                                        <Col span={12}>
+                                            <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchEthereumWalletConnection()}></Button>
+                                        </Col>
+                                        <Col span={12}>
+                                            <Popconfirm
+                                                title="Remove the connection"
+                                                description="Are you sure to remove this connection? Imported transactions will remain in the portfolio"
+                                                onConfirm={() => deleteEthereumWalletConnection()}
+                                                okText="Yes"
+                                                cancelText="No"
+                                            >
+                                                <Button block type="primary" icon={<DeleteOutlined />}></Button>
+                                            </Popconfirm>
+                                        </Col>
+                                    </Row>
                                 </>
                                 :
                                 <>
@@ -122,7 +180,7 @@ const Connections: React.FC = () => {
                                     <Button block type="primary" icon={<WalletOutlined />} onClick={() => setShowEthereumWalletConnectionModal(true)}></Button>
                                 </>
                         }
-                        <AddEthereumWalletConnection></AddEthereumWalletConnection>
+                        <AddEthereumWalletConnection refresh={getData} />
                     </Card>
                 </Col>
             </Row>
@@ -131,7 +189,7 @@ const Connections: React.FC = () => {
                     <Card><Skeleton /></Card>
                 </Col>
             </Row>
-        </Space>
+        </Space >
     );
 }
 

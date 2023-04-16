@@ -8,8 +8,11 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import { logout, useAppDispatch } from "../app/store";
 import { useNavigate } from "react-router-dom";
 
+interface Props {
+    refresh: () => void;
+}
 
-const AddSpectrocoinConnection: React.FC = () => {
+const AddSpectrocoinConnection = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -20,7 +23,7 @@ const AddSpectrocoinConnection: React.FC = () => {
     const handleOk = () => {
         ConnectionsService.createSpectrocoinConnection({ client_id: clientId, client_secret: clientSecret }).then(() => {
             setShowModal(false);
-            setShowModal(false);
+            props.refresh();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());

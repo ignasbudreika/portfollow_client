@@ -7,7 +7,11 @@ import ConnectionsService from "../services/ConnectionsService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
 
-const AddEthereumWalletConnection: React.FC = () => {
+interface Props {
+    refresh: () => void;
+}
+
+const AddEthereumWalletConnection = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -17,6 +21,7 @@ const AddEthereumWalletConnection: React.FC = () => {
     const handleOk = () => {
         ConnectionsService.createEthereumWalletConnection({ address: address }).then(() => {
             setShowModal(false);
+            props.refresh();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());

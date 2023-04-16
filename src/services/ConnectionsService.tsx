@@ -13,12 +13,20 @@ class ConnectionsService {
     return api.post('/connection/spectrocoin/fetch');
   }
 
+  deleteSpectrocoinConnection() {
+    return api.delete('/connection/spectrocoin');
+  }
+
   createEthereumWalletConnection(body: any) {
     return api.post('/connection/ethereum', body);
   }
 
   fetchEthereumWalletConnection() {
     return api.post('/connection/ethereum/fetch');
+  }
+
+  deleteEthereumWalletConnection() {
+    return api.delete('/connection/ethereum');
   }
 }
 
