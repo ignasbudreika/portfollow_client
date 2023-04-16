@@ -41,6 +41,7 @@ const Connections: React.FC = () => {
                 dispatch(logout());
                 navigate("/");
             }
+            getData();
         });
     }
 
@@ -50,6 +51,7 @@ const Connections: React.FC = () => {
                 navigate("/")
                 return;
             }
+            getData();
         });
     }
 

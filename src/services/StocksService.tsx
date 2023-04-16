@@ -5,6 +5,10 @@ class StocksService {
     return api.get('/investment/stock');
   }
 
+  getStocksStats() {
+    return api.get('/investment/stock/stats');
+  }
+
   createStock(body: any) {
     return api.post('/investment/stock', body);
   }

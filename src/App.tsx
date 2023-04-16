@@ -6,7 +6,7 @@ import { Drawer, Layout } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Statistics from './pages/Statistics';
 import Stocks from './pages/Stocks';
-import Cryptocurrencies from './pages/Cryptocurrencies';
+import Currencies from './pages/Currencies';
 import Connections from './pages/Connections';
 import SideNavbar from './components/SideNavbar';
 import Sider from 'antd/es/layout/Sider';
@@ -88,7 +88,7 @@ function App() {
               <>
                 <Route path="/dash" element={<Statistics />} />
                 <Route path="/stocks" element={<Stocks />} />
-                <Route path="/currencies" element={<Cryptocurrencies />} />
+                <Route path="/currencies" element={<Currencies />} />
                 <Route path="/connections" element={<Connections />} />
                 <Route path="/explore" element={<Explore />} />
                 <Route path="/settings" element={<Settings />} />

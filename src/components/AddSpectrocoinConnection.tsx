@@ -5,19 +5,29 @@ import { useAtom } from 'jotai'
 import { showAddSpectrocoinConnectionModalAtom } from '../atoms';
 import ConnectionsService from "../services/ConnectionsService";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import { logout, useAppDispatch } from "../app/store";
+import { useNavigate } from "react-router-dom";
 
 
 const AddSpectrocoinConnection: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const [clientId, setClientId] = useState<string>('')
     const [clientSecret, setClientSecret] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddSpectrocoinConnectionModalAtom)
-    const [confirmLoading, setConfirmLoading] = useState(false);
 
     const handleOk = () => {
-        ConnectionsService.createSpectrocoinConnection({ client_id: clientId, client_secret: clientSecret })
-        setConfirmLoading(true);
-        setShowModal(false);
-        setConfirmLoading(false);
+        ConnectionsService.createSpectrocoinConnection({ client_id: clientId, client_secret: clientSecret }).then(() => {
+            setShowModal(false);
+            setShowModal(false);
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+            setShowModal(false);
+        });
     };
 
     const handleCancel = () => {
@@ -32,7 +42,6 @@ const AddSpectrocoinConnection: React.FC = () => {
             open={showModal}
             onOk={handleOk}
             centered
-            confirmLoading={confirmLoading}
             cancelButtonProps={{ hidden: true }}
             okText={'Connect'}
             onCancel={handleCancel}

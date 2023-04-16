@@ -4,22 +4,30 @@ import { useState } from "react";
 import { useAtom } from 'jotai'
 import { showAddEthereumWalletConnectionModalAtom } from '../atoms';
 import ConnectionsService from "../services/ConnectionsService";
+import { useNavigate } from "react-router-dom";
+import { logout, useAppDispatch } from "../app/store";
 
 const AddEthereumWalletConnection: React.FC = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const [address, setAddress] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddEthereumWalletConnectionModalAtom)
-    const [confirmLoading, setConfirmLoading] = useState(false);
 
     const handleOk = () => {
-        ConnectionsService.createEthereumWalletConnection({ address: address })
-        setShowModal(false);
+        ConnectionsService.createEthereumWalletConnection({ address: address }).then(() => {
+            setShowModal(false);
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+        });
     };
 
     const handleCancel = () => {
         setAddress('')
-        setConfirmLoading(true);
         setShowModal(false);
-        setConfirmLoading(false);
     };
 
     return (
@@ -28,7 +36,6 @@ const AddEthereumWalletConnection: React.FC = () => {
             open={showModal}
             onOk={handleOk}
             centered
-            confirmLoading={confirmLoading}
             cancelButtonProps={{ hidden: true }}
             okText={'Connect'}
             onCancel={handleCancel}

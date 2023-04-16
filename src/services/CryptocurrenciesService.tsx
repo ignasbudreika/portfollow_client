@@ -5,6 +5,10 @@ class CryptocurrenciesService {
     return api.get('/investment/crypto');
   }
 
+  getCryptoStats() {
+    return api.get('/investment/crypto/stats');
+  }
+
   createCrypto(body: any) {
     return api.post('/investment/crypto', body);
   }

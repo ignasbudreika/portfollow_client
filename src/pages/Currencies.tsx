@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Divider, Popconfirm, Row, Space, Table, Typography } from 'antd';
+import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import CryptocurrenciesService from '../services/CryptocurrenciesService';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
-import { DeleteOutlined, FieldTimeOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCrypto';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
@@ -14,13 +14,17 @@ import InvestmentService from '../services/InvestmentService';
 import { logout, useAppDispatch } from '../app/store';
 import Title from 'antd/es/typography/Title';
 
-const Cryptocurrencies: React.FC = () => {
+const Currencies: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [, setShowModal] = useAtom(showAddCryptoModalAtom)
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
   const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
+
+  const [totalValue, setTotalValue] = useState<number>(0);
+  const [totalValueChange, setTotalValueChange] = useState<number>(0);
+  const [trend, setTrend] = useState<number>(0);
 
   const [cryptocurrencies, setCryptocurrencies] = useState<CryptoInvestment[]>([]);
 
@@ -120,6 +124,17 @@ const Cryptocurrencies: React.FC = () => {
         navigate("/");
       }
     });
+
+    CryptocurrenciesService.getCryptoStats().then((res) => {
+      setTotalValue(res.data.total_value);
+      setTrend(res.data.trend);
+      setTotalValueChange(res.data.total_change);
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
+    });
   };
 
   useEffect(() => {
@@ -139,6 +154,69 @@ const Cryptocurrencies: React.FC = () => {
             <Title level={2}>Manage currency investments</Title>
             <Divider></Divider>
           </Typography>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Total currencies value
+                  <Tooltip placement="right" title={
+                    "current currency holdings value"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={totalValue}
+              precision={2}
+              suffix="$"
+            />
+          </Card>
+        </Col>
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Trend
+                  <Tooltip placement="right" title={
+                    "current currency holdings value change compared to previous days closing price"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={trend}
+              precision={2}
+              valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
+              prefix={trend >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              suffix="%"
+            />
+          </Card>
+        </Col>
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Total value change
+                  <Tooltip placement="right" title={
+                    "total change of currency investments value for full portfolio history"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={totalValueChange}
+              precision={2}
+              valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
+              prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              suffix="$"
+            />
+          </Card>
         </Col>
       </Row>
       <Row justify="end">
@@ -205,4 +283,4 @@ const Cryptocurrencies: React.FC = () => {
   );
 }
 
-export default Cryptocurrencies;
+export default Currencies;

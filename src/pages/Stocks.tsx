@@ -2,11 +2,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Col, Divider, Popconfirm, Row, Space, Table, Typography } from 'antd';
+import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
-import { DeleteOutlined, FieldTimeOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
 import AddTx from '../components/AddTx';
@@ -22,6 +22,10 @@ const Stocks: React.FC = () => {
   const [, setShowModal] = useAtom(showAddStockModalAtom)
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
   const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
+
+  const [totalValue, setTotalValue] = useState<number>(0);
+  const [totalValueChange, setTotalValueChange] = useState<number>(0);
+  const [trend, setTrend] = useState<number>(0);
 
   const [stocks, setStocks] = useState<StockInvestment[]>([]);
 
@@ -115,6 +119,18 @@ const Stocks: React.FC = () => {
       setStocks(res.data.map((stock: any) => {
         return { id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions }
       }));
+
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+      }
+    });
+
+    StocksService.getStocksStats().then((res) => {
+      setTotalValue(res.data.total_value);
+      setTrend(res.data.trend);
+      setTotalValueChange(res.data.total_change);
     }).catch((err) => {
       if (err.response.status === 401) {
         dispatch(logout());
@@ -140,6 +156,69 @@ const Stocks: React.FC = () => {
             <Title level={2}>Manage stock investments</Title>
             <Divider></Divider>
           </Typography>
+        </Col>
+      </Row>
+      <Row justify="center">
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Total stocks value
+                  <Tooltip placement="right" title={
+                    "current stocks holdings value"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={totalValue}
+              precision={2}
+              suffix="$"
+            />
+          </Card>
+        </Col>
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Trend
+                  <Tooltip placement="right" title={
+                    "current stocks holdings value change compared to previous days closing price"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={trend}
+              precision={2}
+              valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
+              prefix={trend >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              suffix="%"
+            />
+          </Card>
+        </Col>
+        <Col xl={5} xs={16} sm={10} md={7}>
+          <Card>
+            <Statistic
+              title={
+                <Space>
+                  Total value change
+                  <Tooltip placement="right" title={
+                    "total change of stocks investments value for full portfolio history"
+                  }>
+                    <InfoCircleOutlined />
+                  </Tooltip>
+                </Space>
+              }
+              value={totalValueChange}
+              precision={2}
+              valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
+              prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+              suffix="$"
+            />
+          </Card>
         </Col>
       </Row>
       <Row justify="end">
