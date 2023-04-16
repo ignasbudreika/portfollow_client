@@ -27,6 +27,7 @@ export const PublicPortfolioHistoryChart = (props: Props) => {
             {
                 animation: false,
                 aspectRatio: 3,
+                maintainAspectRatio: false,
                 plugins:
                 {
                     legend: {

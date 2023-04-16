@@ -160,7 +160,9 @@ const Explore: React.FC = () => {
             <Row justify={'center'}>
                 <Button icon={<AppstoreAddOutlined />} hidden={!existsMore} onClick={loadMore}>More</Button>
             </Row>
-            <PublicPortfolio portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
+            {
+                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
+            }
         </Space >
     );
 }
