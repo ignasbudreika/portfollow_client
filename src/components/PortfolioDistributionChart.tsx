@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArcElement, Tooltip } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js/auto'
 
@@ -8,7 +8,11 @@ import PortfolioService from '../services/PortfolioService';
 import { logout, useAppDispatch } from '../app/store';
 import { Empty } from 'antd';
 
-export const PortfolioDistributionChart: React.FC = () => {
+interface Props {
+  percentage: boolean;
+}
+
+const PortfolioDistributionChart = (props: Props) => {
   ChartJS.register(ArcElement, Tooltip);
 
   const navigate = useNavigate();
@@ -16,7 +20,8 @@ export const PortfolioDistributionChart: React.FC = () => {
   const chartRef = useRef(null);
 
   const [categories, setCategories] = useState<any[]>([]);
-  const [distribution, setDistribution] = useState<any[]>([]);
+  const [percentage, setPercentage] = useState<any[]>([]);
+  const [values, setValues] = useState<any[]>([]);
   const [selectedInvestmentType, setSelectedInvestmentType] = useState<string>('');
 
   const onReturn = () => {
@@ -33,7 +38,8 @@ export const PortfolioDistributionChart: React.FC = () => {
   const getData = (investmentType: string) => {
     if (investmentType.length == 0) {
       PortfolioService.getPortfolioDistribution().then((res) => {
-        setDistribution(res.data.map((distribution: any) => distribution.value));
+        setPercentage(res.data.map((distribution: any) => distribution.percentage));
+        setValues(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
       }).catch((err) => {
         if (err.response.status === 401) {
@@ -44,7 +50,8 @@ export const PortfolioDistributionChart: React.FC = () => {
     } else if (selectedInvestmentType.length == 0) {
       PortfolioService.getPortfolioDistributionByType(investmentType).then((res) => {
         setSelectedInvestmentType(investmentType);
-        setDistribution(res.data.map((distribution: any) => distribution.value));
+        setPercentage(res.data.map((distribution: any) => distribution.percentage));
+        setValues(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
       }).catch((err) => {
         if (err.response.status === 401) {
@@ -70,22 +77,22 @@ export const PortfolioDistributionChart: React.FC = () => {
     labels: categories,
     datasets: [
       {
-        label: 'invested amount',
-        data: distribution,
+        label:
+          props.percentage ? 'percentage' : 'invested amount',
+        data:
+          props.percentage ? percentage : values,
         backgroundColor: ["#70a37f", "#659482", "#598485", "#4d7588", "#476d89", "#41658a", "#474f71", "#4c3957"],
       },
     ],
   };
 
-  // @ts-ignore
   return <div>
     {
-      distribution.length === 0 ?
+      values.length === 0 ?
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
         <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
           {
-            maintainAspectRatio: false, radius: 90, aspectRatio: 1, plugins:
-            {
+            maintainAspectRatio: false, radius: 90, aspectRatio: 1, plugins: {
               legend:
               {
                 display: false,
@@ -96,3 +103,5 @@ export const PortfolioDistributionChart: React.FC = () => {
     }
   </div>
 }
+
+export default PortfolioDistributionChart;

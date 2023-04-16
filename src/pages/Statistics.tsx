@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { PortfolioValueChart } from '../components/PortfolioValueChart';
-import { Card, Col, Row, Space, Statistic, Tooltip } from 'antd';
+import { Card, Col, Row, Space, Statistic, Switch, Tooltip } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 import EmptyPortfolio from '../components/EmptyPortfolio';
-import { PortfolioDistributionChart } from '../components/PortfolioDistributionChart';
+import PortfolioDistributionChart from '../components/PortfolioDistributionChart';
 import { PortfolioProfitLossChart } from '../components/PortfolioProfitLossChart';
 import { PortfolioPerformanceChart } from '../components/PortfolioPerformanceChart';
 import { logout, useAppDispatch } from '../app/store';
@@ -19,6 +19,7 @@ const Statistics: React.FC = () => {
   const [totalValue, setTotalValue] = useState<number>(0);
   const [totalValueChange, setTotalValueChange] = useState<number>(0);
   const [trend, setTrend] = useState<number>(0);
+  const [percentage, setPercentage] = useState<boolean>(false);
 
   const getData = () => {
     PortfolioService.getPortfolio().then((res) => {
@@ -54,7 +55,16 @@ const Statistics: React.FC = () => {
               <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
                   <Statistic
-                    title="Total value"
+                    title={
+                      <Space>
+                        Total value
+                        <Tooltip placement="right" title={
+                          "current portfolio value"
+                        }>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </Space>
+                    }
                     value={totalValue}
                     precision={2}
                     suffix="$"
@@ -64,7 +74,16 @@ const Statistics: React.FC = () => {
               <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
                   <Statistic
-                    title="Trend"
+                    title={
+                      <Space>
+                        Trend
+                        <Tooltip placement="right" title={
+                          "current investments value change compared to previous days closing price"
+                        }>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </Space>
+                    }
                     value={trend}
                     precision={2}
                     valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
@@ -76,7 +95,16 @@ const Statistics: React.FC = () => {
               <Col xl={5} xs={16} sm={10} md={7}>
                 <Card>
                   <Statistic
-                    title="Total value change"
+                    title={
+                      <Space>
+                        Total value change
+                        <Tooltip placement="right" title={
+                          "total change of investments value for full portfolio history"
+                        }>
+                          <InfoCircleOutlined />
+                        </Tooltip>
+                      </Space>
+                    }
                     value={totalValueChange}
                     precision={2}
                     valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
@@ -88,11 +116,18 @@ const Statistics: React.FC = () => {
             </Row>
             <Row justify="center">
               <Col xl={8} xs={16} sm={12}>
-                <Card title={'Portfolio distribution'}>
-                  <PortfolioDistributionChart />
+                <Card title={"Portfolio distribution"}>
+                  <>
+                    <Switch
+                      checkedChildren={"%"}
+                      unCheckedChildren={"$"}
+                      onChange={value => setPercentage(value)} />
+                    <PortfolioDistributionChart percentage={percentage} />
+
+                  </>
                 </Card>
               </Col>
-            </Row>
+            </Row >
             <Row justify="center">
               <Col xl={16} xs={22} sm={22}>
                 <Card title={
