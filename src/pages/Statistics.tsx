@@ -115,7 +115,7 @@ const Statistics: React.FC = () => {
               </Col>
             </Row>
             <Row justify="center">
-              <Col xl={8} xs={16} sm={12}>
+              <Col xl={5} xs={16} sm={12}>
                 <Card title={"Portfolio distribution"}>
                   <>
                     <Switch
