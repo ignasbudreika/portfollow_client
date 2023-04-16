@@ -83,6 +83,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
               display: false
             },
             y: {
+              display: false,
               beginAtZero: false
             }
           },

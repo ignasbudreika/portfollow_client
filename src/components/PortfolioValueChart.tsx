@@ -67,6 +67,7 @@ export const PortfolioValueChart: React.FC = () => {
               display: false
             },
             y: {
+              display: false,
               beginAtZero: false
             }
           },

@@ -8,10 +8,17 @@ import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
 import { PublicPortfolioHistoryChart } from "../components/PublicPortfolioHistoryChart";
+import { useAtom } from "jotai";
+import { showPublicPortfolioDrawerAtom } from "../atoms";
+import PublicPortfolio from "../components/PublicPortfolio";
 
 const Explore: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+
+    const [, setOpen] = useAtom(showPublicPortfolioDrawerAtom);
+    const [selectedPortfolio, setSelectedPortfolio] = useState<PublicPortfolio>({} as PublicPortfolio);
+    const [selectedPortfolioStats, setSelectedPortfolioStats] = useState<PublicPortfolioStats>({} as PublicPortfolioStats);
 
     const [existsMore, setExistsMore] = useState<boolean>(false);
     const [index, setIndex] = useState<number>(0);
@@ -22,6 +29,14 @@ const Explore: React.FC = () => {
         title: string;
         description: string;
         history: DateValue[];
+    }
+
+    interface PublicPortfolioStats {
+        trend: number;
+        change: number;
+        hidden: boolean;
+        categories: string[];
+        distribution: number[];
     }
 
     interface DateValue {
@@ -69,6 +84,27 @@ const Explore: React.FC = () => {
         });
     }
 
+    const openPublicPortfolio = (portfolio: PublicPortfolio) => {
+        setSelectedPortfolio(portfolio);
+        PublicPortfolioService.getPublicPortfolioStats(portfolio.id).then((res) => {
+            setSelectedPortfolioStats({
+                trend: res.data.trend,
+                change: res.data.total_change,
+                hidden: res.data.hidden_value,
+                distribution: res.data.hidden_value ?
+                    res.data.distribution.map((distribution: any) => distribution.percentage) :
+                    res.data.distribution.map((distribution: any) => distribution.value),
+                categories: res.data.distribution.map((distribution: any) => distribution.label)
+            } as PublicPortfolioStats);
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+        });
+        setOpen(true);
+    }
+
     useEffect(() => {
         if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
             navigate("/")
@@ -106,7 +142,13 @@ const Explore: React.FC = () => {
                         {
                             portfolios.map(function (portfolio) {
                                 return <Col xxl={8} md={12} xs={24} sm={20}>
-                                    <Card title={portfolio.title} bodyStyle={{ justifyContent: 'center', padding: 0 }}>
+                                    <Card title=
+                                        {
+                                            <a onClick={() => openPublicPortfolio(portfolio)} style={{ color: "#c7c4c5" }}>
+                                                {portfolio.title}
+                                            </a>
+                                        }
+                                        bodyStyle={{ justifyContent: 'center', padding: 0 }}>
                                         <PublicPortfolioHistoryChart values={portfolio.history} />
                                     </Card>
                                 </Col>
@@ -114,10 +156,11 @@ const Explore: React.FC = () => {
                         }
                     </Row>
                 </Col>
-            </Row>
+            </Row >
             <Row justify={'center'}>
                 <Button icon={<AppstoreAddOutlined />} hidden={!existsMore} onClick={loadMore}>More</Button>
             </Row>
+            <PublicPortfolio portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
         </Space >
     );
 }

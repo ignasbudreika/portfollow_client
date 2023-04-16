@@ -10,8 +10,6 @@ interface Props {
 export const PublicPortfolioHistoryChart = (props: Props) => {
     ChartJS.register(ArcElement, Tooltip, Legend);
 
-    console.log(props.values);
-
     const data = {
         datasets: [
             {
