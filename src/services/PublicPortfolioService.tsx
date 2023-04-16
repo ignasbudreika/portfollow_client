@@ -16,6 +16,14 @@ class PublicPortfolioService {
     getPublicPortfolioDistributionByType(id: string, type: string) {
         return api.get('/public/portfolio/' + id + '/distribution?type=' + type);
     }
+
+    createComment(id: string, body: any) {
+        return api.post('/public/portfolio/' + id + '/comment', body);
+    }
+
+    deleteComment(id: string) {
+        return api.delete('/public/portfolio/comment/' + id);
+    }
 }
 
 export default new PublicPortfolioService();

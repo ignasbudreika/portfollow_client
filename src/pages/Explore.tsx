@@ -17,8 +17,8 @@ const Explore: React.FC = () => {
     const dispatch = useAppDispatch();
 
     const [, setOpen] = useAtom(showPublicPortfolioDrawerAtom);
-    const [selectedPortfolio, setSelectedPortfolio] = useState<PublicPortfolio>({} as PublicPortfolio);
-    const [selectedPortfolioStats, setSelectedPortfolioStats] = useState<PublicPortfolioStats>({} as PublicPortfolioStats);
+    const [selectedPortfolio, setSelectedPortfolio] = useState<PublicPortfolio>();
+    const [selectedPortfolioStats, setSelectedPortfolioStats] = useState<PublicPortfolioStats>();
 
     const [existsMore, setExistsMore] = useState<boolean>(false);
     const [index, setIndex] = useState<number>(0);
@@ -29,6 +29,7 @@ const Explore: React.FC = () => {
         title: string;
         description: string;
         history: DateValue[];
+        comments: Comment[];
     }
 
     interface PublicPortfolioStats {
@@ -44,10 +45,25 @@ const Explore: React.FC = () => {
         value: number;
     }
 
+    interface Comment {
+        id: string;
+        author: string;
+        comment: string;
+        deletable: boolean;
+    }
+
     const getData = () => {
         PublicPortfolioService.getPublicPortfolios(index).then((res) => {
             setPortfolios(res.data.portfolios.map((portfolio: any) => {
-                return { id: portfolio.id, title: portfolio.title, description: portfolio.description, history: portfolio.history.map((history: any) => { return { x: history.date, y: history.value } }) }
+                return {
+                    id: portfolio.id,
+                    title: portfolio.title,
+                    description: portfolio.description,
+                    history: portfolio.history.map((history: any) => { return { x: history.date, y: history.value } }),
+                    comments: portfolio.comments.map((comment: any) => {
+                        return { id: comment.id, author: comment.author, comment: comment.comment, deletable: comment.deletable }
+                    })
+                }
             }));
             setIndex(res.data.index);
             setExistsMore(res.data.more);
@@ -71,6 +87,9 @@ const Explore: React.FC = () => {
                             x: history.date,
                             y: history.value
                         }
+                    }),
+                    comments: portfolio.comments.map((comment: any) => {
+                        return { id: comment.id, author: comment.author, comment: comment.comment, deletable: comment.deletable }
                     })
                 }
             })));
@@ -86,6 +105,7 @@ const Explore: React.FC = () => {
 
     const openPublicPortfolio = (portfolio: PublicPortfolio) => {
         setSelectedPortfolio(portfolio);
+        console.log(portfolio);
         PublicPortfolioService.getPublicPortfolioStats(portfolio.id).then((res) => {
             setSelectedPortfolioStats({
                 trend: res.data.trend,

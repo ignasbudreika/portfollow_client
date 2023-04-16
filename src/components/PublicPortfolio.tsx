@@ -1,12 +1,13 @@
-import { Col, Descriptions, Drawer, Statistic } from "antd";
+import { Avatar, Button, Col, Descriptions, Drawer, List, Statistic } from "antd";
 import { useAtom } from "jotai";
 import { showPublicPortfolioDrawerAtom } from "../atoms";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
+import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRef, useState } from 'react';
 import { Doughnut, getElementAtEvent } from "react-chartjs-2";
 import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
+import TextArea from "antd/es/input/TextArea";
 
 interface Props {
     portfolio: PublicPortfolio
@@ -18,6 +19,7 @@ interface PublicPortfolio {
     title: string;
     description: string;
     history: DateValue[];
+    comments: Comment[];
 }
 
 interface PublicPortfolioStats {
@@ -34,12 +36,21 @@ interface DateValue {
     value: number;
 }
 
+interface Comment {
+    id: string;
+    author: string;
+    comment: string;
+    deletable: boolean;
+}
+
 const PublicPortfolio = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
     const [open, setOpen] = useAtom(showPublicPortfolioDrawerAtom);
     const [selectedInvestmentType, setSelectedInvestmentType] = useState<string>('');
+
+    const [newComment, setNewComment] = useState<string>('');
 
     const [categories, setCategories] = useState<any[]>([]);
     const [values, setValues] = useState<number[]>([]);
@@ -59,6 +70,26 @@ const PublicPortfolio = (props: Props) => {
             },
         ],
     };
+
+    const deleteComment = (id: string) => {
+        PublicPortfolioService.deleteComment(id).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+        });
+    }
+
+    const createComment = () => {
+        PublicPortfolioService.createComment(props.portfolio.id, { comment: newComment }).then(() => {
+            setNewComment('');
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+            }
+        });
+    }
 
     const onClose = () => {
         setSelectedInvestmentType('');
@@ -117,6 +148,10 @@ const PublicPortfolio = (props: Props) => {
         }
     };
 
+    const onCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        setNewComment(e.target.value);
+    };
+
     return (
         <Drawer title={props.portfolio.title} onClose={onClose} open={open}>
             <Descriptions layout="vertical">
@@ -162,7 +197,35 @@ const PublicPortfolio = (props: Props) => {
                         suffix={props.stats.hidden ? "%" : "$"}
                     />
                 </Col>
+                <Descriptions.Item span={3} label="Comments">{ }</Descriptions.Item>
             </Descriptions>
+            <List>
+                {
+                    props.portfolio.comments.map(function (comment) {
+                        return <List.Item
+                            actions={
+                                comment.deletable ?
+                                    [<DeleteOutlined onClick={() => deleteComment(comment.id)} />] : []
+                            }
+                        >
+                            <List.Item.Meta
+                                title={comment.author}
+                                description={comment.comment}
+                            />
+                        </List.Item>
+                    })
+                }
+            </List>
+            <TextArea
+                showCount
+                maxLength={100}
+                rows={4}
+                style={{ resize: 'none' }}
+                onChange={onCommentChange}
+                placeholder="leave a comment"
+            />
+            <br></br>
+            <Button type="primary" disabled={newComment.length <= 0} onClick={createComment}>Comment</Button>
         </Drawer >
     );
 }
