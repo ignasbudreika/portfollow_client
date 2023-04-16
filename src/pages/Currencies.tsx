@@ -3,16 +3,16 @@ import { useNavigate } from 'react-router-dom';
 
 import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography } from 'antd';
 import { ColumnsType } from 'antd/es/table';
-import CryptocurrenciesService from '../services/CryptocurrenciesService';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import AddCrypto from '../components/AddCrypto';
+import AddCrypto from '../components/AddCurrency';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
 import InvestmentService from '../services/InvestmentService';
 import { logout, useAppDispatch } from '../app/store';
 import Title from 'antd/es/typography/Title';
+import CurrenciesService from '../services/CurrenciesService';
 
 const Currencies: React.FC = () => {
   const navigate = useNavigate();
@@ -61,6 +61,7 @@ const Currencies: React.FC = () => {
     quantity: number;
     price: number;
     value: number;
+    type: string;
     transactions: Transaction[];
   }
 
@@ -94,6 +95,11 @@ const Currencies: React.FC = () => {
       key: 'value',
     },
     {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
       title: 'Action',
       key: 'tx',
       render: (_, investment) => (
@@ -114,9 +120,17 @@ const Currencies: React.FC = () => {
   ];
 
   const getData = () => {
-    CryptocurrenciesService.getCrypto().then((res) => {
-      setCryptocurrencies(res.data.map((crypto: any) => {
-        return { id: crypto.id, symbol: crypto.symbol, quantity: crypto.quantity, price: crypto.price, value: crypto.value, transactions: crypto.transactions }
+    CurrenciesService.getCurrencies().then((res) => {
+      setCryptocurrencies(res.data.map((currency: any) => {
+        return {
+          id: currency.id,
+          symbol: currency.symbol,
+          quantity: currency.quantity,
+          price: currency.price,
+          value: currency.value,
+          type: currency.crypto ? 'CRYPTO' : 'FOREX',
+          transactions: currency.transactions
+        }
       }));
     }).catch((err) => {
       if (err.response.status === 401) {
@@ -125,7 +139,7 @@ const Currencies: React.FC = () => {
       }
     });
 
-    CryptocurrenciesService.getCryptoStats().then((res) => {
+    CurrenciesService.getCurrenciesStats().then((res) => {
       setTotalValue(res.data.total_value);
       setTrend(res.data.trend);
       setTotalValueChange(res.data.total_change);
@@ -252,17 +266,15 @@ const Currencies: React.FC = () => {
                     title: '',
                     key: 'action',
                     render: (_, tx) => (
-                      <Space>
-                        <Popconfirm
-                          title="Delete the transaction"
-                          description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
-                          onConfirm={() => removeTx(tx.id)}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
-                        </Popconfirm>
-                      </Space>
+                      <Popconfirm
+                        title="Delete the transaction"
+                        description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
+                        onConfirm={() => removeTx(tx.id)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                      </Popconfirm>
                     ),
                   },
                 ];

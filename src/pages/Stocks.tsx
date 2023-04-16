@@ -254,17 +254,15 @@ const Stocks: React.FC = () => {
                     title: '',
                     key: 'action',
                     render: (_, tx) => (
-                      <Space>
-                        <Popconfirm
-                          title="Delete the transaction"
-                          description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
-                          onConfirm={() => removeTx(tx.id)}
-                          okText="Yes"
-                          cancelText="No"
-                        >
-                          <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
-                        </Popconfirm>
-                      </Space>
+                      <Popconfirm
+                        title="Delete the transaction"
+                        description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
+                        onConfirm={() => removeTx(tx.id)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                      </Popconfirm>
                     ),
                   },
                 ];
