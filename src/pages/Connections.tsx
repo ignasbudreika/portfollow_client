@@ -1,5 +1,5 @@
 import { DeleteOutlined, SyncOutlined, UserAddOutlined, WalletOutlined } from "@ant-design/icons";
-import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, Popconfirm } from "antd";
+import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, Popconfirm, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAtom } from "jotai";
@@ -12,6 +12,7 @@ import { logout, useAppDispatch } from "../app/store";
 const Connections: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const [spectrocoinConnected, setSpectrocoinConnected] = useState<boolean>(false);
     const [spectrocoinConnection, setSpectrocoinConnection] = useState<any>();
@@ -37,51 +38,75 @@ const Connections: React.FC = () => {
 
     const fetchSpectrocoinConnection = () => {
         ConnectionsService.fetchSpectrocoinConnection().then(() => {
+            success('SpectroCoin connection was successfully fetched');
             getData();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
+            error('Unable to fetch SpectroCoin connection');
             getData();
         });
     }
 
     const deleteSpectrocoinConnection = () => {
         ConnectionsService.deleteSpectrocoinConnection().then(() => {
+            success('SpectroCoin connection was successfully deleted');
             getData();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
+            error('Unable to delete SpectroCoin connection');
             getData();
         });
     }
 
     const fetchEthereumWalletConnection = () => {
         ConnectionsService.fetchEthereumWalletConnection().then(() => {
+            success('Ethereum wallet connection was successfully fetched');
             getData();
         }).catch((err) => {
             if (err.response.status === 401) {
                 navigate("/")
                 return;
             }
+            error('Unable to fetch Ethereum wallet connection');
             getData();
         });
     }
 
     const deleteEthereumWalletConnection = () => {
         ConnectionsService.deleteEthereumWalletConnection().then(() => {
+            success('Ethereum wallet connection was successfully deleted');
             getData();
         }).catch((err) => {
             if (err.response.status === 401) {
                 navigate("/")
                 return;
             }
+            error('Unable to delete Ethereum wallet connection');
             getData();
         });
     }
+
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
+        });
+    };
 
     useEffect(() => {
         if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
@@ -94,6 +119,7 @@ const Connections: React.FC = () => {
 
     return (
         <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+            {contextHolder}
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Card cover={<img alt="example" src="spectrocoin_logo.svg" style={{ height: '100px', padding: '20px 0px 0px 0px' }} />}>

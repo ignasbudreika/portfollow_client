@@ -1,4 +1,4 @@
-import { Avatar, Button, Col, Descriptions, Drawer, List, Statistic } from "antd";
+import { Button, Col, Descriptions, Drawer, List, Statistic, message } from "antd";
 import { useAtom } from "jotai";
 import { showPublicPortfolioDrawerAtom } from "../atoms";
 import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -46,6 +46,7 @@ interface Comment {
 const PublicPortfolio = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const [open, setOpen] = useAtom(showPublicPortfolioDrawerAtom);
     const [selectedInvestmentType, setSelectedInvestmentType] = useState<string>('');
@@ -72,22 +73,29 @@ const PublicPortfolio = (props: Props) => {
     };
 
     const deleteComment = (id: string) => {
-        PublicPortfolioService.deleteComment(id).catch((err) => {
+        PublicPortfolioService.deleteComment(id).then(() => {
+            success('Comment was successfully deleted');
+        }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
+            error('Unable to delete transaction');
         });
     }
 
     const createComment = () => {
         PublicPortfolioService.createComment(props.portfolio.id, { comment: newComment }).then(() => {
+            success('Comment was successfully created');
             setNewComment('');
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
+            error('Unable to create transaction');
         });
     }
 
@@ -112,6 +120,20 @@ const PublicPortfolio = (props: Props) => {
             }
         }
     }
+
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
+        });
+    };
 
     const getData = (investmentType: string) => {
         if (investmentType.length == 0) {
@@ -154,6 +176,7 @@ const PublicPortfolio = (props: Props) => {
 
     return (
         <Drawer title={props.portfolio.title} onClose={onClose} open={open}>
+            {contextHolder}
             <Descriptions layout="vertical">
                 <Descriptions.Item span={3} label="About the portfolio">
                     {props.portfolio.description}

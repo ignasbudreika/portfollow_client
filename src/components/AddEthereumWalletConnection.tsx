@@ -1,4 +1,4 @@
-import { Form, Input, Modal } from "antd";
+import { Form, Input, Modal, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
@@ -14,25 +14,44 @@ interface Props {
 const AddEthereumWalletConnection = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const [address, setAddress] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddEthereumWalletConnectionModalAtom)
 
-    const handleOk = () => {
-        ConnectionsService.createEthereumWalletConnection({ address: address }).then(() => {
-            setShowModal(false);
-            props.refresh();
-        }).catch((err) => {
-            if (err.response.status === 401) {
-                dispatch(logout());
-                navigate("/");
-            }
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
         });
     };
 
     const handleCancel = () => {
         setAddress('')
         setShowModal(false);
+    };
+
+    const handleOk = () => {
+        ConnectionsService.createEthereumWalletConnection({ address: address }).then(() => {
+            success('Ethereum wallet was successfully connected')
+            setShowModal(false);
+            props.refresh();
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+                return;
+            }
+            error('Unable to connect Ethereum wallet');
+            setShowModal(false);
+        });
     };
 
     return (
@@ -45,6 +64,7 @@ const AddEthereumWalletConnection = (props: Props) => {
             okText={'Connect'}
             onCancel={handleCancel}
         >
+            {contextHolder}
             <br></br>
             <Form>
                 <Form.Item required={true}>

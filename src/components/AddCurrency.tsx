@@ -1,28 +1,54 @@
-import { DatePicker, DatePickerProps, Form, Input, Modal, Switch } from "antd";
+import { DatePicker, DatePickerProps, Form, Input, Modal, Switch, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
 import { showAddCryptoModalAtom } from '../atoms';
 import CurrenciesService from "../services/CurrenciesService";
+import { useNavigate } from "react-router-dom";
+import { logout, useAppDispatch } from "../app/store";
 
 interface Props {
     onDone: () => void
 }
 
 const AddCurrency = (props: Props) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
+
     const [symbol, setSymbol] = useState<string>('');
     const [quantity, setQuantity] = useState<number>(0);
     const [date, setDate] = useState<string>('');
     const [isCrypto, setIsCrypto] = useState<boolean>(false);
     const [showModal, setShowModal] = useAtom(showAddCryptoModalAtom);
-    const [confirmLoading, setConfirmLoading] = useState(false);
 
-    const handleOk = async () => {
-        await CurrenciesService.createCurrency({ symbol: symbol, quantity: quantity, date: date, crypto: isCrypto })
-        setConfirmLoading(true);
-        props.onDone();
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
+        });
+    };
+
+    const handleOk = () => {
+        CurrenciesService.createCurrency({ symbol: symbol, quantity: quantity, date: date, crypto: isCrypto }).then(() => {
+            success('Investment was successfully created');
+            props.onDone();
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+                return;
+            }
+            error('Unable to create investment');
+        });
         setShowModal(false);
-        setConfirmLoading(false);
     };
 
     const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -42,11 +68,11 @@ const AddCurrency = (props: Props) => {
             open={showModal}
             onOk={handleOk}
             centered
-            confirmLoading={confirmLoading}
             cancelButtonProps={{ hidden: true }}
             okText={'Create'}
             onCancel={handleCancel}
         >
+            {contextHolder}
             <p>Add your new currency investment that will instantly alter your portfolio history</p>
             <Form>
                 <Form.Item required={true}>

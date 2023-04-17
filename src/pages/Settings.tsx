@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, TourProps } from "antd";
+import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, TourProps, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
@@ -11,6 +11,7 @@ const Settings: React.FC = () => {
     const updateRef = useRef(null);
     const resetRef = useRef(null);
     const deleteRef = useRef(null);
+    const [messageApi, contextHolder] = message.useMessage();
 
     const [updateOpen, setUpdateOpen] = useState<boolean>(false);
 
@@ -53,6 +54,8 @@ const Settings: React.FC = () => {
         }
 
         SettingsService.setUserSettings(body).then((res) => {
+            success('Settings successfully updated');
+
             setEmail(res.data.user_info.email);
             setUsername(res.data.user_info.username);
             setTitle(res.data.portfolio_info.title);
@@ -67,9 +70,25 @@ const Settings: React.FC = () => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
+            error('Unable to update settings');
         });
     }
+
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
+        });
+    };
 
     useEffect(() => {
         if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
@@ -82,6 +101,7 @@ const Settings: React.FC = () => {
 
     return (
         <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+            {contextHolder}
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Descriptions title="User information" bordered>

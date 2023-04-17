@@ -1,9 +1,11 @@
-import { DatePicker, DatePickerProps, Form, Input, Modal } from "antd";
+import { DatePicker, DatePickerProps, Form, Input, Modal, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
 import { showAddStockModalAtom } from '../atoms';
 import StocksService from "../services/StocksService";
+import { useNavigate } from "react-router-dom";
+import { logout, useAppDispatch } from "../app/store";
 
 
 interface Props {
@@ -11,18 +13,28 @@ interface Props {
 }
 
 const AddStock = (props: Props) => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
+
     const [ticker, setTicker] = useState<string>('')
     const [quantity, setQuantity] = useState<number>(0)
     const [date, setDate] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddStockModalAtom)
-    const [confirmLoading, setConfirmLoading] = useState(false);
 
-    const handleOk = async () => {
-        setConfirmLoading(true);
-        await StocksService.createStock({ ticker: ticker, quantity: quantity, date: date })
-        props.onDone();
+    const handleOk = () => {
+        StocksService.createStock({ ticker: ticker, quantity: quantity, date: date }).then(() => {
+            success('Investment was successfully created');
+            props.onDone();
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+                return;
+            }
+            error('Unable to create investment');
+        });
         setShowModal(false);
-        setConfirmLoading(false);
     };
 
     const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -36,17 +48,31 @@ const AddStock = (props: Props) => {
         setShowModal(false);
     };
 
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
+        });
+    };
+
     return (
         <Modal
             title="Create stock investment"
             open={showModal}
             onOk={handleOk}
             centered
-            confirmLoading={confirmLoading}
             cancelButtonProps={{ hidden: true }}
             okText={'Create'}
             onCancel={handleCancel}
         >
+            {contextHolder}
             <p>Add your new stock investment that will instantly alter your portfolio history</p>
             <Form>
                 <Form.Item required={true}>

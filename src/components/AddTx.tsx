@@ -1,28 +1,54 @@
-import { DatePicker, DatePickerProps, Form, Input, Modal, Select } from "antd";
+import { DatePicker, DatePickerProps, Form, Input, Modal, Select, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
 import InvestmentService from "../services/InvestmentService";
+import { useNavigate } from "react-router-dom";
+import { logout, useAppDispatch } from "../app/store";
 
 interface Props {
   onDone: () => void
 }
 
 const AddTx = (props: Props) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
+
   const [id, setId] = useAtom(selectedInvestmentIdAtom)
   const [quantity, setQuantity] = useState<number>(0)
   const [type, setType] = useState<string>('BUY')
   const [date, setDate] = useState<string>('')
   const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
-  const [confirmLoading, setConfirmLoading] = useState(false);
 
-  const handleOk = async () => {
-    await InvestmentService.createTx(id, { quantity: quantity, type: type, date: date })
-    setConfirmLoading(true);
-    props.onDone();
+  const handleOk = () => {
+    InvestmentService.createTx(id, { quantity: quantity, type: type, date: date }).then(() => {
+      props.onDone();
+      success('Transaction was successfully created');
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+        return;
+      }
+      error('Unable to create transaction');
+    });
     setShowModal(false);
-    setConfirmLoading(false);
+  };
+
+  const success = (message: string) => {
+    messageApi.open({
+      type: 'success',
+      content: message,
+    });
+  };
+
+  const error = (message: string) => {
+    messageApi.open({
+      type: 'error',
+      content: message,
+    });
   };
 
   const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -47,11 +73,11 @@ const AddTx = (props: Props) => {
       open={showModal}
       onOk={handleOk}
       centered
-      confirmLoading={confirmLoading}
       cancelButtonProps={{ hidden: true }}
       okText={'Create'}
       onCancel={handleCancel}
     >
+      {contextHolder}
       <p>Add new transaction for your investment</p>
       <Form>
         <Form.Item required={true}>

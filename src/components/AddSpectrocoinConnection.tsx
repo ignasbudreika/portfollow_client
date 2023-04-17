@@ -1,4 +1,4 @@
-import { Form, Input, Modal, Row, Tooltip } from "antd";
+import { Form, Input, Modal, Row, Tooltip, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
@@ -15,6 +15,7 @@ interface Props {
 const AddSpectrocoinConnection = (props: Props) => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const [messageApi, contextHolder] = message.useMessage();
 
     const [clientId, setClientId] = useState<string>('')
     const [clientSecret, setClientSecret] = useState<string>('')
@@ -22,6 +23,7 @@ const AddSpectrocoinConnection = (props: Props) => {
 
     const handleOk = () => {
         ConnectionsService.createSpectrocoinConnection({ client_id: clientId, client_secret: clientSecret }).then(() => {
+            success('SpectroCoin account was successfully connected')
             setShowModal(false);
             props.refresh();
         }).catch((err) => {
@@ -29,7 +31,22 @@ const AddSpectrocoinConnection = (props: Props) => {
                 dispatch(logout());
                 navigate("/");
             }
+            error('Unable to connect SpectroCoin account');
             setShowModal(false);
+        });
+    };
+
+    const success = (message: string) => {
+        messageApi.open({
+            type: 'success',
+            content: message,
+        });
+    };
+
+    const error = (message: string) => {
+        messageApi.open({
+            type: 'error',
+            content: message,
         });
     };
 
@@ -49,6 +66,7 @@ const AddSpectrocoinConnection = (props: Props) => {
             okText={'Connect'}
             onCancel={handleCancel}
         >
+            {contextHolder}
             <Form>
                 <Row justify={'space-between'}>
                     <p>Enter your wallet API client credentials</p>
