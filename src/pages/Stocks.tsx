@@ -28,6 +28,8 @@ const Stocks: React.FC = () => {
   const [totalValueChange, setTotalValueChange] = useState<number>(0);
   const [trend, setTrend] = useState<number>(0);
 
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
   const [stocks, setStocks] = useState<StockInvestment[]>([]);
 
   const addTx = (id: string) => {
@@ -254,8 +256,21 @@ const Stocks: React.FC = () => {
       </Row>
       <Row justify="center">
         <Col xl={16} xs={22} sm={22}>
-          <Table columns={columns} dataSource={stocks} size="small" pagination={false}
+          <Table
+            rowKey={(record) => record.id}
+            columns={columns}
+            dataSource={stocks}
+            size="small"
+            pagination={false}
             expandable={{
+              expandedRowKeys: expandedKeys,
+              onExpand: (expanded, record) => {
+                if (expanded) {
+                  setExpandedKeys((prev) => [...prev, record.id])
+                } else {
+                  setExpandedKeys((prev) => prev.filter((k) => k !== record.id));
+                }
+              },
               expandedRowRender: (investment) => {
                 const transactions: ColumnsType<Transaction> = [
                   {
@@ -291,6 +306,7 @@ const Stocks: React.FC = () => {
                 ];
                 return (
                   <Table<Transaction>
+                    rowKey={(record) => record.id}
                     columns={transactions}
                     dataSource={investment.transactions}
                     pagination={false}
