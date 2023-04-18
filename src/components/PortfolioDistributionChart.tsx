@@ -92,7 +92,7 @@ const PortfolioDistributionChart = (props: Props) => {
         <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} /> :
         <Doughnut ref={chartRef} onClick={onSelectedType} data={data} options={
           {
-            maintainAspectRatio: false, radius: 130, aspectRatio: 1, plugins: {
+            maintainAspectRatio: false, aspectRatio: 1, plugins: {
               legend:
               {
                 display: false,

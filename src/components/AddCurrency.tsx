@@ -1,4 +1,4 @@
-import { DatePicker, DatePickerProps, Form, Input, Modal, Switch, message } from "antd";
+import { DatePicker, Form, Input, InputNumber, Modal, Switch, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
@@ -6,20 +6,19 @@ import { showAddCryptoModalAtom } from '../atoms';
 import CurrenciesService from "../services/CurrenciesService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
+import dayjs from "dayjs";
 
 interface Props {
     onDone: () => void
 }
 
 const AddCurrency = (props: Props) => {
+    const [form] = Form.useForm();
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [symbol, setSymbol] = useState<string>('');
-    const [quantity, setQuantity] = useState<number>(0);
-    const [date, setDate] = useState<string>('');
-    const [isCrypto, setIsCrypto] = useState<boolean>(false);
     const [showModal, setShowModal] = useAtom(showAddCryptoModalAtom);
 
     const success = (message: string) => {
@@ -37,28 +36,30 @@ const AddCurrency = (props: Props) => {
     };
 
     const handleOk = () => {
-        CurrenciesService.createCurrency({ symbol: symbol, quantity: quantity, date: date, crypto: isCrypto }).then(() => {
-            success('Investment was successfully created');
-            props.onDone();
-        }).catch((err) => {
-            if (err.response.status === 401) {
-                dispatch(logout());
-                navigate("/");
-                return;
-            }
-            error('Unable to create investment');
-        });
-        setShowModal(false);
-    };
-
-    const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-        setDate(dateString)
+        form.validateFields().then((values) => {
+            CurrenciesService.createCurrency({
+                symbol: values.symbol.toUpperCase(),
+                quantity: values.quantity,
+                date: values.date.toDate(),
+                crypto: values.type
+            }).then(() => {
+                success('Investment was successfully created');
+                props.onDone();
+            }).catch((err) => {
+                if (err.response.status === 401) {
+                    dispatch(logout());
+                    navigate("/");
+                    return;
+                }
+                error('Unable to create investment');
+            });
+            form.resetFields();
+            setShowModal(false);
+        })
     };
 
     const handleCancel = () => {
-        setSymbol('')
-        setQuantity(0)
-        setDate('')
+        form.resetFields();
         setShowModal(false);
     };
 
@@ -74,24 +75,44 @@ const AddCurrency = (props: Props) => {
         >
             {contextHolder}
             <p>Add your new currency investment that will instantly alter your portfolio history</p>
-            <Form>
-                <Form.Item required={true}>
-                    <Input value={symbol} onInput={e => setSymbol((e.target as HTMLTextAreaElement).value.toUpperCase())} placeholder="symbol" />
+            <Form
+                form={form}
+                initialValues={{ date: dayjs(), type: false, quantity: 1 }}
+            >
+                <Form.Item
+                    name="symbol"
+                    rules={[{ required: true, message: 'symbol is required' }]}
+                >
+                    <Input placeholder="symbol" />
                 </Form.Item>
-                <Form.Item required={true}>
-                    <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
-                </Form.Item>
-                <Form.Item required={true}>
+                <Form.Item name='type'>
                     <Switch
                         checkedChildren={"crypto"}
                         unCheckedChildren={"forex"}
-                        onChange={value => setIsCrypto(value)} />
+                    />
                 </Form.Item>
-                <Form.Item required={true}>
-                    <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
+                <Form.Item
+                    name="quantity"
+                    rules={[{ required: true, message: 'quantity is required' }]}
+                >
+                    <InputNumber<string>
+
+                        style={{ width: 200 }}
+                        min="0"
+                        defaultValue="1"
+                        step="1"
+                        placeholder="quantity"
+                        stringMode
+                    />
+                </Form.Item>
+                <Form.Item
+                    name="date"
+                    rules={[{ required: true, message: 'date is required' }]}
+                >
+                    <DatePicker placeholder="date" disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
                 </Form.Item>
             </Form>
-        </Modal>
+        </Modal >
     );
 }
 

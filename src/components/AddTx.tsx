@@ -1,40 +1,47 @@
-import { DatePicker, DatePickerProps, Form, Input, Modal, Select, message } from "antd";
-import { useState } from "react";
+import { DatePicker, Form, InputNumber, Modal, Switch, message } from "antd";
 
 import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
 import InvestmentService from "../services/InvestmentService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
+import dayjs from "dayjs";
 
 interface Props {
   onDone: () => void
 }
 
 const AddTx = (props: Props) => {
+  const [form] = Form.useForm();
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [messageApi, contextHolder] = message.useMessage();
 
   const [id, setId] = useAtom(selectedInvestmentIdAtom)
-  const [quantity, setQuantity] = useState<number>(0)
-  const [type, setType] = useState<string>('BUY')
-  const [date, setDate] = useState<string>('')
   const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
 
   const handleOk = () => {
-    InvestmentService.createTx(id, { quantity: quantity, type: type, date: date }).then(() => {
-      props.onDone();
-      success('Transaction was successfully created');
-    }).catch((err) => {
-      if (err.response.status === 401) {
-        dispatch(logout());
-        navigate("/");
-        return;
-      }
-      error('Unable to create transaction');
-    });
-    setShowModal(false);
+    form.validateFields()
+      .then((values) => {
+        InvestmentService.createTx(id, {
+          quantity: values.quantity,
+          type: values.type ? 'BUY' : 'SELL',
+          date: values.date.toDate()
+        }).then(() => {
+          props.onDone();
+          success('Transaction was successfully created');
+        }).catch((err) => {
+          if (err.response.status === 401) {
+            dispatch(logout());
+            navigate("/");
+            return;
+          }
+          error('Unable to create transaction');
+        });
+        form.resetFields();
+        setShowModal(false);
+      })
   };
 
   const success = (message: string) => {
@@ -51,19 +58,9 @@ const AddTx = (props: Props) => {
     });
   };
 
-  const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-    setDate(dateString)
-  };
-
-  const handleTypeChange = (value: string) => {
-    setType(value);
-  };
-
   const handleCancel = () => {
-    setId('')
-    setQuantity(0)
-    setType('BUY')
-    setDate('')
+    setId('');
+    form.resetFields();
     setShowModal(false);
   };
 
@@ -79,23 +76,34 @@ const AddTx = (props: Props) => {
     >
       {contextHolder}
       <p>Add new transaction for your investment</p>
-      <Form>
-        <Form.Item required={true}>
-          <Input value={quantity} onInput={e => setQuantity(Number((e.target as HTMLTextAreaElement).value))} placeholder="quantity" type="number" />
-        </Form.Item>
-        <Form.Item required={true}>
-          <Select
-            defaultValue="BUY"
-            style={{ width: 120 }}
-            onChange={handleTypeChange}
-            options={[
-              { value: 'BUY', label: 'BUY' },
-              { value: 'SELL', label: 'SELL' },
-            ]}
+      <Form
+        form={form}
+        initialValues={{ date: dayjs(), type: false, quantity: 1 }}
+      >
+        <Form.Item
+          name="quantity"
+          rules={[{ required: true, message: 'quantity is required' }]}
+        >
+          <InputNumber<string>
+            style={{ width: 200 }}
+            min="0"
+            defaultValue="1"
+            step="1"
+            placeholder="quantity"
+            stringMode
           />
         </Form.Item>
-        <Form.Item required={true}>
-          <DatePicker placeholder="date" onChange={onDateChange} disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
+        <Form.Item name='type'>
+          <Switch
+            checkedChildren={"buy"}
+            unCheckedChildren={"sell"}
+          />
+        </Form.Item>
+        <Form.Item
+          name="date"
+          rules={[{ required: true, message: 'date is required' }]}
+        >
+          <DatePicker placeholder="date" disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
         </Form.Item>
       </Form>
     </Modal>

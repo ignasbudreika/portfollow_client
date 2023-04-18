@@ -81,7 +81,7 @@ const PublicPortfolio = (props: Props) => {
                 navigate("/");
                 return;
             }
-            error('Unable to delete transaction');
+            error('Unable to delete comment');
         });
     }
 
@@ -95,7 +95,7 @@ const PublicPortfolio = (props: Props) => {
                 navigate("/");
                 return;
             }
-            error('Unable to create transaction');
+            error('Unable to create comment');
         });
     }
 

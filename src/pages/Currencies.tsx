@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
-import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography } from 'antd';
+import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
@@ -17,6 +17,7 @@ import CurrenciesService from '../services/CurrenciesService';
 const Currencies: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [, setShowModal] = useAtom(showAddCryptoModalAtom)
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
@@ -28,30 +29,51 @@ const Currencies: React.FC = () => {
 
   const [cryptocurrencies, setCryptocurrencies] = useState<CryptoInvestment[]>([]);
 
+  const success = (message: string) => {
+    messageApi.open({
+      type: 'success',
+      content: message,
+    });
+  };
+
+  const error = (message: string) => {
+    messageApi.open({
+      type: 'error',
+      content: message,
+    });
+  };
+
   const addTx = (id: string) => {
     setSelectedInvestmentId(id);
     setShowTxModal(true);
   }
 
   const removeInvestment = (id: string) => {
-    InvestmentService.deleteInvestment(id).then((res) => {
+    InvestmentService.deleteInvestment(id).then(() => {
+      success('Investment was successfully deleted');
       getData();
     }).catch((err) => {
       if (err.response.status === 401) {
         dispatch(logout());
         navigate("/");
+        return;
       }
+      error('Unable to delete investment');
     })
   }
 
   const removeTx = (id: string) => {
-    TransactionService.deleteTransaction(id).then((res) => {
+    TransactionService.deleteTransaction(id).then(() => {
+      success('Transaction was successfully deleted');
       getData();
     }).catch((err) => {
       if (err.response.status === 401) {
         dispatch(logout());
         navigate("/");
+        return;
       }
+
+      error('Unable to delete transaction');
     })
   }
 
@@ -162,6 +184,7 @@ const Currencies: React.FC = () => {
 
   return (
     <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
+      {contextHolder}
       <Row justify={'center'}>
         <Col xl={16} xs={22} sm={22}>
           <Typography>
