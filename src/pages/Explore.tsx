@@ -59,10 +59,7 @@ const Explore: React.FC = () => {
                     id: portfolio.id,
                     title: portfolio.title,
                     description: portfolio.description,
-                    history: portfolio.history.map((history: any) => { return { x: history.date, y: history.value } }),
-                    comments: portfolio.comments.map((comment: any) => {
-                        return { id: comment.id, author: comment.author, comment: comment.comment, deletable: comment.deletable }
-                    })
+                    history: portfolio.history.map((history: any) => { return { x: history.date, y: history.value } })
                 }
             }));
             setIndex(res.data.index);
@@ -87,9 +84,6 @@ const Explore: React.FC = () => {
                             x: history.date,
                             y: history.value
                         }
-                    }),
-                    comments: portfolio.comments.map((comment: any) => {
-                        return { id: comment.id, author: comment.author, comment: comment.comment, deletable: comment.deletable }
                     })
                 }
             })));
@@ -103,12 +97,8 @@ const Explore: React.FC = () => {
         });
     }
 
-    const getComments = () => {
-        if (!selectedPortfolio) {
-            return;
-        }
-
-        PublicPortfolioService.getComments(selectedPortfolio.id).then((res) => {
+    const getComments = (id: string) => {
+        PublicPortfolioService.getComments(id).then((res) => {
             setSelectedPortfolio((prev) => prev ? ({ ...prev, comments: res.data }) : undefined)
         }).catch((err) => {
             if (err.response.status === 401) {
@@ -121,7 +111,7 @@ const Explore: React.FC = () => {
 
     const openPublicPortfolio = (portfolio: PublicPortfolio) => {
         setSelectedPortfolio(portfolio);
-        console.log(portfolio);
+        getComments(portfolio.id);
         PublicPortfolioService.getPublicPortfolioStats(portfolio.id).then((res) => {
             setSelectedPortfolioStats({
                 trend: res.data.trend,
@@ -185,7 +175,7 @@ const Explore: React.FC = () => {
                 <Button icon={<AppstoreAddOutlined />} hidden={!existsMore} onClick={loadMore}>More</Button>
             </Row>
             {
-                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio getComments={getComments} portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
+                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio getComments={() => getComments(selectedPortfolio.id)} portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
             }
         </Space >
     );

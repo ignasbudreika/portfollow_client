@@ -229,7 +229,7 @@ const PublicPortfolio = (props: Props) => {
             </Descriptions>
             <List>
                 {
-                    props.portfolio.comments.map(function (comment) {
+                    props.portfolio.comments && props.portfolio.comments.map(function (comment) {
                         return <List.Item
                             actions={
                                 comment.deletable ?
