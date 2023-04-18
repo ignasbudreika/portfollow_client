@@ -103,6 +103,22 @@ const Explore: React.FC = () => {
         });
     }
 
+    const getComments = () => {
+        if (!selectedPortfolio) {
+            return;
+        }
+
+        PublicPortfolioService.getComments(selectedPortfolio.id).then((res) => {
+            setSelectedPortfolio((prev) => prev ? ({ ...prev, comments: res.data }) : undefined)
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+                return;
+            }
+        });
+    }
+
     const openPublicPortfolio = (portfolio: PublicPortfolio) => {
         setSelectedPortfolio(portfolio);
         console.log(portfolio);
@@ -141,27 +157,15 @@ const Explore: React.FC = () => {
                     <Typography>
                         <Title level={2}>Public portfolios</Title>
                         <Divider></Divider>
-                        <Paragraph>
-                            Portfollow allows users to publish their investment portfolios,
-                            providing a valuable resource for investors to explore and learn from others' investment strategies.
-                        </Paragraph>
-                        <Paragraph>
-                            By exploring published portfolios, users can gain insights into different investment approaches,
-                            discover new investment opportunities, and improve their own investment performance.
-                        </Paragraph>
-                        <Paragraph>
-                            By leveraging the collective knowledge of our user community, we provide investors with a powerful
-                            tool for staying up-to-date with the latest trends in the investment world.
-                        </Paragraph>
                     </Typography>
                 </Col>
             </Row>
             <Row justify={'center'}>
                 <Col xl={16} xs={22} sm={22}>
-                    <Row justify={'start'}>
+                    <Row justify={'start'} gutter={20}>
                         {
                             portfolios.map(function (portfolio) {
-                                return <Col xxl={8} md={12} xs={24} sm={20}>
+                                return <Col xxl={8} md={12} xs={24} sm={24}>
                                     <Card title=
                                         {
                                             <a onClick={() => openPublicPortfolio(portfolio)} style={{ color: "#c7c4c5" }}>
@@ -181,7 +185,7 @@ const Explore: React.FC = () => {
                 <Button icon={<AppstoreAddOutlined />} hidden={!existsMore} onClick={loadMore}>More</Button>
             </Row>
             {
-                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
+                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio getComments={getComments} portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
             }
         </Space >
     );

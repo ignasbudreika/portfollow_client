@@ -10,8 +10,9 @@ import { logout, useAppDispatch } from "../app/store";
 import TextArea from "antd/es/input/TextArea";
 
 interface Props {
-    portfolio: PublicPortfolio
-    stats: PublicPortfolioStats
+    getComments: () => void;
+    portfolio: PublicPortfolio;
+    stats: PublicPortfolioStats;
 }
 
 interface PublicPortfolio {
@@ -56,6 +57,8 @@ const PublicPortfolio = (props: Props) => {
     const [categories, setCategories] = useState<any[]>([]);
     const [values, setValues] = useState<number[]>([]);
 
+    const [comments, setComments] = useState<Comment[]>([]);
+
     const chartRef = useRef(null);
 
     const distribution = {
@@ -75,6 +78,7 @@ const PublicPortfolio = (props: Props) => {
     const deleteComment = (id: string) => {
         PublicPortfolioService.deleteComment(id).then(() => {
             success('Comment was successfully deleted');
+            props.getComments();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
@@ -89,6 +93,7 @@ const PublicPortfolio = (props: Props) => {
         PublicPortfolioService.createComment(props.portfolio.id, { comment: newComment }).then(() => {
             success('Comment was successfully created');
             setNewComment('');
+            props.getComments();
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
@@ -245,6 +250,7 @@ const PublicPortfolio = (props: Props) => {
                 rows={4}
                 style={{ resize: 'none' }}
                 onChange={onCommentChange}
+                value={newComment}
                 placeholder="leave a comment"
             />
             <br></br>

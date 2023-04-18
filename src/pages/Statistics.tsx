@@ -123,7 +123,6 @@ const Statistics: React.FC = () => {
                       unCheckedChildren={"$"}
                       onChange={value => setPercentage(value)} />
                     <PortfolioDistributionChart percentage={percentage} />
-
                   </>
                 </Card>
               </Col>

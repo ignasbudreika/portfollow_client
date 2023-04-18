@@ -17,6 +17,10 @@ class PublicPortfolioService {
         return api.get('/public/portfolio/' + id + '/distribution?type=' + type);
     }
 
+    getComments(id: string) {
+        return api.get('/public/portfolio/' + id + '/comment');
+    }
+
     createComment(id: string, body: any) {
         return api.post('/public/portfolio/' + id + '/comment', body);
     }

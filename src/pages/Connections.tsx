@@ -139,10 +139,11 @@ const Connections: React.FC = () => {
                                     </Descriptions>
                                     <br></br>
                                     <Row justify={'center'}>
-                                        <Col span={12}>
+                                        <Col span={10}>
                                             <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchSpectrocoinConnection()}></Button>
                                         </Col>
-                                        <Col span={12}>
+                                        <Col span={1}></Col>
+                                        <Col span={10}>
                                             <Popconfirm
                                                 title="Remove the connection"
                                                 description="Are you sure to remove this connection? Imported transactions will remain in the portfolio"
@@ -184,10 +185,11 @@ const Connections: React.FC = () => {
                                     </Descriptions>
                                     <br></br>
                                     <Row justify={'center'}>
-                                        <Col span={12}>
+                                        <Col span={10}>
                                             <Button block type="primary" icon={<SyncOutlined />} onClick={() => fetchEthereumWalletConnection()}></Button>
                                         </Col>
-                                        <Col span={12}>
+                                        <Col span={1}></Col>
+                                        <Col span={10}>
                                             <Popconfirm
                                                 title="Remove the connection"
                                                 description="Are you sure to remove this connection? Imported transactions will remain in the portfolio"
