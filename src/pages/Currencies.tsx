@@ -152,7 +152,7 @@ const Currencies: React.FC = () => {
           quantity: currency.quantity,
           price: currency.price,
           value: currency.value,
-          type: currency.crypto ? 'CRYPTO' : 'FOREX',
+          type: currency.crypto ? 'CRYPTO' : 'FIAT',
           transactions: currency.transactions
         }
       }));
