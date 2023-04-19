@@ -58,6 +58,13 @@ const AddCurrency = (props: Props) => {
         })
     };
 
+    const formatValue = (value: string | undefined) => {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        return value.replace('/\.?0+$/', '');
+    };
+
     const handleCancel = () => {
         form.resetFields();
         setShowModal(false);
@@ -96,9 +103,10 @@ const AddCurrency = (props: Props) => {
                     rules={[{ required: true, message: 'quantity is required' }]}
                 >
                     <InputNumber<string>
-
                         style={{ width: 200 }}
-                        min="0"
+                        min="0.00000001"
+                        precision={8}
+                        formatter={formatValue}
                         defaultValue="1"
                         step="1"
                         placeholder="quantity"

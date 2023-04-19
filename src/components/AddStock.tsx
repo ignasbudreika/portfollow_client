@@ -56,6 +56,13 @@ const AddStock = (props: Props) => {
         });
     };
 
+    const formatValue = (value: string | undefined) => {
+        if (value === undefined || value === null) {
+            return '';
+        }
+        return value.replace('/\.?0+$/', '');
+    };
+
     const error = (message: string) => {
         messageApi.open({
             type: 'error',
@@ -90,11 +97,12 @@ const AddStock = (props: Props) => {
                     rules={[{ required: true, message: 'quantity is required' }]}
                 >
                     <InputNumber<string>
-
                         style={{ width: 200 }}
-                        min="0"
+                        min="0.00000001"
                         defaultValue="1"
                         step="1"
+                        precision={8}
+                        formatter={formatValue}
                         placeholder="quantity"
                         stringMode
                     />

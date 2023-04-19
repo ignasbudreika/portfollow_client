@@ -141,7 +141,14 @@ const Stocks: React.FC = () => {
   const getData = () => {
     StocksService.getStocks().then((res) => {
       setStocks(res.data.map((stock: any) => {
-        return { id: stock.id, ticker: stock.ticker, quantity: stock.quantity, price: stock.price, value: stock.value, transactions: stock.transactions }
+        return {
+          id: stock.id,
+          ticker: stock.ticker,
+          quantity: stock.quantity,
+          price: stock.price,
+          value: stock.value,
+          transactions: stock.transactions
+        }
       }));
 
     }).catch((err) => {

@@ -64,6 +64,13 @@ const AddTx = (props: Props) => {
     setShowModal(false);
   };
 
+  const formatValue = (value: string | undefined) => {
+    if (value === undefined || value === null) {
+      return '';
+    }
+    return value.replace('/\.?0+$/', '');
+  };
+
   return (
     <Modal
       title="Create transaction"
@@ -86,9 +93,11 @@ const AddTx = (props: Props) => {
         >
           <InputNumber<string>
             style={{ width: 200 }}
-            min="0"
+            min="0.00000001"
+            precision={8}
             defaultValue="1"
             step="1"
+            formatter={formatValue}
             placeholder="quantity"
             stringMode
           />
