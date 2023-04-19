@@ -246,7 +246,7 @@ const PublicPortfolio = (props: Props) => {
             </List>
             <TextArea
                 showCount
-                maxLength={100}
+                maxLength={40}
                 rows={4}
                 style={{ resize: 'none' }}
                 onChange={onCommentChange}
