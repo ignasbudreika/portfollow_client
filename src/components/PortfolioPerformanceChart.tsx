@@ -71,19 +71,21 @@ export const PortfolioPerformanceChart: React.FC = () => {
     <div>
       <Line data={data} options={
         {
+          animation: false,
           maintainAspectRatio: false,
           plugins:
           {
             legend: {
-              display: false
+              display: true,
+              onClick: () => { }
             },
           },
           scales: {
             x: {
-              display: false
+              display: true
             },
             y: {
-              display: false,
+              display: true,
               beginAtZero: false
             }
           },

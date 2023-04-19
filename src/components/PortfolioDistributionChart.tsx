@@ -31,6 +31,7 @@ const PortfolioDistributionChart = (props: Props) => {
 
   const onSelectedType = (event: any) => {
     if (chartRef.current) {
+      console.log(getElementAtEvent(chartRef.current, event)[0].index);
       getData(categories[getElementAtEvent(chartRef.current, event)[0].index]);
     }
   }
@@ -95,7 +96,9 @@ const PortfolioDistributionChart = (props: Props) => {
             maintainAspectRatio: false, aspectRatio: 1, plugins: {
               legend:
               {
-                display: false,
+                display: true,
+                position: 'right',
+                onClick: () => { },
               }
             }
           }

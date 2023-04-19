@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ArcElement, Tooltip, Legend } from 'chart.js';
+import { ArcElement, Tooltip, Legend, ScriptableContext } from 'chart.js';
 import { Chart as ChartJS } from 'chart.js/auto'
 
 import { Line } from 'react-chartjs-2';
@@ -48,8 +48,18 @@ export const PortfolioProfitLossChart: React.FC = () => {
         steppedLine: true,
         fill: {
           target: 'origin',
-          below: 'rgba(255, 0, 0, 0.2)',
-          above: 'rgba(0, 255, 0, 0.2)',
+          below: (context: ScriptableContext<"line">) => {
+            const ctx = context.chart.ctx; const gradient = ctx.createLinearGradient(0, 200, 0, 0);
+            gradient.addColorStop(1, "rgba(255,0,0,0)");
+            gradient.addColorStop(0, "rgba(255,120,120,1)");
+            return gradient;
+          },
+          above: (context: ScriptableContext<"line">) => {
+            const ctx = context.chart.ctx; const gradient = ctx.createLinearGradient(0, 0, 0, 200);
+            gradient.addColorStop(1, "rgba(120,255,120,0)");
+            gradient.addColorStop(0, "rgba(120,255,120,1)");
+            return gradient;
+          },
         }
       },
     ],
@@ -60,19 +70,20 @@ export const PortfolioProfitLossChart: React.FC = () => {
     <div>
       <Line data={data} options={
         {
+          animation: false,
           maintainAspectRatio: false,
           plugins:
           {
             legend: {
-              display: false
+              display: false,
             },
           },
           scales: {
             x: {
-              display: false
+              display: true
             },
             y: {
-              display: false,
+              display: true,
               beginAtZero: false
             }
           },
