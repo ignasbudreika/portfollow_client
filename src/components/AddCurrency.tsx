@@ -88,9 +88,15 @@ const AddCurrency = (props: Props) => {
             >
                 <Form.Item
                     name="symbol"
-                    rules={[{ required: true, message: 'symbol is required' }]}
+                    rules={[
+                        { required: true, message: 'symbol is required' },
+                        { max: 6, message: 'currency symbol length cannot exceed 6 characters' }
+                    ]}
                 >
-                    <Input placeholder="symbol" />
+                    <Input
+                        placeholder="symbol"
+                        onInput={e => (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase()}
+                    />
                 </Form.Item>
                 <Form.Item name='type'>
                     <Switch

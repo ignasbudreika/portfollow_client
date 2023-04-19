@@ -88,9 +88,15 @@ const AddStock = (props: Props) => {
             >
                 <Form.Item
                     name="ticker"
-                    rules={[{ required: true, message: 'ticker is required' }]}
+                    rules={[
+                        { required: true, message: 'ticker is required' },
+                        { max: 6, message: 'stock ticker length cannot exceed 6 characters' }
+                    ]}
                 >
-                    <Input placeholder="ticker" />
+                    <Input
+                        placeholder="ticker"
+                        onInput={e => (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase()}
+                    />
                 </Form.Item>
                 <Form.Item
                     name="quantity"
