@@ -86,6 +86,8 @@ const Stocks: React.FC = () => {
     quantity: number;
     price: number;
     value: number;
+    dayTrend: number;
+    totalChange: number;
     transactions: Transaction[];
   }
 
@@ -119,6 +121,22 @@ const Stocks: React.FC = () => {
       key: 'value',
     },
     {
+      title: 'Day trend, %',
+      dataIndex: 'dayTrend',
+      key: 'day_trend',
+      render: (_, investment) => (
+        <div style={{ color: investment.dayTrend >= 0 ? 'green' : 'red' }}>{investment.dayTrend}</div>
+      ),
+    },
+    {
+      title: 'Total change, $',
+      dataIndex: 'totalChange',
+      key: 'total_change',
+      render: (_, investment) => (
+        <div style={{ color: investment.totalChange >= 0 ? 'green' : 'red' }}>{investment.totalChange}</div>
+      ),
+    },
+    {
       title: '',
       key: 'action',
       render: (_, investment) => (
@@ -147,6 +165,8 @@ const Stocks: React.FC = () => {
           quantity: stock.quantity,
           price: stock.price,
           value: stock.value,
+          dayTrend: stock.day_trend,
+          totalChange: stock.total_change,
           transactions: stock.transactions
         }
       }));
