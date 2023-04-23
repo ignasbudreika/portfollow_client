@@ -8,6 +8,8 @@ import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 import { logout, useAppDispatch } from '../app/store';
+import 'chartjs-adapter-date-fns';
+import { enGB } from 'date-fns/locale';
 
 export const PortfolioPerformanceChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
@@ -15,6 +17,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
+  const [selectedType, setSelectedType] = useState<string>('WEEKLY');
   const [values, setValues] = useState<any[]>([]);
   const [comparison, setComparison] = useState<any[]>([]);
 
@@ -38,13 +41,18 @@ export const PortfolioPerformanceChart: React.FC = () => {
     });
   }
 
+  const changeSelectedType = (type: string) => {
+    setSelectedType(type);
+    getData(type);
+  }
+
   useEffect(() => {
     if (!localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY)) {
       navigate("/")
       return;
     }
 
-    getData('WEEKLY');
+    getData(selectedType);
   }, []);
 
   const data = {
@@ -67,30 +75,51 @@ export const PortfolioPerformanceChart: React.FC = () => {
   };
 
   return <div>
-    <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => { getData(selectedType.toString().toUpperCase()) }} />
+    <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => { changeSelectedType(selectedType.toString().toUpperCase()) }} />
     <div>
-      <Line data={data} options={
-        {
-          animation: false,
-          maintainAspectRatio: false,
-          plugins:
+      <Line
+        data={data}
+        options={
           {
-            legend: {
-              display: true,
-              onClick: () => { }
+            animation: false,
+            maintainAspectRatio: false,
+            plugins:
+            {
+              legend: {
+                display: true,
+                onClick: () => { }
+              },
             },
-          },
-          scales: {
-            x: {
-              display: true
+            scales: {
+              x: {
+                display: true,
+                type: 'timeseries',
+                time: {
+                  round: 'day',
+                  tooltipFormat: 'yyyy MM dd',
+                  unit:
+                    selectedType === 'WEEKLY' ?
+                      'day' :
+                      selectedType === 'MONTHLY' || selectedType === 'QUARTERLY' ? 'week' :
+                        'month'
+                },
+                adapters: {
+                  date: {
+                    locale: enGB
+                  }
+                }
+              },
+              y: {
+                display: true,
+                beginAtZero: false,
+                title: {
+                  display: true,
+                  text: 'Change, %'
+                },
+              }
             },
-            y: {
-              display: true,
-              beginAtZero: false
-            }
-          },
-        }
-      } />
+          }
+        } />
     </div>
   </div>
 }
