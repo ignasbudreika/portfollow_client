@@ -21,25 +21,41 @@ export const PortfolioPerformanceChart: React.FC = () => {
   const [values, setValues] = useState<any[]>([]);
   const [comparison, setComparison] = useState<any[]>([]);
 
-  const getData = (historyType: string) => {
-    PortfolioService.getPortfolioPerformanceHistory(historyType).then((res) => {
-      setValues(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
-    }).catch((err) => {
+  const getData = async (historyType: string) => {
+    const portfolioResponse = await PortfolioService.getPortfolioPerformanceHistory(
+      historyType
+    ).catch((err) => {
       if (err.response.status === 401) {
         dispatch(logout());
         navigate("/");
       }
     });
 
-    PortfolioService.getPortfolioPerformanceComparisonHistory(historyType).then((res) => {
-      setComparison(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
-    }).catch((err) => {
-      if (err.response.status === 401) {
-        dispatch(logout());
-        navigate("/");
-      }
-    });
-  }
+    const comparisonResponse =
+      await PortfolioService.getPortfolioPerformanceComparisonHistory(
+        historyType
+      ).catch((err) => {
+        if (err.response.status === 401) {
+          dispatch(logout());
+          navigate("/");
+        }
+      });
+
+    if (portfolioResponse?.data) {
+      setValues(
+        portfolioResponse.data.map((history: any) => {
+          return { x: history.date, y: history.value };
+        })
+      );
+    }
+
+    if (comparisonResponse?.data)
+      setComparison(
+        comparisonResponse.data.map((history: any) => {
+          return { x: history.date, y: history.value };
+        })
+      );
+  };
 
   const changeSelectedType = (type: string) => {
     setSelectedType(type);

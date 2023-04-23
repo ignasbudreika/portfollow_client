@@ -104,8 +104,9 @@ const AddTx = (props: Props) => {
         </Form.Item>
         <Form.Item name='type'>
           <Switch
-            checkedChildren={"buy"}
-            unCheckedChildren={"sell"}
+            defaultChecked={true}
+            checkedChildren={"BUY"}
+            unCheckedChildren={"SELL"}
           />
         </Form.Item>
         <Form.Item

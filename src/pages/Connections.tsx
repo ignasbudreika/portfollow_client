@@ -180,7 +180,13 @@ const Connections: React.FC = () => {
                                 <>
                                     <Divider orientation="right"><Badge color="green" text="Connected" /></Divider>
                                     <Descriptions bordered>
-                                        <Descriptions.Item label="Address" span={3}>{ethereumWalletConnection.address}</Descriptions.Item>
+                                        <Descriptions.Item label="Address" span={3}>
+                                            {
+                                                <a href={"https://etherscan.io/address/" + ethereumWalletConnection.address} target="_blank" style={{ color: 'black', fontWeight: 'bold' }}>
+                                                    {ethereumWalletConnection.address}
+                                                </a>
+                                            }
+                                        </Descriptions.Item>
                                         <Descriptions.Item label="Updated at" span={3}>{ethereumWalletConnection.updatedAt}</Descriptions.Item>
                                     </Descriptions>
                                     <br></br>

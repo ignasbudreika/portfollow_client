@@ -100,8 +100,8 @@ const AddCurrency = (props: Props) => {
                 </Form.Item>
                 <Form.Item name='type'>
                     <Switch
-                        checkedChildren={"crypto"}
-                        unCheckedChildren={"fiat"}
+                        checkedChildren={"CRYPTO"}
+                        unCheckedChildren={"FIAT"}
                     />
                 </Form.Item>
                 <Form.Item
