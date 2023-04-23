@@ -5,8 +5,12 @@ class PublicPortfolioService {
         return api.get('/public/portfolio?index=' + index);
     }
 
-    getPublicPortfolioStats(id: string) {
+    getPublicPortfolio(id: string) {
         return api.get('/public/portfolio/' + id);
+    }
+
+    getPublicPortfolioStats(id: string) {
+        return api.get('/public/portfolio/' + id + '/stats');
     }
 
     getPublicPortfolioDistribution(id: string) {

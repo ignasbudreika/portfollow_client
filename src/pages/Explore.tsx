@@ -97,6 +97,25 @@ const Explore: React.FC = () => {
         });
     }
 
+    const getPortfolio = (id: string) => {
+        PublicPortfolioService.getPublicPortfolio(id).then((res) => {
+            setSelectedPortfolio({
+                id: res.data.id,
+                title: res.data.title,
+                description: res.data.description,
+                history: res.data.history.map((history: any) => { return { x: history.date, y: history.value } })
+            } as PublicPortfolio)
+        }).catch((err) => {
+            if (err.response.status === 401) {
+                dispatch(logout());
+                navigate("/");
+                return;
+            }
+        });
+    }
+
+    console.log(selectedPortfolio?.id);
+
     const getComments = (id: string) => {
         PublicPortfolioService.getComments(id).then((res) => {
             setSelectedPortfolio((prev) => prev ? ({ ...prev, comments: res.data }) : undefined)
@@ -109,10 +128,10 @@ const Explore: React.FC = () => {
         });
     }
 
-    const openPublicPortfolio = (portfolio: PublicPortfolio) => {
-        setSelectedPortfolio(portfolio);
-        getComments(portfolio.id);
-        PublicPortfolioService.getPublicPortfolioStats(portfolio.id).then((res) => {
+    const openPublicPortfolio = (id: string) => {
+        getPortfolio(id);
+        getComments(id);
+        PublicPortfolioService.getPublicPortfolioStats(id).then((res) => {
             setSelectedPortfolioStats({
                 trend: res.data.trend,
                 change: res.data.total_change,
@@ -138,6 +157,14 @@ const Explore: React.FC = () => {
         }
 
         getData();
+
+        const query = new URLSearchParams(window.location.search.substring(1));
+        console.log(query);
+        const id = query.get('id');
+        console.log(id);
+        if (id && id.length > 0) {
+            openPublicPortfolio(id);
+        }
     }, []);
 
     return (
@@ -158,7 +185,7 @@ const Explore: React.FC = () => {
                                 return <Col xxl={8} md={12} xs={24} sm={24}>
                                     <Card title=
                                         {
-                                            <a onClick={() => openPublicPortfolio(portfolio)} style={{ color: "#c7c4c5" }}>
+                                            <a onClick={() => openPublicPortfolio(portfolio.id)} style={{ color: "#c7c4c5" }}>
                                                 {portfolio.title}
                                             </a>
                                         }
@@ -175,7 +202,8 @@ const Explore: React.FC = () => {
                 <Button icon={<AppstoreAddOutlined />} hidden={!existsMore} onClick={loadMore}>More</Button>
             </Row>
             {
-                selectedPortfolio && selectedPortfolioStats && <PublicPortfolio getComments={() => getComments(selectedPortfolio.id)} portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
+                selectedPortfolio && selectedPortfolioStats
+                && <PublicPortfolio getComments={() => getComments(selectedPortfolio.id)} portfolio={selectedPortfolio} stats={selectedPortfolioStats} />
             }
         </Space >
     );

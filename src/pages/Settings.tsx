@@ -1,4 +1,4 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { CopyOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, TourProps, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ const Settings: React.FC = () => {
 
     const [updateOpen, setUpdateOpen] = useState<boolean>(false);
 
+    const [id, setId] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [username, setUsername] = useState<string>('');
     const [title, setTitle] = useState<string>('');
@@ -26,6 +27,7 @@ const Settings: React.FC = () => {
 
     const getData = () => {
         SettingsService.getUserSettings().then((res) => {
+            setId(res.data.portfolio_info.id);
             setEmail(res.data.user_info.email);
             setUsername(res.data.user_info.username);
             setTitle(res.data.portfolio_info.title);
@@ -56,6 +58,7 @@ const Settings: React.FC = () => {
         SettingsService.setUserSettings(body).then((res) => {
             success('Settings successfully updated');
 
+            setId(res.data.portfolio_info.id);
             setEmail(res.data.user_info.email);
             setUsername(res.data.user_info.username);
             setTitle(res.data.portfolio_info.title);
@@ -74,6 +77,12 @@ const Settings: React.FC = () => {
             }
             error('Unable to update settings');
         });
+    }
+
+    const copyPortfolioLink = () => {
+        let link = location.protocol + '//' + location.host + '/explore?id=' + id;
+        console.log(link);
+        navigator.clipboard.writeText(link);
     }
 
     const success = (message: string) => {
@@ -170,6 +179,10 @@ const Settings: React.FC = () => {
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Space>
+                        <Button ref={updateRef} type="default" onClick={() => copyPortfolioLink()} disabled={(!isPublic && !updateOpen) || updateOpen}>
+                            Copy link
+                            <CopyOutlined />
+                        </Button>
                         <Button ref={updateRef} type="default" onClick={() => setUpdateOpen(true)} hidden={updateOpen}>
                             Update
                         </Button>
