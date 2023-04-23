@@ -116,7 +116,17 @@ const Statistics: React.FC = () => {
             </Row>
             <Row justify="center">
               <Col xl={5} xs={16} sm={12} md={12} lg={12}>
-                <Card title={"Portfolio distribution"}>
+                <Card title={
+                  <Space>
+                    Portfolio distribution
+                    <Tooltip placement="right" title={
+                      "displays current portfolio distribution by category. " +
+                      "Upon clicking category, displays distribution of assets from the selected category."
+                    }>
+                      <InfoCircleOutlined />
+                    </Tooltip>
+                  </Space>
+                }>
                   <>
                     <Switch
                       checkedChildren={"%"}
