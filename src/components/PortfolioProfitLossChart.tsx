@@ -77,6 +77,7 @@ export const PortfolioProfitLossChart: React.FC = () => {
     <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => { changeSelectedType(selectedType.toString().toUpperCase()) }} />
     <div>
       <Line
+        // @ts-ignore
         data={data}
         options={
           {
