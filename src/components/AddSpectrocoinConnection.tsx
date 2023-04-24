@@ -13,27 +13,30 @@ interface Props {
 }
 
 const AddSpectrocoinConnection = (props: Props) => {
+    const [form] = Form.useForm();
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [clientId, setClientId] = useState<string>('')
-    const [clientSecret, setClientSecret] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddSpectrocoinConnectionModalAtom)
 
     const handleOk = () => {
-        ConnectionsService.createSpectrocoinConnection({ client_id: clientId, client_secret: clientSecret }).then(() => {
-            success('SpectroCoin account was successfully connected')
-            setShowModal(false);
-            props.refresh();
-        }).catch((err) => {
-            if (err.response.status === 401) {
-                dispatch(logout());
-                navigate("/");
-            }
-            error('Unable to connect SpectroCoin account');
-            setShowModal(false);
-        });
+        form.validateFields()
+            .then((values) => {
+                ConnectionsService.createSpectrocoinConnection({ client_id: values.clientID, client_secret: values.clientSecret }).then(() => {
+                    success('SpectroCoin account was successfully connected')
+                    setShowModal(false);
+                    props.refresh();
+                }).catch((err) => {
+                    if (err.response.status === 401) {
+                        dispatch(logout());
+                        navigate("/");
+                    }
+                    error('Unable to connect SpectroCoin account');
+                    setShowModal(false);
+                });
+            });
     };
 
     const success = (message: string) => {
@@ -51,8 +54,6 @@ const AddSpectrocoinConnection = (props: Props) => {
     };
 
     const handleCancel = () => {
-        setClientId('')
-        setClientSecret('')
         setShowModal(false);
     };
 
@@ -67,19 +68,33 @@ const AddSpectrocoinConnection = (props: Props) => {
             onCancel={handleCancel}
         >
             {contextHolder}
-            <Form>
+            <Form form={form}>
                 <Row justify={'space-between'}>
                     <p>Enter your wallet API client credentials</p>
                     <Tooltip title="scope user_account is required in order to access wallet information">
                         <InfoCircleOutlined />
                     </Tooltip>
                 </Row>
-                {/* todo remove <br> from project */}
-                <Form.Item required={true}>
-                    <Input value={clientId} onInput={e => setClientId((e.target as HTMLTextAreaElement).value)} placeholder="client ID" />
+                <Form.Item
+                    name="clientID"
+                    rules={[
+                        { required: true, message: 'client ID is required' },
+                    ]}
+                >
+                    <Input
+                        placeholder="client ID"
+                    />
                 </Form.Item>
-                <Form.Item required={true}>
-                    <Input.Password value={clientSecret} onInput={e => setClientSecret((e.target as HTMLTextAreaElement).value)} placeholder="client secret" type="secret" />
+                <Form.Item
+                    name="clientSecret"
+                    rules={[
+                        { required: true, message: 'client secret is required' },
+                    ]}
+                >
+                    <Input.Password
+                        placeholder="client secret"
+                        type="secret"
+                    />
                 </Form.Item>
             </Form>
         </Modal>

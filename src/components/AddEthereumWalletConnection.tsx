@@ -12,11 +12,12 @@ interface Props {
 }
 
 const AddEthereumWalletConnection = (props: Props) => {
+    const [form] = Form.useForm();
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [messageApi, contextHolder] = message.useMessage();
 
-    const [address, setAddress] = useState<string>('')
     const [showModal, setShowModal] = useAtom(showAddEthereumWalletConnectionModalAtom)
 
     const success = (message: string) => {
@@ -34,24 +35,26 @@ const AddEthereumWalletConnection = (props: Props) => {
     };
 
     const handleCancel = () => {
-        setAddress('')
         setShowModal(false);
     };
 
     const handleOk = () => {
-        ConnectionsService.createEthereumWalletConnection({ address: address }).then(() => {
-            success('Ethereum wallet was successfully connected')
-            setShowModal(false);
-            props.refresh();
-        }).catch((err) => {
-            if (err.response.status === 401) {
-                dispatch(logout());
-                navigate("/");
-                return;
-            }
-            error('Unable to connect Ethereum wallet');
-            setShowModal(false);
-        });
+        form.validateFields()
+            .then((values) => {
+                ConnectionsService.createEthereumWalletConnection({ address: values.address }).then(() => {
+                    success('Ethereum wallet was successfully connected')
+                    setShowModal(false);
+                    props.refresh();
+                }).catch((err) => {
+                    if (err.response.status === 401) {
+                        dispatch(logout());
+                        navigate("/");
+                        return;
+                    }
+                    error('Unable to connect Ethereum wallet');
+                    setShowModal(false);
+                });
+            });
     };
 
     return (
@@ -66,9 +69,18 @@ const AddEthereumWalletConnection = (props: Props) => {
         >
             {contextHolder}
             <br></br>
-            <Form>
-                <Form.Item required={true}>
-                    <Input value={address} onInput={e => setAddress((e.target as HTMLTextAreaElement).value)} placeholder="address" />
+            <Form form={form}>
+                <Form.Item
+                    rules={[
+                        { required: true, message: 'address is required' },
+                        { max: 42, message: 'Ethereum wallet address length cannot exceed 42 characters' }
+                    ]}
+                    name="address"
+                >
+                    <Input
+                        placeholder="address"
+                        onInput={e => (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase()}
+                    />
                 </Form.Item>
             </Form>
         </Modal>
