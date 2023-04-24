@@ -114,8 +114,6 @@ const Explore: React.FC = () => {
         });
     }
 
-    console.log(selectedPortfolio?.id);
-
     const getComments = (id: string) => {
         PublicPortfolioService.getComments(id).then((res) => {
             setSelectedPortfolio((prev) => prev ? ({ ...prev, comments: res.data }) : undefined)
@@ -159,9 +157,7 @@ const Explore: React.FC = () => {
         getData();
 
         const query = new URLSearchParams(window.location.search.substring(1));
-        console.log(query);
         const id = query.get('id');
-        console.log(id);
         if (id && id.length > 0) {
             openPublicPortfolio(id);
         }

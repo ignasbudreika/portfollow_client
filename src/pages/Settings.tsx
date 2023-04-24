@@ -81,7 +81,6 @@ const Settings: React.FC = () => {
 
     const copyPortfolioLink = () => {
         let link = location.protocol + '//' + location.host + '/explore?id=' + id;
-        console.log(link);
         navigator.clipboard.writeText(link);
     }
 
