@@ -116,7 +116,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
                   unit:
                     selectedType === 'WEEKLY' ?
                       'day' :
-                      selectedType === 'MONTHLY' || selectedType === 'QUARTERLY' ? 'week' :
+                      selectedType === 'MONTHLY' ? 'week' :
                         'month'
                 },
                 adapters: {
