@@ -21,12 +21,14 @@ const AddTx = (props: Props) => {
   const [id, setId] = useAtom(selectedInvestmentIdAtom)
   const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
 
+  console.log(form.getFieldValue('type'));
+
   const handleOk = () => {
     form.validateFields()
       .then((values) => {
         InvestmentService.createTx(id, {
           quantity: values.quantity,
-          type: values.type ? 'BUY' : 'SELL',
+          type: values.type ? 'SELL' : 'BUY',
           date: values.date.toDate()
         }).then(() => {
           props.onDone();
