@@ -21,14 +21,12 @@ const AddTx = (props: Props) => {
   const [id, setId] = useAtom(selectedInvestmentIdAtom)
   const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
 
-  console.log(form.getFieldValue('type'));
-
   const handleOk = () => {
     form.validateFields()
       .then((values) => {
         InvestmentService.createTx(id, {
           quantity: values.quantity,
-          type: values.type ? 'SELL' : 'BUY',
+          type: values.txType ? 'BUY' : 'SELL',
           date: values.date.toDate()
         }).then(() => {
           props.onDone();
@@ -87,7 +85,7 @@ const AddTx = (props: Props) => {
       <p>Add new transaction for your investment</p>
       <Form
         form={form}
-        initialValues={{ date: dayjs(), type: false, quantity: 1 }}
+        initialValues={{ date: dayjs(), txType: true, quantity: 1 }}
       >
         <Form.Item
           name="quantity"
@@ -97,16 +95,17 @@ const AddTx = (props: Props) => {
             style={{ width: 200 }}
             min="0.00000001"
             precision={8}
-            defaultValue="1"
             step="1"
             formatter={formatValue}
             placeholder="quantity"
             stringMode
           />
         </Form.Item>
-        <Form.Item name='type'>
+        <Form.Item
+          name='txType'
+          valuePropName="checked"
+        >
           <Switch
-            defaultChecked={true}
             checkedChildren={"BUY"}
             unCheckedChildren={"SELL"}
           />
