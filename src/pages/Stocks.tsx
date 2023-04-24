@@ -289,6 +289,7 @@ const Stocks: React.FC = () => {
             dataSource={stocks}
             size="small"
             pagination={false}
+            scroll={{ x: "max-content" }}
             expandable={{
               expandedRowKeys: expandedKeys,
               onExpand: (expanded, record) => {

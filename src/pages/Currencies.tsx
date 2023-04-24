@@ -294,6 +294,7 @@ const Currencies: React.FC = () => {
             dataSource={cryptocurrencies}
             size="small"
             pagination={false}
+            scroll={{ x: "max-content" }}
             expandable={{
               expandedRowKeys: expandedKeys,
               onExpand: (expanded, record) => {
