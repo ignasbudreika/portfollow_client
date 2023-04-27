@@ -6,7 +6,7 @@ import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, T
 import { ColumnsType } from 'antd/es/table';
 import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
-import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons';
 import { useAtom } from 'jotai'
 import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
 import AddTx from '../components/AddTx';
@@ -24,6 +24,7 @@ const Stocks: React.FC = () => {
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
   const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
 
+  const [createPeriodic, setCreatePeriodic] = useState<boolean>(false);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [totalValueChange, setTotalValueChange] = useState<number>(0);
   const [trend, setTrend] = useState<number>(0);
@@ -66,6 +67,20 @@ const Stocks: React.FC = () => {
     })
   }
 
+  const stopPeriodicInvestments = (id: string) => {
+    InvestmentService.stopPeriodicInvestments(id).then(() => {
+      success('Future periodic investments were successfully stopped');
+      getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+        return;
+      }
+      error('Unable to stop periodic investments');
+    })
+  }
+
   const removeTx = (id: string) => {
     TransactionService.deleteTransaction(id).then(() => {
       success('Transaction was successfully deleted');
@@ -86,6 +101,7 @@ const Stocks: React.FC = () => {
     quantity: number;
     price: number;
     value: number;
+    updateType: string;
     dayTrend: number;
     totalChange: number;
     transactions: Transaction[];
@@ -137,6 +153,11 @@ const Stocks: React.FC = () => {
       ),
     },
     {
+      title: 'Update type',
+      dataIndex: 'updateType',
+      key: 'updateType',
+    },
+    {
       title: '',
       key: 'action',
       render: (_, investment) => (
@@ -150,6 +171,21 @@ const Stocks: React.FC = () => {
             cancelText="No"
           >
             <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+          </Popconfirm>
+          <Popconfirm
+            title="Stop periodic investments"
+            description="Are you sure to stop periodic investments for this investment?"
+            onConfirm={() => stopPeriodicInvestments(investment.id)}
+            disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+              type="primary"
+              shape="circle" size='small'
+              icon={<StopOutlined />}>
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -165,6 +201,7 @@ const Stocks: React.FC = () => {
           quantity: stock.quantity,
           price: stock.price,
           value: stock.value,
+          updateType: stock.update_type,
           dayTrend: stock.day_trend,
           totalChange: stock.total_change,
           transactions: stock.transactions
@@ -276,8 +313,8 @@ const Stocks: React.FC = () => {
       <Row justify="end">
         <Col span={8}>
           <Space>
-            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
-            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => setShowModal(true)}></Button>
+            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => { setCreatePeriodic(false); setShowModal(true) }}></Button>
+            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => { setCreatePeriodic(true); setShowModal(true) }}></Button>
           </Space>
         </Col>
       </Row>
@@ -325,9 +362,10 @@ const Stocks: React.FC = () => {
                         description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
                         onConfirm={() => removeTx(tx.id)}
                         okText="Yes"
+                        disabled={investment.updateType != 'Manual'}
                         cancelText="No"
                       >
-                        <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                        <Button disabled={investment.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
                       </Popconfirm>
                     ),
                   },
@@ -344,7 +382,7 @@ const Stocks: React.FC = () => {
             }}></Table>
         </Col>
       </Row>
-      <AddStock onDone={getData}></AddStock>
+      <AddStock periodic={createPeriodic} onDone={getData}></AddStock>
       <AddTx onDone={getData} />
     </Space>
   );

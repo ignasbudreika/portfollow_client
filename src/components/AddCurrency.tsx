@@ -1,5 +1,4 @@
-import { DatePicker, Form, Input, InputNumber, Modal, Switch, message } from "antd";
-import { useState } from "react";
+import { DatePicker, Form, Input, InputNumber, Modal, Select, Switch, message } from "antd";
 
 import { useAtom } from 'jotai'
 import { showAddCryptoModalAtom } from '../atoms';
@@ -9,6 +8,7 @@ import { logout, useAppDispatch } from "../app/store";
 import dayjs from "dayjs";
 
 interface Props {
+    periodic: boolean
     onDone: () => void
 }
 
@@ -35,13 +35,16 @@ const AddCurrency = (props: Props) => {
         });
     };
 
+    console.log(props.periodic)
+
     const handleOk = () => {
         form.validateFields().then((values) => {
             CurrenciesService.createCurrency({
                 symbol: values.symbol.toUpperCase(),
                 quantity: values.quantity,
                 date: values.date.toDate(),
-                crypto: values.type
+                crypto: values.type,
+                period: values.period,
             }).then(() => {
                 success('Investment was successfully created');
                 props.onDone();
@@ -72,7 +75,11 @@ const AddCurrency = (props: Props) => {
 
     return (
         <Modal
-            title="Create currency investment"
+            title={
+                props.periodic ?
+                    "Set up periodic currency investment" :
+                    "Create currency investment"
+            }
             open={showModal}
             onOk={handleOk}
             centered
@@ -84,7 +91,7 @@ const AddCurrency = (props: Props) => {
             <p>Add your new currency investment that will instantly alter your portfolio history</p>
             <Form
                 form={form}
-                initialValues={{ date: dayjs(), type: false, quantity: 1 }}
+                initialValues={{ date: dayjs(), type: false, quantity: 1, period: props.periodic ? 'DAILY' : undefined }}
             >
                 <Form.Item
                     name="symbol"
@@ -103,6 +110,20 @@ const AddCurrency = (props: Props) => {
                         checkedChildren={"CRYPTO"}
                         unCheckedChildren={"FIAT"}
                     />
+                </Form.Item>
+                <Form.Item hidden={!props.periodic} name='period'>
+                    <Select
+                        placeholder="Period"
+                        defaultValue="DAILY"
+                        options={[
+                            { value: 'DAILY', label: 'Daily' },
+                            { value: 'WEEKLY', label: 'Weekly' },
+                            { value: 'MONTHLY', label: 'Monthly' },
+                            { value: 'QUARTERLY', label: 'Quarterly' },
+                            { value: 'YEARLY', label: 'Yearly' }
+                        ]}>
+
+                    </Select>
                 </Form.Item>
                 <Form.Item
                     name="quantity"
@@ -123,7 +144,7 @@ const AddCurrency = (props: Props) => {
                     name="date"
                     rules={[{ required: true, message: 'date is required' }]}
                 >
-                    <DatePicker placeholder="date" disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
+                    <DatePicker placeholder="date" disabled={props.periodic} disabledDate={d => !d || d.isBefore('2023-01-01') || d.isAfter(Date.now())} />
                 </Form.Item>
             </Form>
         </Modal >

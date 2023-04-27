@@ -5,7 +5,7 @@ import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, T
 import { ColumnsType } from 'antd/es/table';
 import { useAtom } from 'jotai';
 import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
-import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCurrency';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
@@ -23,6 +23,7 @@ const Currencies: React.FC = () => {
   const [, setShowTxModal] = useAtom(showAddTxModalAtom)
   const [, setSelectedInvestmentId] = useAtom(selectedInvestmentIdAtom)
 
+  const [createPeriodic, setCreatePeriodic] = useState<boolean>(false);
   const [totalValue, setTotalValue] = useState<number>(0);
   const [totalValueChange, setTotalValueChange] = useState<number>(0);
   const [trend, setTrend] = useState<number>(0);
@@ -48,6 +49,20 @@ const Currencies: React.FC = () => {
   const addTx = (id: string) => {
     setSelectedInvestmentId(id);
     setShowTxModal(true);
+  }
+
+  const stopPeriodicInvestments = (id: string) => {
+    InvestmentService.stopPeriodicInvestments(id).then(() => {
+      success('Future periodic investments were successfully stopped');
+      getData();
+    }).catch((err) => {
+      if (err.response.status === 401) {
+        dispatch(logout());
+        navigate("/");
+        return;
+      }
+      error('Unable to stop periodic investments');
+    })
   }
 
   const removeInvestment = (id: string) => {
@@ -86,6 +101,7 @@ const Currencies: React.FC = () => {
     price: number;
     value: number;
     type: string;
+    updateType: string;
     dayTrend: number;
     totalChange: number;
     transactions: Transaction[];
@@ -142,11 +158,16 @@ const Currencies: React.FC = () => {
       ),
     },
     {
+      title: 'Update type',
+      dataIndex: 'updateType',
+      key: 'updateType',
+    },
+    {
       title: 'Action',
       key: 'tx',
       render: (_, investment) => (
         <Space>
-          <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+          <Button disabled={investment.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
           <Popconfirm
             title="Delete the investment"
             description="Are you sure to delete this investment? This affects all of the portfolio statistics"
@@ -155,6 +176,21 @@ const Currencies: React.FC = () => {
             cancelText="No"
           >
             <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+          </Popconfirm>
+          <Popconfirm
+            title="Stop periodic investments"
+            description="Are you sure to stop periodic investments for this investment?"
+            onConfirm={() => stopPeriodicInvestments(investment.id)}
+            disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button
+              disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+              type="primary"
+              shape="circle" size='small'
+              icon={<StopOutlined />}>
+            </Button>
           </Popconfirm>
         </Space>
       ),
@@ -170,7 +206,8 @@ const Currencies: React.FC = () => {
           quantity: currency.quantity,
           price: currency.price,
           value: currency.value,
-          type: currency.crypto ? 'CRYPTO' : 'FIAT',
+          type: currency.crypto ? 'Crypto' : 'Fiat',
+          updateType: currency.update_type,
           dayTrend: currency.day_trend,
           totalChange: currency.total_change,
           transactions: currency.transactions
@@ -281,8 +318,8 @@ const Currencies: React.FC = () => {
       <Row justify="end">
         <Col span={8}>
           <Space>
-            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => setShowModal(true)}></Button>
-            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => setShowModal(true)}></Button>
+            <Button type="primary" shape="circle" icon={<PlusOutlined />} onClick={() => { setCreatePeriodic(false); setShowModal(true) }}></Button>
+            <Button type="primary" shape="circle" icon={<FieldTimeOutlined />} onClick={() => { setCreatePeriodic(true); setShowModal(true) }}></Button>
           </Space>
         </Col>
       </Row>
@@ -330,9 +367,10 @@ const Currencies: React.FC = () => {
                         description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
                         onConfirm={() => removeTx(tx.id)}
                         okText="Yes"
+                        disabled={record.updateType != 'Manual'}
                         cancelText="No"
                       >
-                        <Button type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                        <Button disabled={record.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
                       </Popconfirm>
                     ),
                   },
@@ -349,7 +387,7 @@ const Currencies: React.FC = () => {
             }}></Table>
         </Col>
       </Row>
-      <AddCrypto onDone={getData} />
+      <AddCrypto periodic={createPeriodic} onDone={getData} />
       <AddTx onDone={getData} />
     </Space>
   );

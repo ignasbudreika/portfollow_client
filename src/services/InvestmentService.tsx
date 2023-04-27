@@ -8,6 +8,10 @@ class InvestmentService {
   deleteInvestment(id: string) {
     return api.delete('/investment/' + id);
   }
+
+  stopPeriodicInvestments(id: string) {
+    return api.post('/investment/' + id + '/stop');
+  }
 }
 
 export default new InvestmentService();
