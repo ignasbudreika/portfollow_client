@@ -2,10 +2,10 @@ import { Form, Input, Modal, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
-import { showAddEthereumWalletConnectionModalAtom } from '../Atoms';
+import { showAddEthereumWalletConnectionModalAtom } from '../atoms';
 import ConnectionsService from "../services/ConnectionsService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 
 interface Props {
     refresh: () => void;

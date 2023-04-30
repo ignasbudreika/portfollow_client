@@ -1,10 +1,10 @@
 import { DatePicker, Form, InputNumber, Modal, Switch, message } from "antd";
 
 import { useAtom } from 'jotai'
-import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../Atoms';
+import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
 import InvestmentService from "../services/InvestmentService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 import dayjs from "dayjs";
 
 interface Props {

@@ -1,10 +1,10 @@
 import { DatePicker, Form, Input, InputNumber, Modal, Select, message } from "antd";
 
 import { useAtom } from 'jotai'
-import { showAddStockModalAtom } from '../Atoms';
+import { showAddStockModalAtom } from '../atoms';
 import StocksService from "../services/StocksService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 import dayjs from "dayjs";
 
 

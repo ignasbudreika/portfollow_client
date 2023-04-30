@@ -9,7 +9,7 @@ import EmptyPortfolio from '../components/EmptyPortfolio';
 import PortfolioDistributionChart from '../components/PortfolioDistributionChart';
 import { PortfolioProfitLossChart } from '../components/PortfolioProfitLossChart';
 import { PortfolioPerformanceChart } from '../components/PortfolioPerformanceChart';
-import { logout, useAppDispatch } from '../app/Store';
+import { logout, useAppDispatch } from '../app/store';
 
 const Statistics: React.FC = () => {
   const navigate = useNavigate();

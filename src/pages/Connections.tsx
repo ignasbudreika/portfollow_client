@@ -3,11 +3,11 @@ import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, 
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAtom } from "jotai";
-import { showAddEthereumWalletConnectionModalAtom, showAddSpectrocoinConnectionModalAtom } from "../Atoms";
+import { showAddEthereumWalletConnectionModalAtom, showAddSpectrocoinConnectionModalAtom } from "../atoms";
 import AddSpectrocoinConnection from "../components/AddSpectrocoinConnection";
 import AddEthereumWalletConnection from '../components/AddEthereumWalletConnection';
 import ConnectionsService from "../services/ConnectionsService";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 
 const Connections: React.FC = () => {
     const navigate = useNavigate();

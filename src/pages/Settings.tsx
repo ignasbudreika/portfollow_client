@@ -3,7 +3,7 @@ import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, T
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 
 const Settings: React.FC = () => {
     const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
-import { logout, useAppDispatch } from '../app/Store';
+import { logout, useAppDispatch } from '../app/store';
 import { Empty } from 'antd';
 
 interface Props {

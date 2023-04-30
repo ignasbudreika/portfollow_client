@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
-import { logout, useAppDispatch } from '../app/Store';
+import { logout, useAppDispatch } from '../app/store';
 import 'chartjs-adapter-date-fns';
 import { enGB } from 'date-fns/locale';
 

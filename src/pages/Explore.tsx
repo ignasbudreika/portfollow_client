@@ -5,10 +5,10 @@ import { AppstoreAddOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/Store";
+import { logout, useAppDispatch } from "../app/store";
 import { PublicPortfolioHistoryChart } from "../components/PublicPortfolioHistoryChart";
 import { useAtom } from "jotai";
-import { showPublicPortfolioDrawerAtom } from "../Atoms";
+import { showPublicPortfolioDrawerAtom } from "../atoms";
 import PublicPortfolio from "../components/PublicPortfolio";
 
 const Explore: React.FC = () => {

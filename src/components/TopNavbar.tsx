@@ -2,14 +2,14 @@ import { useGoogleLogin } from '@react-oauth/google';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Button, message } from 'antd';
-import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/Store';
+import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/topnavbar.css';
 import { BarsOutlined, GoogleOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthService from '../services/AuthService';
 import { useAtom } from 'jotai';
-import { showDrawerAtom } from '../Atoms';
+import { showDrawerAtom } from '../atoms';
 
 
 export const TopNavbar: React.FC = () => {

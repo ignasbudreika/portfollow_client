@@ -3,7 +3,7 @@ import { Button, Row, Space } from 'antd';
 import { useAtom } from 'jotai';
 import React from 'react'
 import { useNavigate } from 'react-router';
-import { showDrawerAtom } from '../Atoms';
+import { showDrawerAtom } from '../atoms';
 
 export const SideNavbar: React.FC = () => {
     const navigate = useNavigate();
