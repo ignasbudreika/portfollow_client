@@ -195,12 +195,6 @@ const Settings: React.FC = () => {
                         <Button ref={updateRef} type="default" onClick={save} hidden={!updateOpen}>
                             Save
                         </Button>
-                        <Button ref={resetRef} type="primary" danger>
-                            Reset portfolio
-                        </Button>
-                        <Button ref={deleteRef} disabled type="primary" danger>
-                            Delete account
-                        </Button>
                     </Space>
                 </Col>
             </Row>
