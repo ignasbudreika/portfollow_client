@@ -8,11 +8,11 @@ import StocksService from '../services/StocksService';
 import AddStock from '../components/AddStock';
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons';
 import { useAtom } from 'jotai'
-import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../atoms';
+import { selectedInvestmentIdAtom, showAddStockModalAtom, showAddTxModalAtom } from '../Atoms';
 import AddTx from '../components/AddTx';
 import InvestmentService from '../services/InvestmentService';
 import TransactionService from '../services/TransactionService';
-import { logout, useAppDispatch } from '../app/store';
+import { logout, useAppDispatch } from '../app/Store';
 import Title from 'antd/es/typography/Title';
 
 const Stocks: React.FC = () => {

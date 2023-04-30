@@ -1,7 +1,7 @@
 import { TopNavbar } from './components/TopNavbar';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LandingPage } from './pages/LandingPage';
-import { selectAuth, useAppSelector } from './app/store';
+import { selectAuth, useAppSelector } from './app/Store';
 import { Drawer, Layout } from 'antd';
 import { Content, Header } from 'antd/es/layout/layout';
 import Statistics from './pages/Statistics';
@@ -12,7 +12,7 @@ import SideNavbar from './components/SideNavbar';
 import Sider from 'antd/es/layout/Sider';
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
-import { showDrawerAtom } from './atoms';
+import { showDrawerAtom } from './Atoms';
 import Settings from './pages/Settings';
 import Explore from './pages/Explore';
 

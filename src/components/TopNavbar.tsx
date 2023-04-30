@@ -1,15 +1,15 @@
 import { useGoogleLogin } from '@react-oauth/google';
 import React, { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Button } from 'antd';
-import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
+import { Button, message } from 'antd';
+import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/Store';
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/topnavbar.css';
 import { BarsOutlined, GoogleOutlined, LogoutOutlined } from '@ant-design/icons';
 import AuthService from '../services/AuthService';
 import { useAtom } from 'jotai';
-import { showDrawerAtom } from '../atoms';
+import { showDrawerAtom } from '../Atoms';
 
 
 export const TopNavbar: React.FC = () => {
@@ -18,6 +18,7 @@ export const TopNavbar: React.FC = () => {
   const auth = useAppSelector(selectAuth);
 
   const [, setShowDrawer] = useAtom(showDrawerAtom)
+  const [messageApi, contextHolder] = message.useMessage();
 
   const showDrawer = () => {
     setShowDrawer(true);
@@ -37,14 +38,31 @@ export const TopNavbar: React.FC = () => {
     window.addEventListener("resize", handleResize)
   })
 
+  const success = (message: string) => {
+    messageApi.open({
+      type: 'success',
+      content: message,
+    });
+  };
+
+  const error = (message: string) => {
+    messageApi.open({
+      type: 'error',
+      content: message,
+    });
+  };
+
   const getAccessToken = (authorizationCode: string) => {
     AuthService.retrieveAccessTokenFromAuthenticationCode(authorizationCode)
       .then((res) => {
         if (res.status == 200) {
           dispatch(login({ accessToken: res.data.access_token }));
           navigate('/dash');
+          success('Welcome')
         }
-      }).catch(err => { })
+      }).catch(() => {
+        error('Unable to login. Please try again later')
+      });
   }
 
   const logoutUser = () => {
@@ -59,6 +77,7 @@ export const TopNavbar: React.FC = () => {
   });
 
   return <div className='topNavigationBar'>
+    {contextHolder}
     <div className='leftPartFromMainLogo'>
       {
         useDrawer && auth.accessToken ?
@@ -74,6 +93,7 @@ export const TopNavbar: React.FC = () => {
     <span className='googleLoginButtonSpan'>
       {auth.accessToken ?
         <Button
+          id='logoutButton'
           className='googleLoginButton ant-btn'
           icon={<LogoutOutlined className='googleIcon' />}
           size='small'
@@ -86,6 +106,7 @@ export const TopNavbar: React.FC = () => {
         </Button>
         :
         <Button
+          id='loginButton'
           className='googleLoginButton ant-btn'
           icon={<GoogleOutlined className='googleIcon' />}
           size='small'

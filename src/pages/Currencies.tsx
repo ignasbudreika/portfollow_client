@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { Button, Card, Col, Divider, Popconfirm, Row, Space, Statistic, Table, Tooltip, Typography, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import { useAtom } from 'jotai';
-import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../atoms';
+import { selectedInvestmentIdAtom, showAddCryptoModalAtom, showAddTxModalAtom } from '../Atoms';
 import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined, FieldTimeOutlined, InfoCircleOutlined, PlusOutlined, StopOutlined } from '@ant-design/icons';
 import AddCrypto from '../components/AddCurrency';
 import AddTx from '../components/AddTx';
 import TransactionService from '../services/TransactionService';
 import InvestmentService from '../services/InvestmentService';
-import { logout, useAppDispatch } from '../app/store';
+import { logout, useAppDispatch } from '../app/Store';
 import Title from 'antd/es/typography/Title';
 import CurrenciesService from '../services/CurrenciesService';
 

@@ -2,10 +2,10 @@ import { Form, Input, Modal, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
-import { showAddEthereumWalletConnectionModalAtom } from '../atoms';
+import { showAddEthereumWalletConnectionModalAtom } from '../Atoms';
 import ConnectionsService from "../services/ConnectionsService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/store";
+import { logout, useAppDispatch } from "../app/Store";
 
 interface Props {
     refresh: () => void;
@@ -35,6 +35,7 @@ const AddEthereumWalletConnection = (props: Props) => {
     };
 
     const handleCancel = () => {
+        form.resetFields();
         setShowModal(false);
     };
 
@@ -73,13 +74,13 @@ const AddEthereumWalletConnection = (props: Props) => {
                 <Form.Item
                     rules={[
                         { required: true, message: 'address is required' },
-                        { max: 42, message: 'Ethereum wallet address length cannot exceed 42 characters' }
+                        { max: 42, message: 'Ethereum wallet address length cannot exceed 42 characters' },
+                        // { pattern: new RegExp("/^0x[a-fA-F0-9]{40}$/g"), message: 'Invalid address' }
                     ]}
                     name="address"
                 >
                     <Input
                         placeholder="address"
-                        onInput={e => (e.target as HTMLInputElement).value = (e.target as HTMLInputElement).value.toUpperCase()}
                     />
                 </Form.Item>
             </Form>

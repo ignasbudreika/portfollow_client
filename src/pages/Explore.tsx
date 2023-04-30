@@ -1,15 +1,14 @@
 import { Button, Card, Col, Divider, Row, Space } from "antd";
-import Paragraph from "antd/es/typography/Paragraph";
 import Title from "antd/es/typography/Title";
 import Typography from "antd/es/typography/Typography";
 import { AppstoreAddOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/store";
+import { logout, useAppDispatch } from "../app/Store";
 import { PublicPortfolioHistoryChart } from "../components/PublicPortfolioHistoryChart";
 import { useAtom } from "jotai";
-import { showPublicPortfolioDrawerAtom } from "../atoms";
+import { showPublicPortfolioDrawerAtom } from "../Atoms";
 import PublicPortfolio from "../components/PublicPortfolio";
 
 const Explore: React.FC = () => {

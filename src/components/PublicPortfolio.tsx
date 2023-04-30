@@ -1,12 +1,12 @@
 import { Button, Col, Descriptions, Drawer, List, Statistic, message } from "antd";
 import { useAtom } from "jotai";
-import { showPublicPortfolioDrawerAtom } from "../atoms";
+import { showPublicPortfolioDrawerAtom } from "../Atoms";
 import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRef, useState } from 'react';
 import { Doughnut, getElementAtEvent } from "react-chartjs-2";
 import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
-import { logout, useAppDispatch } from "../app/store";
+import { logout, useAppDispatch } from "../app/Store";
 import TextArea from "antd/es/input/TextArea";
 
 interface Props {

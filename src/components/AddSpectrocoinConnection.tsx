@@ -2,10 +2,10 @@ import { Form, Input, Modal, Row, Tooltip, message } from "antd";
 import { useState } from "react";
 
 import { useAtom } from 'jotai'
-import { showAddSpectrocoinConnectionModalAtom } from '../atoms';
+import { showAddSpectrocoinConnectionModalAtom } from '../Atoms';
 import ConnectionsService from "../services/ConnectionsService";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { logout, useAppDispatch } from "../app/store";
+import { logout, useAppDispatch } from "../app/Store";
 import { useNavigate } from "react-router-dom";
 
 interface Props {

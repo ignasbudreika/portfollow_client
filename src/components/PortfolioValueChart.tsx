@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
 import { Segmented } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
-import { logout, useAppDispatch } from '../app/store';
+import { logout, useAppDispatch } from '../app/Store';
 
 import { ArcElement, Chart, Legend, ScriptableContext, Tooltip } from 'chart.js';
 import 'chartjs-adapter-date-fns';
