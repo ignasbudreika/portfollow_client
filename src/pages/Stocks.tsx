@@ -162,7 +162,11 @@ const Stocks: React.FC = () => {
       key: 'action',
       render: (_, investment) => (
         <Space>
-          <Button type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+          <Button
+            disabled={
+              investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'
+            }
+            type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
           <Popconfirm
             title="Delete the investment"
             description="Are you sure to delete this investment? This affects all of the portfolio statistics"
@@ -365,7 +369,9 @@ const Stocks: React.FC = () => {
                         disabled={investment.updateType != 'Manual'}
                         cancelText="No"
                       >
-                        <Button disabled={investment.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                        <Button disabled={
+                          investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'
+                        } type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
                       </Popconfirm>
                     ),
                   },

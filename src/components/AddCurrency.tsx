@@ -5,7 +5,7 @@ import { showAddCryptoModalAtom } from '../atoms';
 import CurrenciesService from "../services/CurrenciesService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface Props {
     periodic: boolean
@@ -13,7 +13,13 @@ interface Props {
 }
 
 const AddCurrency = (props: Props) => {
-    const [form] = Form.useForm();
+    const [form] = Form.useForm<{
+        symbol: string,
+        quantity: number,
+        date: Dayjs,
+        type: boolean,
+        period: string
+    }>();
 
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -114,7 +120,6 @@ const AddCurrency = (props: Props) => {
                 <Form.Item hidden={!props.periodic} name='period'>
                     <Select
                         placeholder="Period"
-                        defaultValue="DAILY"
                         options={[
                             { value: 'DAILY', label: 'Daily' },
                             { value: 'WEEKLY', label: 'Weekly' },
@@ -122,7 +127,6 @@ const AddCurrency = (props: Props) => {
                             { value: 'QUARTERLY', label: 'Quarterly' },
                             { value: 'YEARLY', label: 'Yearly' }
                         ]}>
-
                     </Select>
                 </Form.Item>
                 <Form.Item
@@ -134,7 +138,6 @@ const AddCurrency = (props: Props) => {
                         min="0.00000001"
                         precision={8}
                         formatter={formatValue}
-                        defaultValue="1"
                         step="1"
                         placeholder="quantity"
                         stringMode

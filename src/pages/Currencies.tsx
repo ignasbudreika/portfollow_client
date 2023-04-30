@@ -137,11 +137,6 @@ const Currencies: React.FC = () => {
       key: 'value',
     },
     {
-      title: 'Type',
-      dataIndex: 'type',
-      key: 'type',
-    },
-    {
       title: 'Day trend, %',
       dataIndex: 'dayTrend',
       key: 'day_trend',
@@ -158,6 +153,11 @@ const Currencies: React.FC = () => {
       ),
     },
     {
+      title: 'Type',
+      dataIndex: 'type',
+      key: 'type',
+    },
+    {
       title: 'Update type',
       dataIndex: 'updateType',
       key: 'updateType',
@@ -167,7 +167,12 @@ const Currencies: React.FC = () => {
       key: 'tx',
       render: (_, investment) => (
         <Space>
-          <Button disabled={investment.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}></Button>
+          <Button
+            disabled={
+              investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'
+            }
+            type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}>
+          </Button>
           <Popconfirm
             title="Delete the investment"
             description="Are you sure to delete this investment? This affects all of the portfolio statistics"
@@ -370,7 +375,9 @@ const Currencies: React.FC = () => {
                         disabled={record.updateType != 'Manual'}
                         cancelText="No"
                       >
-                        <Button disabled={record.updateType != 'Manual'} type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
+                        <Button disabled={
+                          record.updateType == 'SpectroCoin account' || record.updateType == 'Ethereum wallet'
+                        } type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
                       </Popconfirm>
                     ),
                   },
