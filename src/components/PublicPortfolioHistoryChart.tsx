@@ -14,8 +14,9 @@ export const PublicPortfolioHistoryChart = (props: Props) => {
         datasets: [
             {
                 data: props.values,
-                tension: 0.3,
-                borderColor: "black",
+                tension: 0.5,
+                borderColor: "#1f1f1f",
+                borderWidth: 3,
                 pointRadius: 0,
                 steppedLine: true
             },
@@ -31,7 +32,7 @@ export const PublicPortfolioHistoryChart = (props: Props) => {
                 plugins:
                 {
                     legend: {
-                        display: false
+                        display: false,
                     },
                     tooltip: {
                         enabled: false
@@ -39,10 +40,16 @@ export const PublicPortfolioHistoryChart = (props: Props) => {
                 },
                 scales: {
                     x: {
-                        display: false
+                        display: true,
+                        type: 'timeseries',
+                        time: {
+                            round: 'day',
+                            tooltipFormat: 'yyyy MM dd',
+                            unit: 'week'
+                        },
                     },
                     y: {
-                        display: false,
+                        display: true,
                         beginAtZero: false
                     }
                 },

@@ -5,7 +5,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
-import { Segmented } from 'antd';
+import { Segmented, Space } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 import { logout, useAppDispatch } from '../app/store';
 import 'chartjs-adapter-date-fns';
@@ -77,20 +77,20 @@ export const PortfolioPerformanceChart: React.FC = () => {
         label: "Portfolio performance",
         data: values,
         tension: 0.3,
-        borderColor: "black",
+        borderColor: "#1f1f1f",
         pointRadius: 2,
       },
       {
         label: "SPY performance",
         data: comparison,
         tension: 0.3,
-        borderColor: "#70a37f",
+        borderColor: "#3f6600",
         pointRadius: 2,
       },
     ],
   };
 
-  return <div>
+  return <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
     <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => { changeSelectedType(selectedType.toString().toUpperCase()) }} />
     <div>
       <Line
@@ -137,5 +137,5 @@ export const PortfolioPerformanceChart: React.FC = () => {
           }
         } />
     </div>
-  </div>
+  </Space>
 }

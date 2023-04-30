@@ -6,14 +6,24 @@ import './index.css';
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import 'antd/dist/reset.css';
 import './App.css';
+import { ConfigProvider } from 'antd';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
 root.render(
-  <Provider store={store}>
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
-      <App />
-    </GoogleOAuthProvider>
-  </Provider>
+  <ConfigProvider
+    theme={{
+      token: {
+        colorPrimary: "#1f1f1f",
+        colorPrimaryHover: "#c7c4c5"
+      },
+    }}
+  >
+    <Provider store={store}>
+      <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+        <App />
+      </GoogleOAuthProvider>
+    </Provider>
+  </ConfigProvider>
 );

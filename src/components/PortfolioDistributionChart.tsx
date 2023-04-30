@@ -97,7 +97,7 @@ const PortfolioDistributionChart = (props: Props) => {
               legend:
               {
                 display: true,
-                position: 'right',
+                position: 'bottom',
                 onClick: () => { },
               }
             }

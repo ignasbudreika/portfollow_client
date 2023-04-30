@@ -252,18 +252,19 @@ const Currencies: React.FC = () => {
       <Row justify={'center'}>
         <Col xl={16} xs={22} sm={22}>
           <Typography>
-            <Title level={2}>Manage currency investments</Title>
             <Divider></Divider>
           </Typography>
         </Col>
       </Row>
-      <Row justify="center">
-        <Col xl={5} xs={16} sm={10} md={7}>
+      <Row justify="center" gutter={[20, 20]}>
+        <Col xl={5} xs={22} sm={22} md={7}>
           <Card>
             <Statistic
               title={
                 <Space>
-                  Total currencies value
+                  <Typography color="#1f1f1f">
+                    Total currencies value
+                  </Typography>
                   <Tooltip placement="right" title={
                     "current currency holdings value"
                   }>
@@ -277,12 +278,14 @@ const Currencies: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col xl={5} xs={16} sm={10} md={7}>
+        <Col xl={5} xs={22} sm={22} md={7}>
           <Card>
             <Statistic
               title={
                 <Space>
-                  Trend
+                  <Typography color="#1f1f1f">
+                    Trend
+                  </Typography>
                   <Tooltip placement="right" title={
                     "current currency holdings value change compared to previous days closing price"
                   }>
@@ -298,12 +301,14 @@ const Currencies: React.FC = () => {
             />
           </Card>
         </Col>
-        <Col xl={5} xs={16} sm={10} md={7}>
+        <Col xl={5} xs={22} sm={22} md={7}>
           <Card>
             <Statistic
               title={
                 <Space>
-                  Total value change
+                  <Typography color="#1f1f1f">
+                    Total value change
+                  </Typography>
                   <Tooltip placement="right" title={
                     "total change of currency investments value for full portfolio history"
                   }>
@@ -329,7 +334,7 @@ const Currencies: React.FC = () => {
         </Col>
       </Row>
       <Row justify="center">
-        <Col xl={16} xs={22} sm={22}>
+        <Col xl={15} xs={22} sm={22}>
           <Table
             rowKey={(record) => record.id}
             columns={columns}

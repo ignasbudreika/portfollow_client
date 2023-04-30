@@ -1,5 +1,5 @@
 import { CopyOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Input, Row, Space, Switch, Tooltip, TourProps, message } from "antd";
+import { Badge, Button, Col, Descriptions, Divider, Input, Row, Space, Switch, Tooltip, TourProps, Typography, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
@@ -110,6 +110,13 @@ const Settings: React.FC = () => {
     return (
         <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
             {contextHolder}
+            <Row justify={'center'}>
+                <Col xl={16} xs={22} sm={22}>
+                    <Typography>
+                        <Divider></Divider>
+                    </Typography>
+                </Col>
+            </Row>
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Descriptions title="User information" bordered>

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 import { PortfolioValueChart } from '../components/PortfolioValueChart';
-import { Card, Col, Row, Space, Statistic, Switch, Tooltip } from 'antd';
+import { Card, Col, Divider, Row, Space, Statistic, Switch, Tooltip, Typography } from 'antd';
 import { ArrowDownOutlined, ArrowUpOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import PortfolioService from '../services/PortfolioService';
 import EmptyPortfolio from '../components/EmptyPortfolio';
@@ -51,71 +51,86 @@ const Statistics: React.FC = () => {
           <EmptyPortfolio />
           :
           <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
-            <Row justify="center">
-              <Col xl={5} xs={16} sm={10} md={7}>
-                <Card>
-                  <Statistic
-                    title={
-                      <Space>
-                        Total value
-                        <Tooltip placement="right" title={
-                          "current portfolio value"
-                        }>
-                          <InfoCircleOutlined />
-                        </Tooltip>
-                      </Space>
-                    }
-                    value={totalValue}
-                    precision={2}
-                    suffix="$"
-                  />
-                </Card>
-              </Col>
-              <Col xl={5} xs={16} sm={10} md={7}>
-                <Card>
-                  <Statistic
-                    title={
-                      <Space>
-                        Trend
-                        <Tooltip placement="right" title={
-                          "current investments value change compared to previous days closing price"
-                        }>
-                          <InfoCircleOutlined />
-                        </Tooltip>
-                      </Space>
-                    }
-                    value={trend}
-                    precision={2}
-                    valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
-                    prefix={trend >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                    suffix="%"
-                  />
-                </Card>
-              </Col>
-              <Col xl={5} xs={16} sm={10} md={7}>
-                <Card>
-                  <Statistic
-                    title={
-                      <Space>
-                        Total value change
-                        <Tooltip placement="right" title={
-                          "total change of investments value for full portfolio history"
-                        }>
-                          <InfoCircleOutlined />
-                        </Tooltip>
-                      </Space>
-                    }
-                    value={totalValueChange}
-                    precision={2}
-                    valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
-                    prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
-                    suffix="$"
-                  />
-                </Card>
+            <Row justify={'center'}>
+              <Col xl={16} xs={22} sm={22}>
+                <Typography>
+                  <Divider></Divider>
+                </Typography>
               </Col>
             </Row>
-            <Row justify="center">
-              <Col xl={5} xs={16} sm={12} md={12} lg={12}>
+            <Row justify="center" gutter={[15, 15]}>
+              <Col xl={7} md={22} xs={22} sm={22} lg={11}>
+                <Row justify="center" gutter={[15, 15]} style={{ height: '100%' }}>
+                  <Col xl={24} xs={24} sm={24} md={24} >
+                    <Card style={{ height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                      <Statistic
+                        title={
+                          <Space>
+                            <Typography color="#1f1f1f">
+                              Total value
+                            </Typography>
+                            <Tooltip placement="right" title={
+                              "current portfolio value"
+                            }>
+                              <InfoCircleOutlined />
+                            </Tooltip>
+                          </Space>
+                        }
+                        value={totalValue}
+                        precision={2}
+                        suffix="$"
+                      />
+                    </Card>
+                  </Col>
+                  <Col xl={24} xs={24} sm={24} md={24}>
+                    <Card style={{ height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                      <Statistic
+                        title={
+                          <Space>
+                            <Typography color="#1f1f1f">
+                              Trend
+                            </Typography>
+                            <Tooltip placement="right" title={
+                              "current investments value change compared to previous days closing price"
+                            }>
+                              <InfoCircleOutlined />
+                            </Tooltip>
+                          </Space>
+                        }
+                        value={trend}
+                        precision={2}
+                        valueStyle={{ color: trend >= 0 ? 'green' : 'red' }}
+                        prefix={trend >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                        suffix="%"
+                      />
+                    </Card>
+                  </Col>
+                  <Col xl={24} xs={24} sm={24} md={24}>
+                    <Card style={{ height: '100%', alignItems: 'center', display: 'flex', flexDirection: 'row' }}>
+                      <Statistic
+                        title={
+                          <Space>
+                            <Typography color="#1f1f1f">
+                              Total value change
+                            </Typography>
+                            <Tooltip placement="right" title={
+                              "total change of investments value for full portfolio history"
+                            }>
+                              <InfoCircleOutlined />
+                            </Tooltip>
+                          </Space>
+                        }
+                        value={totalValueChange}
+                        precision={2}
+                        valueStyle={{ color: totalValueChange >= 0 ? 'green' : 'red' }}
+                        prefix={totalValueChange >= 0 ? <ArrowUpOutlined /> : <ArrowDownOutlined />}
+                        suffix="$"
+                      />
+                    </Card>
+                  </Col>
+                </Row>
+              </Col>
+              <Col xl={8} xs={22} sm={22} lg={11} style={{ paddingRight: 0 }}>
                 <Card title={
                   <Space>
                     Portfolio distribution
@@ -138,7 +153,7 @@ const Statistics: React.FC = () => {
               </Col>
             </Row >
             <Row justify="center">
-              <Col xl={16} xs={22} sm={22}>
+              <Col xl={15} xs={22} sm={22}>
                 <Card title={
                   <Space>
                     Total value history
@@ -155,7 +170,7 @@ const Statistics: React.FC = () => {
               </Col>
             </Row >
             <Row justify="center">
-              <Col xl={16} xs={22} sm={22}>
+              <Col xl={15} xs={22} sm={22}>
                 <Card title={
                   <Space>
                     P/L history
@@ -173,7 +188,7 @@ const Statistics: React.FC = () => {
               </Col>
             </Row >
             <Row justify="center">
-              <Col xl={16} xs={22} sm={22}>
+              <Col xl={15} xs={22} sm={22}>
                 <Card title={
                   <Space>
                     Performance history

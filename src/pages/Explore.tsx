@@ -167,20 +167,19 @@ const Explore: React.FC = () => {
             <Row justify={'center'}>
                 <Col xl={16} xs={22} sm={22}>
                     <Typography>
-                        <Title level={2}>Public portfolios</Title>
                         <Divider></Divider>
                     </Typography>
                 </Col>
             </Row>
             <Row justify={'center'}>
                 <Col xl={16} xs={22} sm={22}>
-                    <Row justify={'start'} gutter={20}>
+                    <Row justify={'start'} gutter={[35, 20]} >
                         {
                             portfolios.map(function (portfolio) {
                                 return <Col xxl={8} md={12} xs={24} sm={24}>
                                     <Card title=
                                         {
-                                            <a onClick={() => openPublicPortfolio(portfolio.id)} style={{ color: "#c7c4c5" }}>
+                                            <a onClick={() => openPublicPortfolio(portfolio.id)} style={{ color: "#1f1f1f" }}>
                                                 {portfolio.title}
                                             </a>
                                         }

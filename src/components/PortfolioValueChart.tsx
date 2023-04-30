@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
-import { Segmented } from 'antd';
+import { Segmented, Space } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 import { logout, useAppDispatch } from '../app/store';
 
@@ -56,21 +56,14 @@ export const PortfolioValueChart: React.FC = () => {
         label: "portfolio value",
         data: values,
         tension: 0.3,
-        borderColor: "black",
+        borderColor: "#3f6600",
         pointRadius: 2,
         steppedLine: true,
-        fill: true,
-        fillColor: (context: ScriptableContext<"line">) => {
-          const ctx = context.chart.ctx; const gradient = ctx.createLinearGradient(0, 200, 0, 0);
-          gradient.addColorStop(1, "rgba(255,0,0,0)");
-          gradient.addColorStop(0, "rgba(255,120,120,1)");
-          return gradient;
-        },
       },
     ],
   };
 
-  return <div>
+  return <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
     <Segmented
       options={['Weekly', 'Monthly', 'Quarterly', 'All']}
       onChange={(selectedType: SegmentedValue) => {
@@ -122,5 +115,5 @@ export const PortfolioValueChart: React.FC = () => {
         }
       />
     </div>
-  </div>
+  </Space>
 }

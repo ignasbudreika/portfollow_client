@@ -1,5 +1,5 @@
 import { DeleteOutlined, SyncOutlined, UserAddOutlined, WalletOutlined } from "@ant-design/icons";
-import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, Popconfirm, message } from "antd";
+import { Space, Row, Col, Card, Skeleton, Divider, Badge, Button, Descriptions, Popconfirm, message, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { useAtom } from "jotai";
@@ -120,6 +120,13 @@ const Connections: React.FC = () => {
     return (
         <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
             {contextHolder}
+            <Row justify={'center'}>
+                <Col xl={16} xs={22} sm={22}>
+                    <Typography>
+                        <Divider></Divider>
+                    </Typography>
+                </Col>
+            </Row>
             <Row justify="center">
                 <Col xl={16} xs={22} sm={22}>
                     <Card cover={<img alt="example" src="spectrocoin_logo.svg" style={{ height: '100px', padding: '20px 0px 0px 0px' }} />}>
@@ -134,7 +141,11 @@ const Connections: React.FC = () => {
                                 <>
                                     <Divider orientation="right"><Badge color="green" text="Connected" /></Divider>
                                     <Descriptions bordered>
-                                        <Descriptions.Item label="Client ID" span={3}>{spectrocoinConnection.clientId}</Descriptions.Item>
+                                        <Descriptions.Item label="Client ID" span={3}>
+                                            <Typography style={{ color: "#1f1f1f", fontWeight: 'bold' }}>
+                                                {spectrocoinConnection.clientId}
+                                            </Typography>
+                                        </Descriptions.Item>
                                         <Descriptions.Item label="Updated at" span={3}>{spectrocoinConnection.updatedAt}</Descriptions.Item>
                                     </Descriptions>
                                     <br></br>
@@ -182,7 +193,7 @@ const Connections: React.FC = () => {
                                     <Descriptions bordered>
                                         <Descriptions.Item label="Address" span={3}>
                                             {
-                                                <a href={"https://etherscan.io/address/" + ethereumWalletConnection.address} target="_blank" style={{ color: 'black', fontWeight: 'bold' }}>
+                                                <a href={"https://etherscan.io/address/" + ethereumWalletConnection.address} target="_blank" style={{ color: "#1f1f1f", fontWeight: 'bold' }}>
                                                     {ethereumWalletConnection.address}
                                                 </a>
                                             }

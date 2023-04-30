@@ -5,7 +5,7 @@ import { Chart as ChartJS } from 'chart.js/auto'
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
 import PortfolioService from '../services/PortfolioService';
-import { Segmented } from 'antd';
+import { Segmented, Space } from 'antd';
 import { SegmentedValue } from 'antd/es/segmented';
 import { logout, useAppDispatch } from '../app/store';
 import 'chartjs-adapter-date-fns';
@@ -51,21 +51,21 @@ export const PortfolioProfitLossChart: React.FC = () => {
         label: "P/L",
         data: values,
         tension: 0.3,
-        borderColor: "black",
+        borderColor: "#1f1f1f",
         pointRadius: 2,
         steppedLine: true,
         fill: {
           target: 'origin',
           below: (context: ScriptableContext<"line">) => {
             const ctx = context.chart.ctx; const gradient = ctx.createLinearGradient(0, 200, 0, 0);
-            gradient.addColorStop(1, "rgba(255,0,0,0)");
-            gradient.addColorStop(0, "rgba(255,120,120,1)");
+            gradient.addColorStop(1, "rgba(255,92,92,0)");
+            gradient.addColorStop(0, "rgba(255,92,92,1)");
             return gradient;
           },
           above: (context: ScriptableContext<"line">) => {
             const ctx = context.chart.ctx; const gradient = ctx.createLinearGradient(0, 0, 0, 200);
-            gradient.addColorStop(1, "rgba(120,255,120,0)");
-            gradient.addColorStop(0, "rgba(120,255,120,1)");
+            gradient.addColorStop(1, "rgba(178,210,164,0)");
+            gradient.addColorStop(0, "rgba(178,210,164,1)");
             return gradient;
           },
         }
@@ -73,7 +73,7 @@ export const PortfolioProfitLossChart: React.FC = () => {
     ],
   };
 
-  return <div>
+  return <Space direction="vertical" size="middle" style={{ display: "flex", padding: "0 0 20px 0" }}>
     <Segmented options={['Weekly', 'Monthly', 'Quarterly', 'All']} onChange={(selectedType: SegmentedValue) => { changeSelectedType(selectedType.toString().toUpperCase()) }} />
     <div>
       <Line
@@ -120,5 +120,5 @@ export const PortfolioProfitLossChart: React.FC = () => {
           }
         } />
     </div>
-  </div>
+  </Space>
 }
