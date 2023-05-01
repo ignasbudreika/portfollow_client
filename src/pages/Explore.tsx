@@ -1,5 +1,4 @@
 import { Button, Card, Col, Divider, Row, Space } from "antd";
-import Title from "antd/es/typography/Title";
 import Typography from "antd/es/typography/Typography";
 import { AppstoreAddOutlined } from "@ant-design/icons";
 import { useEffect, useState } from "react";
@@ -63,6 +62,9 @@ const Explore: React.FC = () => {
             }));
             setIndex(res.data.index);
             setExistsMore(res.data.more);
+            if (portfolios.length === 0 && !existsMore) {
+                navigate("/settings");
+            }
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
