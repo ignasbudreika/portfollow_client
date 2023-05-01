@@ -371,7 +371,7 @@ const Stocks: React.FC = () => {
                         description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
                         onConfirm={() => removeTx(tx.id)}
                         okText="Yes"
-                        disabled={investment.updateType != 'Manual'}
+                        disabled={investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet' || investment.updateType == 'Alpaca account'}
                         cancelText="No"
                       >
                         <Button disabled={

@@ -377,7 +377,7 @@ const Currencies: React.FC = () => {
                         description="Are you sure to delete this transaction? This affects all of the portfolio statistics"
                         onConfirm={() => removeTx(tx.id)}
                         okText="Yes"
-                        disabled={record.updateType != 'Manual'}
+                        disabled={record.updateType == 'SpectroCoin account' || record.updateType == 'Ethereum wallet' || record.updateType == 'Alpaca account'}
                         cancelText="No"
                       >
                         <Button disabled={
