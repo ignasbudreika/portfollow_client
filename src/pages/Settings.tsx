@@ -1,5 +1,5 @@
 import { CopyOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Badge, Button, Col, Descriptions, Divider, Input, Row, Space, Switch, Tooltip, TourProps, Typography, message } from "antd";
+import { Badge, Button, Col, Descriptions, Divider, Input, Row, Space, Switch, Tooltip, Typography, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SettingsService from "../services/SettingsService";
@@ -9,8 +9,6 @@ const Settings: React.FC = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const updateRef = useRef(null);
-    const resetRef = useRef(null);
-    const deleteRef = useRef(null);
     const [messageApi, contextHolder] = message.useMessage();
 
     const [updateOpen, setUpdateOpen] = useState<boolean>(false);
@@ -22,7 +20,7 @@ const Settings: React.FC = () => {
     const [description, setDescription] = useState<string>('');
     const [isPublic, setIsPublic] = useState<boolean>(false);
     const [isValueRevealed, setIsValueRevealed] = useState<boolean>(false);
-    const [allowedUsers, setAllowedUsers] = useState<string[]>([]);
+    const [allowedUsers, setAllowedUsers] = useState<string>();
     const [currencyEur, setCurrencyEur] = useState<boolean>(false);
 
     const getData = () => {
@@ -34,7 +32,7 @@ const Settings: React.FC = () => {
             setDescription(res.data.portfolio_info.description);
             setIsPublic(res.data.portfolio_info.public);
             setIsValueRevealed(res.data.portfolio_info.reveal_value);
-            setAllowedUsers(res.data.portfolio_info.allowed_users);
+            setAllowedUsers(res.data.portfolio_info.allowed_users.join(', '));
             setCurrencyEur(res.data.portfolio_info.currency_eur);
         }).catch((err) => {
             if (err.response.status === 401) {
@@ -44,6 +42,8 @@ const Settings: React.FC = () => {
         });
     };
 
+    console.log(allowedUsers)
+
     const save = () => {
         const body = {
             username: username,
@@ -51,7 +51,7 @@ const Settings: React.FC = () => {
             description: description,
             public: isPublic,
             hide_value: !isValueRevealed,
-            allowed_users: allowedUsers.join(','),
+            allowed_users: allowedUsers,
             currency_eur: currencyEur
         }
 
@@ -65,7 +65,7 @@ const Settings: React.FC = () => {
             setDescription(res.data.portfolio_info.description);
             setIsPublic(res.data.portfolio_info.public);
             setIsValueRevealed(res.data.portfolio_info.reveal_value);
-            setAllowedUsers(res.data.portfolio_info.allowed_users);
+            setAllowedUsers(res.data.portfolio_info.allowed_users.join(', '));
             setCurrencyEur(res.data.portfolio_info.currency_eur);
 
             setUpdateOpen(false);
@@ -169,12 +169,20 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label={
                             <Space>
                                 Allowed users
-                                <Tooltip placement="right" title="leaving allowed users empty will result in anyone being able to comment under your public portfolio">
+                                <Tooltip
+                                    placement="right"
+                                    title="comma separated list of user emails. 
+                                    Leaving this field empty will result in anyone being able to comment under your public portfolio"
+                                >
                                     <InfoCircleOutlined />
                                 </Tooltip>
                             </Space>
                         } span={3}>
-                            {allowedUsers}
+                            {
+                                updateOpen ?
+                                    <Input showCount maxLength={100} defaultValue={allowedUsers} onInput={e => setAllowedUsers((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    allowedUsers
+                            }
                         </Descriptions.Item>
                         <Descriptions.Item label="Currency" span={3}>
                             <Switch disabled checkedChildren="EUR" unCheckedChildren="USD" checked={currencyEur} />

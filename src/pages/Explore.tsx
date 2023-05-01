@@ -96,23 +96,6 @@ const Explore: React.FC = () => {
         });
     }
 
-    const getPortfolio = (id: string) => {
-        PublicPortfolioService.getPublicPortfolio(id).then((res) => {
-            setSelectedPortfolio({
-                id: res.data.id,
-                title: res.data.title,
-                description: res.data.description,
-                history: res.data.history.map((history: any) => { return { x: history.date, y: history.value } })
-            } as PublicPortfolio)
-        }).catch((err) => {
-            if (err.response.status === 401) {
-                dispatch(logout());
-                navigate("/");
-                return;
-            }
-        });
-    }
-
     const getComments = (id: string) => {
         PublicPortfolioService.getComments(id).then((res) => {
             setSelectedPortfolio((prev) => prev ? ({ ...prev, comments: res.data }) : undefined)
@@ -126,25 +109,40 @@ const Explore: React.FC = () => {
     }
 
     const openPublicPortfolio = (id: string) => {
-        getPortfolio(id);
-        getComments(id);
-        PublicPortfolioService.getPublicPortfolioStats(id).then((res) => {
-            setSelectedPortfolioStats({
-                trend: res.data.trend,
-                change: res.data.total_change,
-                hidden: res.data.hidden_value,
-                distribution: res.data.hidden_value ?
-                    res.data.distribution.map((distribution: any) => distribution.percentage) :
-                    res.data.distribution.map((distribution: any) => distribution.value),
-                categories: res.data.distribution.map((distribution: any) => distribution.label)
-            } as PublicPortfolioStats);
+        PublicPortfolioService.getPublicPortfolio(id).then((res) => {
+            setSelectedPortfolio({
+                id: res.data.id,
+                title: res.data.title,
+                description: res.data.description,
+                comments: [],
+                history: res.data.history.map((history: any) => { return { x: history.date, y: history.value } })
+            } as PublicPortfolio)
         }).catch((err) => {
             if (err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
+                return;
             }
-        });
-        setOpen(true);
+        }).then(() => {
+            getComments(id);
+        }).then(() => {
+            PublicPortfolioService.getPublicPortfolioStats(id).then((res) => {
+                setSelectedPortfolioStats({
+                    trend: res.data.trend,
+                    change: res.data.total_change,
+                    hidden: res.data.hidden_value,
+                    distribution: res.data.hidden_value ?
+                        res.data.distribution.map((distribution: any) => distribution.percentage) :
+                        res.data.distribution.map((distribution: any) => distribution.value),
+                    categories: res.data.distribution.map((distribution: any) => distribution.label)
+                } as PublicPortfolioStats);
+            }).catch((err) => {
+                if (err.response.status === 401) {
+                    dispatch(logout());
+                    navigate("/");
+                }
+            });
+        }).then(() => setOpen(true));
     }
 
     useEffect(() => {

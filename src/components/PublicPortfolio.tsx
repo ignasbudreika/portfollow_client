@@ -57,8 +57,6 @@ const PublicPortfolio = (props: Props) => {
     const [categories, setCategories] = useState<any[]>([]);
     const [values, setValues] = useState<number[]>([]);
 
-    const [comments, setComments] = useState<Comment[]>([]);
-
     const chartRef = useRef(null);
 
     const distribution = {

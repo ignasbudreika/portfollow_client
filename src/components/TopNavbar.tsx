@@ -6,7 +6,7 @@ import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../ap
 import { useNavigate } from 'react-router-dom';
 
 import '../styles/topnavbar.css';
-import { BarsOutlined, GoogleOutlined, LogoutOutlined } from '@ant-design/icons';
+import { GoogleOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
 import AuthService from '../services/AuthService';
 import { useAtom } from 'jotai';
 import { showDrawerAtom } from '../atoms';
@@ -81,7 +81,7 @@ export const TopNavbar: React.FC = () => {
     <div className='leftPartFromMainLogo'>
       {
         useDrawer && auth.accessToken ?
-          <BarsOutlined onClick={showDrawer} /> :
+          <MenuOutlined onClick={showDrawer} /> :
           <></>
       }
     </div>

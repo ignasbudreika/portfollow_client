@@ -15,9 +15,9 @@ export const PublicPortfolioHistoryChart = (props: Props) => {
             {
                 data: props.values,
                 tension: 0.5,
-                borderColor: "#1f1f1f",
+                borderColor: "#3f6600",
+                pointRadius: 2,
                 borderWidth: 3,
-                pointRadius: 0,
                 steppedLine: true
             },
         ],
