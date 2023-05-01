@@ -8,3 +8,4 @@ export const showAddTxModalAtom = atom(false);
 export const selectedInvestmentIdAtom = atom('');
 export const showAddSpectrocoinConnectionModalAtom = atom(false);
 export const showAddEthereumWalletConnectionModalAtom = atom(false);
+export const showAddAlpacaConnectionModalAtom = atom(false);

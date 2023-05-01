@@ -157,7 +157,17 @@ const Settings: React.FC = () => {
                                         <Badge status="error" text="No" />
                             }
                         </Descriptions.Item>
-                        <Descriptions.Item label="Reveal value" span={3}>
+                        <Descriptions.Item label={
+                            <Space>
+                                Reveal value
+                                <Tooltip
+                                    placement="right"
+                                    title="toggles between value and percentage for public portfolio display purposes"
+                                >
+                                    <InfoCircleOutlined />
+                                </Tooltip>
+                            </Space>
+                        } span={3}>
                             {
                                 updateOpen ?
                                     <Switch checkedChildren={'YES'} unCheckedChildren={'NO'} checked={isValueRevealed} onChange={e => setIsValueRevealed(e)}></Switch> :

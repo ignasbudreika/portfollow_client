@@ -169,7 +169,7 @@ const Currencies: React.FC = () => {
         <Space>
           <Button
             disabled={
-              investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'
+              investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet' || investment.updateType == 'Alpaca account'
             }
             type="primary" shape="circle" size='small' icon={<PlusOutlined />} onClick={() => addTx(investment.id)}>
           </Button>
@@ -186,12 +186,12 @@ const Currencies: React.FC = () => {
             title="Stop periodic investments"
             description="Are you sure to stop periodic investments for this investment?"
             onConfirm={() => stopPeriodicInvestments(investment.id)}
-            disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+            disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet' || investment.updateType == 'Alpaca account'}
             okText="Yes"
             cancelText="No"
           >
             <Button
-              disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet'}
+              disabled={investment.updateType == 'Manual' || investment.updateType == 'SpectroCoin account' || investment.updateType == 'Ethereum wallet' || investment.updateType == 'Alpaca account'}
               type="primary"
               shape="circle" size='small'
               icon={<StopOutlined />}>
@@ -381,7 +381,7 @@ const Currencies: React.FC = () => {
                         cancelText="No"
                       >
                         <Button disabled={
-                          record.updateType == 'SpectroCoin account' || record.updateType == 'Ethereum wallet'
+                          record.updateType == 'SpectroCoin account' || record.updateType == 'Ethereum wallet' || record.updateType == 'Alpaca account'
                         } type="primary" shape="circle" size='small' icon={<DeleteOutlined />}></Button>
                       </Popconfirm>
                     ),

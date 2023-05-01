@@ -28,6 +28,18 @@ class ConnectionsService {
   deleteEthereumWalletConnection() {
     return api.delete('/connection/ethereum');
   }
+
+  createAlpacaConnection(body: any) {
+    return api.post('/connection/alpaca', body);
+  }
+
+  fetchAlpacaConnection() {
+    return api.post('/connection/alpaca/fetch');
+  }
+
+  deleteAlpacaConnection() {
+    return api.delete('/connection/alpaca');
+  }
 }
 
 export default new ConnectionsService();
