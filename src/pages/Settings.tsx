@@ -151,7 +151,7 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label="Public" span={3}>
                             {
                                 updateOpen ?
-                                    <Switch checked={isPublic} onChange={e => setIsPublic(e)}></Switch> :
+                                    <Switch checkedChildren={'YES'} unCheckedChildren={'NO'} checked={isPublic} onChange={e => setIsPublic(e)}></Switch> :
                                     isPublic ?
                                         <Badge status="success" text="Yes" /> :
                                         <Badge status="error" text="No" />
@@ -160,7 +160,7 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label="Reveal value" span={3}>
                             {
                                 updateOpen ?
-                                    <Switch checked={isValueRevealed} onChange={e => setIsValueRevealed(e)}></Switch> :
+                                    <Switch checkedChildren={'YES'} unCheckedChildren={'NO'} checked={isValueRevealed} onChange={e => setIsValueRevealed(e)}></Switch> :
                                     isValueRevealed ?
                                         <Badge status="success" text="Yes" /> :
                                         <Badge status="error" text="No" />

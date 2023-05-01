@@ -1,70 +1,99 @@
-import { Card, Col, Row, Typography } from 'antd';
+import Icon from '@ant-design/icons';
+import { Avatar, Card, Col, Divider, Image, Row, Space, Typography } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React from 'react'
-import { Header } from 'antd/es/layout/layout';
-import Paragraph from 'antd/es/typography/Paragraph';
 
 export const LandingPage: React.FC = () => {
     return (
-        <Row justify="center" style={{ height: "calc(100vh - 64px)" }}>
-            <Col xs={20} sm={20} md={18} lg={18} xl={18} xxl={18} >
-                <Row justify="center" style={{ height: "calc(70vh - 64px)" }} gutter={40}>
+        <Row justify="center">
+            < Col xs={22} sm={22} md={20} lg={20} xl={18} xxl={18} >
+                <Row justify="center" gutter={50}>
                     <Col xs={20} sm={20} md={18} lg={16} xl={19} xxl={19}>
-                        <Title>WELCOME TO portfollow</Title>
+                        <Typography>
+                            <Divider></Divider>
+                        </Typography>
                     </Col>
-                    <Col xs={20} sm={20} md={18} lg={16} xl={6} xxl={6}>
+                    <Col xs={20} sm={20} md={18} lg={16} xl={8} xxl={8}>
                         <Card
                             style={{
                                 margin: "0 0 30px 0",
                                 borderRadius: "20px",
                                 overflow: "hidden"
                             }}
-                            cover={<img alt="Track Your investments" src="landing_page.jpg" />}
+                            cover={<img alt="Track Your investments" src="track5.svg" />}
                         >
-                            <Title level={4}>TRACK YOUR INVESTMENTS</Title>
-                            <Paragraph>
-                                Hold Your stock, crypto and fiat currencies investments data in one place.
-                                <br></br>
-                                Stay up to date with the recent data of your portfolio holdings.
-                                <br></br>
-                                Get updated statistics that allow to better determine Your current portfolio success.
-                            </Paragraph>
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                TRACK INVESTMENTS
+                            </Title>
+                        </Card>
+                        <Card
+                            style={{
+                                margin: "0 0 30px 0",
+                                borderRadius: "20px",
+                                overflow: "hidden"
+                            }}
+                            cover={<img alt="Get asset data" src="assets.svg" />}
+                        >
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                GET UP TO DATE FINANCIAL DATA
+                            </Title>
                         </Card>
                     </Col>
-                    <Col xs={20} sm={20} md={18} lg={16} xl={6} xxl={6}>
+                    <Col xs={20} sm={20} md={18} lg={16} xl={8} xxl={8}>
                         <Card
                             style={{
                                 margin: "0 0 30px 0",
                                 borderRadius: "20px",
                                 overflow: "hidden"
                             }}
-                            cover={<img alt="Connect Your accounts" src="landing_page.jpg" />}
                         >
-                            <Title level={4}>CONNECT YOUR ACCOUNTS</Title>
-                            <Paragraph>
-                                Connect your brokerage accounts to synchronize the investments.
-                                <br></br>
-                                Automatically get updated positions from the connected brokerages.
-                            </Paragraph>
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                PORTFOLLOW
+                            </Title>
+                            <Typography>
+                                <Typography.Paragraph style={{ textAlign: 'center', textSizeAdjust: 'auto', fontSize: 15 }}>
+                                    Investment tracking made simple. Welcome to Portfollow,
+                                    your partner in tracking and managing your portfolio with ease and accuracy
+                                </Typography.Paragraph>
+                            </Typography>
+                        </Card>
+                        <Card
+                            style={{
+                                margin: "0 0 30px 0",
+                                borderRadius: "20px",
+                                overflow: "hidden"
+                            }}
+                            cover={<img alt="Share and explore" src="periodic.svg" />}
+                        >
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                CREATE PERIODIC INVESTMENTS
+                            </Title>
                         </Card>
                     </Col>
-                    <Col xs={20} sm={20} md={18} lg={16} xl={6} xxl={6}>
+                    <Col xs={20} sm={20} md={18} lg={16} xl={8} xxl={8}>
                         <Card
                             style={{
                                 margin: "0 0 30px 0",
                                 borderRadius: "20px",
                                 overflow: "hidden"
                             }}
-                            cover={<img alt="Share and explore" src="landing_page.jpg" />}
+                            cover={<img alt="Connect Your accounts" src="wallet.svg" />}
                         >
-                            <Title level={4}>SHARE AND EXPLORE</Title>
-                            <Paragraph>
-                                Share your portfolio with other users and receive feedback.
-                                <br></br>
-                                Explore the entire public portfolio gallery.
-                                <br></br>
-                                Get new ideas and inspiration from others success and failures.
-                            </Paragraph>
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                CONNECT ACCOUNTS
+                            </Title>
+                        </Card>
+                        <Card
+                            style={{
+                                margin: "0 0 30px 0",
+                                borderRadius: "20px",
+                                overflow: "hidden"
+                            }}
+                            cover={<img alt="Share and explore" src="share.svg" />}
+                        >
+                            <Title level={4} style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                                SHARE AND EXPLORE
+                            </Title>
                         </Card>
                     </Col>
                 </Row >

@@ -6,6 +6,10 @@
   color: #1f1f1f !important;
 }
 
+.ant-table-row-expand-icon:focus {
+  color: #1f1f1f !important;
+}
+
 .ant-row {
   margin-right: 0 !important;
   margin-left: 0 !important;

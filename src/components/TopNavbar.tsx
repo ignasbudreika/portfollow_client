@@ -99,6 +99,7 @@ export const TopNavbar: React.FC = () => {
           size='small'
           shape='round'
           onClick={() => logoutUser()}
+          style={{ borderColor: "#1f1f1f" }}
         >
           {
             useDrawer ? '' : 'Logout'
@@ -112,6 +113,7 @@ export const TopNavbar: React.FC = () => {
           size='small'
           shape='round'
           onClick={() => getAuthorizationCode()}
+          style={{ borderColor: "#1f1f1f" }}
         >
           {
             useDrawer ? '' : 'Sign in with Google'
@@ -119,5 +121,5 @@ export const TopNavbar: React.FC = () => {
         </Button>
       }
     </span>
-  </div>
+  </div >
 }
