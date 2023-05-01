@@ -41,8 +41,6 @@ const AddCurrency = (props: Props) => {
         });
     };
 
-    console.log(props.periodic)
-
     const handleOk = () => {
         form.validateFields().then((values) => {
             CurrenciesService.createCurrency({

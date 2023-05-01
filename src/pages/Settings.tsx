@@ -42,8 +42,6 @@ const Settings: React.FC = () => {
         });
     };
 
-    console.log(allowedUsers)
-
     const save = () => {
         const body = {
             username: username,

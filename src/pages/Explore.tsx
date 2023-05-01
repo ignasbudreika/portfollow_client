@@ -62,7 +62,7 @@ const Explore: React.FC = () => {
             }));
             setIndex(res.data.index);
             setExistsMore(res.data.more);
-            if (portfolios.length === 0 && !existsMore) {
+            if (!res.data.portfolios.length || res.data.portfolios.length === 0) {
                 navigate("/settings");
             }
         }).catch((err) => {
