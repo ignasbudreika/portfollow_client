@@ -15,7 +15,7 @@ interface Props {
 const AddCurrency = (props: Props) => {
     const [form] = Form.useForm<{
         symbol: string,
-        quantity: number,
+        sum: number,
         date: Dayjs,
         type: boolean,
         period: string
@@ -45,7 +45,7 @@ const AddCurrency = (props: Props) => {
         form.validateFields().then((values) => {
             CurrenciesService.createCurrency({
                 symbol: values.symbol.toUpperCase(),
-                quantity: values.quantity,
+                amount: values.sum,
                 date: values.date.toDate(),
                 crypto: values.type,
                 period: values.period,
@@ -95,7 +95,7 @@ const AddCurrency = (props: Props) => {
             <p>Add your new currency investment that will instantly alter your portfolio history</p>
             <Form
                 form={form}
-                initialValues={{ date: dayjs(), type: false, quantity: 1, period: props.periodic ? 'DAILY' : undefined }}
+                initialValues={{ date: dayjs(), type: false, sum: 1, period: props.periodic ? 'DAILY' : undefined }}
             >
                 <Form.Item
                     name="symbol"
@@ -128,8 +128,8 @@ const AddCurrency = (props: Props) => {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="quantity"
-                    rules={[{ required: true, message: 'quantity is required' }]}
+                    name="sum"
+                    rules={[{ required: true, message: 'sum is required' }]}
                 >
                     <InputNumber<string>
                         style={{ width: 200 }}
@@ -137,7 +137,7 @@ const AddCurrency = (props: Props) => {
                         precision={8}
                         formatter={formatValue}
                         step="1"
-                        placeholder="quantity"
+                        placeholder="sum"
                         stringMode
                     />
                 </Form.Item>

@@ -27,7 +27,7 @@ const AddStock = (props: Props) => {
             .then((values) => {
                 StocksService.createStock({
                     ticker: values.ticker.toUpperCase(),
-                    quantity: values.quantity,
+                    amount: values.sum,
                     date: values.date.toDate(),
                     period: values.period,
                 }).then(() => {
@@ -90,7 +90,7 @@ const AddStock = (props: Props) => {
             <p>Add your new stock investment that will instantly alter your portfolio history</p>
             <Form
                 form={form}
-                initialValues={{ date: dayjs(), quantity: 1, period: props.periodic ? 'DAILY' : undefined }}
+                initialValues={{ date: dayjs(), sum: 1, period: props.periodic ? 'DAILY' : undefined }}
             >
                 <Form.Item
                     name="ticker"
@@ -119,8 +119,8 @@ const AddStock = (props: Props) => {
                     </Select>
                 </Form.Item>
                 <Form.Item
-                    name="quantity"
-                    rules={[{ required: true, message: 'quantity is required' }]}
+                    name="sum"
+                    rules={[{ required: true, message: 'sum is required' }]}
                 >
                     <InputNumber<string>
                         style={{ width: 200 }}
@@ -129,7 +129,7 @@ const AddStock = (props: Props) => {
                         step="1"
                         precision={8}
                         formatter={formatValue}
-                        placeholder="quantity"
+                        placeholder="sum"
                         stringMode
                     />
                 </Form.Item>
