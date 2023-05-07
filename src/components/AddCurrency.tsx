@@ -16,6 +16,7 @@ const AddCurrency = (props: Props) => {
     const [form] = Form.useForm<{
         symbol: string,
         sum: number,
+        quantity: number,
         date: Dayjs,
         type: boolean,
         period: string
@@ -45,7 +46,8 @@ const AddCurrency = (props: Props) => {
         form.validateFields().then((values) => {
             CurrenciesService.createCurrency({
                 symbol: values.symbol.toUpperCase(),
-                amount: values.sum,
+                quantity: props.periodic ? 0 : values.quantity,
+                amount: props.periodic ? values.sum : 0,
                 date: values.date.toDate(),
                 crypto: values.type,
                 period: values.period,
@@ -95,7 +97,7 @@ const AddCurrency = (props: Props) => {
             <p>Add your new currency investment that will instantly alter your portfolio history</p>
             <Form
                 form={form}
-                initialValues={{ date: dayjs(), type: false, sum: 1, period: props.periodic ? 'DAILY' : undefined }}
+                initialValues={{ date: dayjs(), type: false, sum: 1, quantity: 1, period: props.periodic ? 'DAILY' : undefined }}
             >
                 <Form.Item
                     name="symbol"
@@ -128,6 +130,7 @@ const AddCurrency = (props: Props) => {
                     </Select>
                 </Form.Item>
                 <Form.Item
+                    hidden={!props.periodic}
                     name="sum"
                     rules={[{ required: true, message: 'sum is required' }]}
                 >
@@ -138,6 +141,21 @@ const AddCurrency = (props: Props) => {
                         formatter={formatValue}
                         step="1"
                         placeholder="sum"
+                        stringMode
+                    />
+                </Form.Item>
+                <Form.Item
+                    hidden={props.periodic}
+                    name="quantity"
+                    rules={[{ required: true, message: 'quantity is required' }]}
+                >
+                    <InputNumber<string>
+                        style={{ width: 200 }}
+                        min="0.00000001"
+                        precision={8}
+                        formatter={formatValue}
+                        step="1"
+                        placeholder="quantity"
                         stringMode
                     />
                 </Form.Item>

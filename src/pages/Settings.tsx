@@ -122,7 +122,7 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label="User name" span={3}>
                             {
                                 updateOpen ?
-                                    <Input showCount maxLength={30} defaultValue={username} onInput={e => setUsername((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    <Input showCount maxLength={30} required defaultValue={username} onInput={e => setUsername((e.target as HTMLTextAreaElement).value)}></Input> :
                                     username
                             }
                         </Descriptions.Item>
@@ -135,7 +135,7 @@ const Settings: React.FC = () => {
                         <Descriptions.Item label="Title" span={3}>
                             {
                                 updateOpen ?
-                                    <Input showCount maxLength={30} defaultValue={title} onInput={e => setTitle((e.target as HTMLTextAreaElement).value)}></Input> :
+                                    <Input showCount maxLength={30} required defaultValue={title} onInput={e => setTitle((e.target as HTMLTextAreaElement).value)}></Input> :
                                     title
                             }
                         </Descriptions.Item>

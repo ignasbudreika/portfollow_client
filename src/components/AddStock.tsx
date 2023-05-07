@@ -27,7 +27,8 @@ const AddStock = (props: Props) => {
             .then((values) => {
                 StocksService.createStock({
                     ticker: values.ticker.toUpperCase(),
-                    amount: values.sum,
+                    quantity: props.periodic ? 0 : values.quantity,
+                    amount: props.periodic ? values.sum : 0,
                     date: values.date.toDate(),
                     period: values.period,
                 }).then(() => {
@@ -90,7 +91,7 @@ const AddStock = (props: Props) => {
             <p>Add your new stock investment that will instantly alter your portfolio history</p>
             <Form
                 form={form}
-                initialValues={{ date: dayjs(), sum: 1, period: props.periodic ? 'DAILY' : undefined }}
+                initialValues={{ date: dayjs(), sum: 1, quantity: 1, period: props.periodic ? 'DAILY' : undefined }}
             >
                 <Form.Item
                     name="ticker"
@@ -119,6 +120,7 @@ const AddStock = (props: Props) => {
                     </Select>
                 </Form.Item>
                 <Form.Item
+                    hidden={!props.periodic}
                     name="sum"
                     rules={[{ required: true, message: 'sum is required' }]}
                 >
@@ -130,6 +132,21 @@ const AddStock = (props: Props) => {
                         precision={8}
                         formatter={formatValue}
                         placeholder="sum"
+                        stringMode
+                    />
+                </Form.Item>
+                <Form.Item
+                    hidden={props.periodic}
+                    name="quantity"
+                    rules={[{ required: true, message: 'quantity is required' }]}
+                >
+                    <InputNumber<string>
+                        style={{ width: 200 }}
+                        min="0.00000001"
+                        precision={8}
+                        formatter={formatValue}
+                        step="1"
+                        placeholder="quantity"
                         stringMode
                     />
                 </Form.Item>
