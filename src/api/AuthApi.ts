@@ -1,3 +1,4 @@
+import type { InternalAxiosRequestConfig } from "axios";
 import axios from "axios";
 
 const instance = axios.create({
@@ -8,7 +9,7 @@ const instance = axios.create({
 });
 
 instance.interceptors.request.use(
-  (config: any) => {
+  (config: InternalAxiosRequestConfig) => {
     const token = localStorage.getItem(import.meta.env.VITE_ACCESS_TOKEN_KEY);
     if (token) {
       config.headers.Authorization = "Bearer " + token;

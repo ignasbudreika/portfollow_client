@@ -1,12 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
 import { ArcElement, Tooltip } from 'chart.js';
-import { Chart as ChartJS } from 'chart.js/auto'
+import { Chart as ChartJS } from 'chart.js/auto';
+import { useEffect, useRef, useState } from 'react';
 
+import { Empty } from 'antd';
+import { isAxiosError } from 'axios';
 import { Doughnut, getElementAtEvent } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
-import PortfolioService from '../services/PortfolioService';
 import { logout, useAppDispatch } from '../app/store';
-import { Empty } from 'antd';
+import PortfolioService from '../services/PortfolioService';
 
 interface Props {
   percentage: boolean;
@@ -42,7 +43,7 @@ const PortfolioDistributionChart = (props: Props) => {
         setValues(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
       }).catch((err) => {
-        if (err.response.status === 401) {
+        if (isAxiosError(err) && err.response && err.response.status === 401) {
           dispatch(logout());
           navigate("/");
         }
@@ -54,7 +55,7 @@ const PortfolioDistributionChart = (props: Props) => {
         setValues(res.data.map((distribution: any) => distribution.value));
         setCategories(res.data.map((distribution: any) => distribution.label));
       }).catch((err) => {
-        if (err.response.status === 401) {
+        if (isAxiosError(err) && err.response && err.response.status === 401) {
           dispatch(logout());
           navigate("/");
         }

@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 
+import { Segmented, Space } from 'antd';
+import type { SegmentedValue } from 'antd/es/segmented';
 import { Line } from 'react-chartjs-2';
 import { useNavigate } from 'react-router-dom';
-import PortfolioService from '../services/PortfolioService';
-import { Segmented, Space } from 'antd';
-import { SegmentedValue } from 'antd/es/segmented';
 import { logout, useAppDispatch } from '../app/store';
+import PortfolioService from '../services/PortfolioService';
 
-import { ArcElement, Chart, Legend, ScriptableContext, Tooltip } from 'chart.js';
+import { isAxiosError } from 'axios';
+import { ArcElement, Chart, Legend, Tooltip } from 'chart.js';
 import 'chartjs-adapter-date-fns';
 import { enGB } from 'date-fns/locale';
 
@@ -29,7 +30,7 @@ export const PortfolioValueChart: React.FC = () => {
         }
       }));
     }).catch((err) => {
-      if (err.response.status === 401) {
+      if (isAxiosError(err) && err.response && err.response.status === 401) {
         dispatch(logout());
         navigate("/");
       }

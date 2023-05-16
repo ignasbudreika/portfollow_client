@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import { ArcElement, Tooltip, Legend } from 'chart.js';
-import { Chart as ChartJS } from 'chart.js/auto'
+import { ArcElement, Legend, Tooltip } from 'chart.js';
+import { Chart as ChartJS } from 'chart.js/auto';
+import React, { useEffect, useState } from 'react';
 
-import { Line } from 'react-chartjs-2';
-import { useNavigate } from 'react-router-dom';
-import PortfolioService from '../services/PortfolioService';
 import { Segmented, Space } from 'antd';
-import { SegmentedValue } from 'antd/es/segmented';
-import { logout, useAppDispatch } from '../app/store';
+import type { SegmentedValue } from 'antd/es/segmented';
+import { isAxiosError } from 'axios';
 import 'chartjs-adapter-date-fns';
 import { enGB } from 'date-fns/locale';
+import { Line } from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
+import { logout, useAppDispatch } from '../app/store';
+import PortfolioService from '../services/PortfolioService';
 
 export const PortfolioPerformanceChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
@@ -25,7 +26,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
     const portfolioResponse = await PortfolioService.getPortfolioPerformanceHistory(
       historyType
     ).catch((err) => {
-      if (err.response.status === 401) {
+      if (isAxiosError(err) && err.response && err.response.status === 401) {
         dispatch(logout());
         navigate("/");
       }
@@ -35,7 +36,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
       await PortfolioService.getPortfolioPerformanceComparisonHistory(
         historyType
       ).catch((err) => {
-        if (err.response.status === 401) {
+        if (isAxiosError(err) && err.response && err.response.status === 401) {
           dispatch(logout());
           navigate("/");
         }
@@ -59,7 +60,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
 
   const changeSelectedType = (type: string) => {
     setSelectedType(type);
-    getData(type);
+    void getData(type);
   }
 
   useEffect(() => {
@@ -68,7 +69,7 @@ export const PortfolioPerformanceChart: React.FC = () => {
       return;
     }
 
-    getData(selectedType);
+    void getData(selectedType);
   }, []);
 
   const data = {

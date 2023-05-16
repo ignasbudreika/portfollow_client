@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { ArcElement, Tooltip, Legend, ScriptableContext } from 'chart.js';
-import { Chart as ChartJS } from 'chart.js/auto'
+import type { ScriptableContext } from 'chart.js';
+import { ArcElement, Legend, Tooltip } from 'chart.js';
+import { Chart as ChartJS } from 'chart.js/auto';
+import React, { useEffect, useState } from 'react';
 
-import { Line } from 'react-chartjs-2';
-import { useNavigate } from 'react-router-dom';
-import PortfolioService from '../services/PortfolioService';
 import { Segmented, Space } from 'antd';
-import { SegmentedValue } from 'antd/es/segmented';
-import { logout, useAppDispatch } from '../app/store';
+import type { SegmentedValue } from 'antd/es/segmented';
+import { isAxiosError } from 'axios';
 import 'chartjs-adapter-date-fns';
 import { enGB } from 'date-fns/locale';
+import { Line } from 'react-chartjs-2';
+import { useNavigate } from 'react-router-dom';
+import { logout, useAppDispatch } from '../app/store';
+import PortfolioService from '../services/PortfolioService';
 
 export const PortfolioProfitLossChart: React.FC = () => {
   ChartJS.register(ArcElement, Tooltip, Legend);
@@ -24,7 +26,7 @@ export const PortfolioProfitLossChart: React.FC = () => {
     PortfolioService.getPortfolioProfitLossHistory(historyType).then((res) => {
       setValues(res.data.map((history: any) => { return { x: history.date, y: history.value } }));
     }).catch((err) => {
-      if (err.response.status === 401) {
+      if (isAxiosError(err) && err.response && err.response.status === 401) {
         dispatch(logout());
         navigate("/");
       }

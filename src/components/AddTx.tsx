@@ -1,11 +1,12 @@
 import { DatePicker, Form, InputNumber, Modal, Switch, message } from "antd";
 
-import { useAtom } from 'jotai'
-import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
-import InvestmentService from "../services/InvestmentService";
+import { isAxiosError } from "axios";
+import dayjs from "dayjs";
+import { useAtom } from 'jotai';
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
-import dayjs from "dayjs";
+import { selectedInvestmentIdAtom, showAddTxModalAtom } from '../atoms';
+import InvestmentService from "../services/InvestmentService";
 
 interface Props {
   onDone: () => void
@@ -22,7 +23,7 @@ const AddTx = (props: Props) => {
   const [showModal, setShowModal] = useAtom(showAddTxModalAtom)
 
   const handleOk = () => {
-    form.validateFields()
+    void form.validateFields()
       .then((values) => {
         InvestmentService.createTx(id, {
           quantity: values.quantity,
@@ -32,7 +33,7 @@ const AddTx = (props: Props) => {
           props.onDone();
           success('Transaction was successfully created');
         }).catch((err) => {
-          if (err.response.status === 401) {
+          if (isAxiosError(err) && err.response && err.response.status === 401) {
             dispatch(logout());
             navigate("/");
             return;
@@ -45,14 +46,14 @@ const AddTx = (props: Props) => {
   };
 
   const success = (message: string) => {
-    messageApi.open({
+    void messageApi.open({
       type: 'success',
       content: message,
     });
   };
 
   const error = (message: string) => {
-    messageApi.open({
+    void messageApi.open({
       type: 'error',
       content: message,
     });

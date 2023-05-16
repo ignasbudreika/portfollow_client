@@ -1,11 +1,13 @@
 import { DatePicker, Form, Input, InputNumber, Modal, Select, Switch, message } from "antd";
 
-import { useAtom } from 'jotai'
-import { showAddCryptoModalAtom } from '../atoms';
-import CurrenciesService from "../services/CurrenciesService";
+import { isAxiosError } from "axios";
+import type { Dayjs } from "dayjs";
+import dayjs from "dayjs";
+import { useAtom } from 'jotai';
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
-import dayjs, { Dayjs } from "dayjs";
+import { showAddCryptoModalAtom } from '../atoms';
+import CurrenciesService from "../services/CurrenciesService";
 
 interface Props {
     periodic: boolean
@@ -29,21 +31,21 @@ const AddCurrency = (props: Props) => {
     const [showModal, setShowModal] = useAtom(showAddCryptoModalAtom);
 
     const success = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'success',
             content: message,
         });
     };
 
     const error = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'error',
             content: message,
         });
     };
 
     const handleOk = () => {
-        form.validateFields().then((values) => {
+        void form.validateFields().then((values) => {
             CurrenciesService.createCurrency({
                 symbol: values.symbol.toUpperCase(),
                 quantity: props.periodic ? 0 : values.quantity,
@@ -55,7 +57,7 @@ const AddCurrency = (props: Props) => {
                 success('Investment was successfully created');
                 props.onDone();
             }).catch((err) => {
-                if (err.response.status === 401) {
+                if (isAxiosError(err) && err.response && err.response.status === 401) {
                     dispatch(logout());
                     navigate("/");
                     return;

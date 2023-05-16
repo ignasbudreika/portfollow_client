@@ -1,13 +1,14 @@
+import { ArrowDownOutlined, ArrowUpOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Col, Descriptions, Drawer, List, Statistic, message } from "antd";
+import TextArea from "antd/es/input/TextArea";
+import { isAxiosError } from "axios";
 import { useAtom } from "jotai";
-import { showPublicPortfolioDrawerAtom } from "../atoms";
-import { ArrowUpOutlined, ArrowDownOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useRef, useState } from 'react';
 import { Doughnut, getElementAtEvent } from "react-chartjs-2";
-import PublicPortfolioService from "../services/PublicPortfolioService";
 import { useNavigate } from "react-router-dom";
 import { logout, useAppDispatch } from "../app/store";
-import TextArea from "antd/es/input/TextArea";
+import { showPublicPortfolioDrawerAtom } from "../atoms";
+import PublicPortfolioService from "../services/PublicPortfolioService";
 
 interface Props {
     getComments: () => void;
@@ -78,7 +79,7 @@ const PublicPortfolio = (props: Props) => {
             success('Comment was successfully deleted');
             props.getComments();
         }).catch((err) => {
-            if (err.response.status === 401) {
+            if (isAxiosError(err) && err.response && err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
                 return;
@@ -93,7 +94,7 @@ const PublicPortfolio = (props: Props) => {
             setNewComment('');
             props.getComments();
         }).catch((err) => {
-            if (err.response.status === 401) {
+            if (isAxiosError(err) && err.response && err.response.status === 401) {
                 dispatch(logout());
                 navigate("/");
                 return;
@@ -125,14 +126,14 @@ const PublicPortfolio = (props: Props) => {
     }
 
     const success = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'success',
             content: message,
         });
     };
 
     const error = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'error',
             content: message,
         });
@@ -148,7 +149,7 @@ const PublicPortfolio = (props: Props) => {
                 }
                 setCategories(res.data.distribution.map((distribution: any) => distribution.label));
             }).catch((err) => {
-                if (err.response.status === 401) {
+                if (isAxiosError(err) && err.response && err.response.status === 401) {
                     dispatch(logout());
                     navigate("/");
                 }
@@ -163,7 +164,7 @@ const PublicPortfolio = (props: Props) => {
                 }
                 setCategories(res.data.distribution.map((distribution: any) => distribution.label));
             }).catch((err) => {
-                if (err.response.status === 401) {
+                if (isAxiosError(err) && err.response && err.response.status === 401) {
                     dispatch(logout());
                     navigate("/");
                 }

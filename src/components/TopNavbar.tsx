@@ -1,15 +1,14 @@
 import { useGoogleLogin } from '@react-oauth/google';
-import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { Button, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { login, logout, selectAuth, useAppDispatch, useAppSelector } from '../app/store';
-import { useNavigate } from 'react-router-dom';
 
-import '../styles/topnavbar.css';
 import { GoogleOutlined, LogoutOutlined, MenuOutlined } from '@ant-design/icons';
-import AuthService from '../services/AuthService';
 import { useAtom } from 'jotai';
 import { showDrawerAtom } from '../atoms';
+import AuthService from '../services/AuthService';
+import '../styles/topnavbar.css';
 
 
 export const TopNavbar: React.FC = () => {
@@ -39,14 +38,14 @@ export const TopNavbar: React.FC = () => {
   })
 
   const success = (message: string) => {
-    messageApi.open({
+    void messageApi.open({
       type: 'success',
       content: message,
     });
   };
 
   const error = (message: string) => {
-    messageApi.open({
+    void messageApi.open({
       type: 'error',
       content: message,
     });

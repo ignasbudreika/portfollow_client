@@ -1,12 +1,12 @@
 import { Form, Input, Modal, Row, Tooltip, message } from "antd";
-import { useState } from "react";
 
-import { useAtom } from 'jotai'
+import { InfoCircleOutlined } from "@ant-design/icons";
+import { isAxiosError } from "axios";
+import { useAtom } from 'jotai';
+import { useNavigate } from "react-router-dom";
+import { logout, useAppDispatch } from "../app/store";
 import { showAddSpectrocoinConnectionModalAtom } from '../atoms';
 import ConnectionsService from "../services/ConnectionsService";
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { logout, useAppDispatch } from "../app/store";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
     refresh: () => void;
@@ -22,14 +22,14 @@ const AddSpectrocoinConnection = (props: Props) => {
     const [showModal, setShowModal] = useAtom(showAddSpectrocoinConnectionModalAtom)
 
     const handleOk = () => {
-        form.validateFields()
+        void form.validateFields()
             .then((values) => {
                 ConnectionsService.createSpectrocoinConnection({ client_id: values.clientID, client_secret: values.clientSecret }).then(() => {
                     success('SpectroCoin account was successfully connected')
                     setShowModal(false);
                     props.refresh();
                 }).catch((err) => {
-                    if (err.response.status === 401) {
+                    if (isAxiosError(err) && err.response && err.response.status === 401) {
                         dispatch(logout());
                         navigate("/");
                     }
@@ -40,14 +40,14 @@ const AddSpectrocoinConnection = (props: Props) => {
     };
 
     const success = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'success',
             content: message,
         });
     };
 
     const error = (message: string) => {
-        messageApi.open({
+        void messageApi.open({
             type: 'error',
             content: message,
         });
